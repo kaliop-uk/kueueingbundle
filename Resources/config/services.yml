@@ -1,0 +1,49 @@
+parameters:
+    kaliop_queueing.worker_manager.service.class: Kaliop\QueueingBundle\Services\WorkerManager
+    kaliop_queueing.message_producer.service.class: Kaliop\QueueingBundle\Services\MessageProducer
+    kaliop_queueing.message_consumer.service.class: Kaliop\QueueingBundle\Services\MessageConsumer
+    kaliop_queueing.message_producer.queue_control.service.class: Kaliop\QueueingBundle\Services\MessageProducer\QueueControl
+    kaliop_queueing.message_producer.console_command.service.class: Kaliop\QueueingBundle\Services\MessageProducer\ConsoleCommand
+    kaliop_queueing.message_consumer.console_command.service.class: Kaliop\QueueingBundle\Services\MessageConsumer\ConsoleCommand
+    kaliop_queueing.message_consumer.symfony_service.service.class: Kaliop\QueueingBundle\Services\MessageConsumer\SymfonyService
+
+services:
+
+    kaliop_queueing.worker_manager.service:
+         class: %kaliop_queueing.worker_manager.service.class%
+         arguments: [ @ezpublish.config.resolver, %kernel.root_dir% ]
+
+    kaliop_queueing.message_producer.service:
+         class: %kaliop_queueing.message_producer.service.class%
+         calls:
+             # the name of the queue is declared on the command line, no need to put it here via setQueuename
+             - [ setContainer, [ @service_container ] ]
+
+    kaliop_queueing.message_producer.queue_control.service:
+        class: %kaliop_queueing.message_producer.queue_control.service.class%
+        parent: kaliop_queueing.message_producer.service
+        # nb: we assign by default no rabbitmqbundle producer to this service, otherwise it would look like the following:
+        #calls: [ setQueueName, [ producer_name ] ]
+
+    kaliop_queueing.message_consumer.service:
+         class: %kaliop_queueing.message_consumer.service.class%
+         calls:
+             - [ setLogger, [ @?logger ] ]
+         tags:
+             - { name: monolog.logger, channel: kaliop_queueing }
+
+    kaliop_queueing.message_producer.console_command.service:
+        class: %kaliop_queueing.message_producer.console_command.service.class%
+        parent: kaliop_queueing.message_producer.service
+        # nb: we assign by default no rabbitmqbundle producer to this service, otherwise it would look like the following:
+        #calls: [ setQueueName, [ producer_name ] ]
+
+    kaliop_queueing.message_consumer.console_command.service:
+        class: %kaliop_queueing.message_consumer.console_command.service.class%
+        arguments: [ @kaliop_queueing.worker_manager.service ]
+        parent: kaliop_queueing.message_consumer.service
+
+    kaliop_queueing.message_consumer.symfony_service.service:
+        class: %kaliop_queueing.message_consumer.symfony_service.service.class%
+        arguments: [ @kaliop_queueing.worker_manager.service ]
+        parent: kaliop_queueing.message_consumer.service

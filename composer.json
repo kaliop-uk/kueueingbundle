@@ -1,0 +1,11 @@
+{
+    "name": "kaliop/kueueingbundle",
+    "description": "Kaliop Queueing Bundle",
+    "license": "GPL-2.0",
+    "autoload": {
+        "psr-0": { "Kaliop\QueueingBundle": "/" }
+    },
+    "require": {
+        "oldsound/rabbitmq-bundle": "1.2.*"
+    }
+}
