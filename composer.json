@@ -1,5 +1,5 @@
 {
-    "name": "kaliop/kueueingbundle",
+    "name": "kaliop/queueingbundle",
     "description": "Kaliop Queueing Bundle",
     "license": "GPL-2.0",
     "autoload": {
