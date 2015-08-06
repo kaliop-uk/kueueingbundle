@@ -8,7 +8,6 @@
 namespace Kaliop\QueueingBundle\Command;
 
 use Kaliop\QueueingBundle\Helper\BaseCommand;
-use Kaliop\QueueingBundle\Helper\QueuedScriptCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputArgument;
@@ -27,8 +26,6 @@ class EchoBackCommand extends BaseCommand
             ->addArgument( 'input', InputArgument::REQUIRED, 'What to echo (string)' )
             // NB: an option with a required value remains optional
             ->addOption( 'file', 'f', InputOption::VALUE_REQUIRED, 'A file name to append to', null )
-            // allow being called as "queuedscript"
-            ->addOption( QueuedScriptCommand::OPTION_SCRIPT_ID, null, InputOption::VALUE_OPTIONAL )
         ;
     }
 
