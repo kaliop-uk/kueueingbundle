@@ -23,6 +23,10 @@ Ideally, it should shield the rest of the app from the messaging system in use
 
 * A MessageConsumer class which can execute methods exposed by Symfony services
 
+* An event: kaliop_queueing.message_received, which your services can listen to by usage of tag kaliop_queueing.event_listener
+    This allows to filter received messages to introduce e.g. security, logging or other cross-cutting concerns.
+    To 'swallow' a consumed message, your event listener should simply call stopPropagation() on the event 
+    
 * A console command used to 'daemonize' (a.k.a. restart if not executing) php processes which are 'workers' (a.k.a.
     message consumers)
 
@@ -140,3 +144,8 @@ For a start, the same Symfony installation will be used both as message producer
 * add a new message producer to remotely execute services (methods on services?) instead of console commands
 
 * the usage of the term "queue" should probably be better explained (it is not the same as rabbit queue name)
+
+* set up filters for existing producers:
+    - limit allowed services to a whitelist
+    - limit allowed console commands to a whitelist
+    - set up a list of target servers with options for xmlrpc

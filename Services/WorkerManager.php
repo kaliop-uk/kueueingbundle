@@ -10,8 +10,6 @@ use Symfony\Component\Process\PhpExecutableFinder;
  * Each worker is a php process running a rabbitmq consumer (as symfony console command).
  * The list of workers is defined using configuration parameters.
  *
- * @todo rip away the parts which are specific to eZPublish
- *
  * @todo define an interface for the part of this code which deals with getConsoleCommand() - maybe split it off altogether
  */
 class WorkerManager
@@ -21,7 +19,7 @@ class WorkerManager
     protected static $paramName = 'workers.list';
     protected static $paramScope = 'kaliop_queueing';
 
-    public function __construct( ConfigResolverInterface $configResolver, $kernelRootDir )
+    public function __construct( ConfigResolverInterface $configResolver, $kernelRootDir = '.' )
     {
         $this->configResolver = $configResolver;
         $this->kernelRootDir = $kernelRootDir;
@@ -30,7 +28,8 @@ class WorkerManager
     /**
      * Returns the list of commands for all workers configured to be running as daemons
      *
-     * @param string $serverName
+     * @param string $groupName
+     * @param string $env
      * @return array key: worker name, value: command to execute to start the worker
      * @throws \Exception
      */

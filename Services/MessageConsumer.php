@@ -5,6 +5,10 @@ namespace Kaliop\QueueingBundle\Services;
 use OldSound\RabbitMqBundle\RabbitMq\ConsumerInterface;
 use PhpAmqpLib\Message\AMQPMessage;
 use Psr\Log\LoggerInterface;
+use Kaliop\QueueingBundle\Events\EventsList;
+use Kaliop\QueueingBundle\Events\MessageReceivedEvent;
+use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Base class for message consumers
@@ -12,6 +16,8 @@ use Psr\Log\LoggerInterface;
 abstract class MessageConsumer implements ConsumerInterface
 {
     protected $assumedContentType = null;
+    // NB: if you change this value in subclasses, take care about the security implications
+    /// @see self::decodeMessageBody
     protected $acceptedContentTypes = array(
         'application/json',
     );
@@ -19,6 +25,7 @@ abstract class MessageConsumer implements ConsumerInterface
     protected $message;
     /** @var  \Psr\Log\LoggerInterface $logger */
     protected $logger;
+    protected $dispatcher;
 
     /**
      * The method to be implemented by subclasses, executed upon reception of a message.
@@ -33,6 +40,11 @@ abstract class MessageConsumer implements ConsumerInterface
     public function setLogger( LoggerInterface $logger=null )
     {
         $this->logger = $logger;
+    }
+
+    public function setDispatcher( EventDispatcherInterface $dispatcher=null )
+    {
+        $this->dispatcher = $dispatcher;
     }
 
     /**
@@ -75,6 +87,15 @@ abstract class MessageConsumer implements ConsumerInterface
             // save the message, in case child class needs it for whacky stuff
             $this->message = $msg;
             $body = $this->decodeMessageBody( $msg );
+
+            // while at it, emit a message, and allow listeners to prevent further execution
+            if ($this->dispatcher) {
+                $event = new MessageReceivedEvent( $msg, $body );
+                if ($this->dispatcher->dispatch( EventsList::MESSAGE_RECEIVED, $event)->isPropagationStopped()) {
+                    return;
+                }
+            }
+
             $this->consume( $body );
         }
         catch( \Exception $e )
@@ -118,7 +139,7 @@ abstract class MessageConsumer implements ConsumerInterface
                     throw new \UnexpectedValueException( "Error decoding json payload: " . $error );
                 }
                 return $data;
-            case 'application/x-httpd-php-source':
+             case 'application/x-httpd-php-source':
                 /// @todo should we wrap this in try/catch, ob_start and set_error_handler, or just make sure it is never used?
                 return eval ( 'return ' . $msg->body . ';' );
             case 'vnd.php.serialized':
