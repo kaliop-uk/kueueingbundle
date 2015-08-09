@@ -7,13 +7,14 @@ use PhpAmqpLib\Message\AMQPMessage;
 
 class MessageReceivedEvent extends Event
 {
-    protected $msg;
     protected $body;
+    protected $message;
+    protected $consumer;
 
-    public function __construct( AMQPMessage $msg, $body )
+    public function __construct( $body, AMQPMessage $message, $consumer )
     {
-        $this->msg = $msg;
         $this->body = $body;
+        $this->consumer = $consumer;
     }
 
     public function getMessage()
@@ -24,5 +25,10 @@ class MessageReceivedEvent extends Event
     public function getBody()
     {
         return $this->body;
+    }
+
+    public function getConsumer()
+    {
+        return $this->consumer;
     }
 }

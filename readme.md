@@ -14,7 +14,9 @@ Ideally, it should shield the rest of the app from the messaging system in use
 * A MessageConsumer class which implements the complementary part of the above
 
     TAKE CARE about security when using it: you generally do NOT want to allow anyone to be able to post commands to the
-    queue and execute them blindly
+    queue and execute them blindly.
+    A basic limitation you can implement is to whitelist the commands available for execution via queue messages; this
+    is set up via parameters.yml
 
 * A CLI command which can be used to test the above (scheduling remote execution of console commands)
 
@@ -101,9 +103,12 @@ For a start, the same Symfony installation will be used both as message producer
 
 12. PROPERLY SECURE YOUR NETWORK !!!
 
-    If you are running the consumers which execute symfony console commands or symfony services, know that they provide
-    no authentication mechanism at all for the moment.
-    Anyone who can send messages to their queue can have them execute any code they want. 
+    If you are running the consumers which execute Symfony console commands or Symfony services, be warned that they
+    provide no authentication mechanism at all for the moment.
+    Anyone who can send messages to their queue can have them execute the relevant code. 
+
+13. If you are running the consumers which execute Symfony console commands or Symfony services, set up at least some
+    basic security via filtering of the accepted messages by configuring values in parameters.yml
 
 
 ## Console commands available:

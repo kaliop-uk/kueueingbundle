@@ -63,8 +63,10 @@ services:
         arguments: [ @kaliop_queueing.worker_manager.service ]
         parent: kaliop_queueing.message_consumer.service
 
+    # a filter used to limit which console commands can be execute via queue messages
     kaliop_queueing.message_consumer.console_command.filter.service:
         class: %kaliop_queueing.message_consumer.console_command.filter.service.class%
+        arguments: [ %kaliop_queueing.default.allowed_commands% ]
         tags:
              - { name: kaliop_queueing.event_listener, event: kaliop_queueing.message_received }
 

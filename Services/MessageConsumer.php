@@ -90,7 +90,7 @@ abstract class MessageConsumer implements ConsumerInterface
 
             // while at it, emit a message, and allow listeners to prevent further execution
             if ($this->dispatcher) {
-                $event = new MessageReceivedEvent( $msg, $body );
+                $event = new MessageReceivedEvent( $body, $msg, $this );
                 if ($this->dispatcher->dispatch( EventsList::MESSAGE_RECEIVED, $event)->isPropagationStopped()) {
                     return;
                 }
