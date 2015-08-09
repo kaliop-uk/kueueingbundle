@@ -16,11 +16,12 @@ Ideally, it should shield the rest of the app from the messaging system in use
     TAKE CARE about security when using it: you generally do NOT want to allow anyone to be able to post commands to the
     queue and execute them blindly
 
+* A CLI command which can be used to test the above (scheduling remote execution of console commands)
+
+* MessageConsumer, MessageProducer and test cli command to schedule execution of XMLRPC calls to remote servers
+   (note that you will need to install the phpxmlrpc\phpxmlrpc package for this to work)
+
 * A MessageConsumer class which can execute methods exposed by Symfony services
-
-* A MessageConsumer class which can execute XMLRPC calls to remote servers
-
-* A MessageConsumer class which can send HTTP requests to remote servers
 
 * A console command used to 'daemonize' (a.k.a. restart if not executing) php processes which are 'workers' (a.k.a.
     message consumers)
@@ -54,7 +55,7 @@ For a start, the same Symfony installation will be used both as message producer
 
 5. Test first that a simple console command can be executed locally 
 
-       php console kaliop_queueing:echoback 'hello world' -f 'testoututput.txt' 
+       php console kaliop_queueing:echoback "hello world" -f "testoututput.txt" 
      
 6. In a config file, define workers and producers according to rabbitmq-bundle docs
 
@@ -69,7 +70,7 @@ For a start, the same Symfony installation will be used both as message producer
     
 7. Start a consumer, putting it in the background
 
-      php console kaliop_queueing:consumer <queue> --label='testconsumer' -w &
+      php console kaliop_queueing:consumer <queue> --label="testconsumer" -w &
 
     Note that <queue> above is to be substituted with the name of a consumer from the old_sound_rabbit_mq configuration 
 
@@ -107,17 +108,21 @@ For a start, the same Symfony installation will be used both as message producer
 
     To send to a queue a message specifying execution of the given symfony console command
 
+* php console kaliop_queueing:queuexmlrpc [-ttl=<secs>] [--novalidate] <producer> <server> <method> <args*>
+
+    To send to a queue a message specifying execution of an xmlrpc call
+
 * php console rabbitmq:consumer -w <consumer>
 
     To start a worker process which consumes messages from the specified queue
 
-* php console kaliop_queueing:watchdog
-
-    To check that all the configured worker processes are executing and restart them if they are not
-
 * php console kaliop_queueing:managequeue purge|delete|info <producer>
 
     To manage a given queue: get info about its state, or purge it from messages
+
+* php console kaliop_queueing:watchdog
+
+    To check that all the configured worker processes are executing and restart them if they are not
 
 
 ## Todo
@@ -135,5 +140,3 @@ For a start, the same Symfony installation will be used both as message producer
 * add a new message producer to remotely execute services (methods on services?) instead of console commands
 
 * the usage of the term "queue" should probably be better explained (it is not the same as rabbit queue name)
-
-* (test) windows support

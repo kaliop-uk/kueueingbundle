@@ -6,6 +6,8 @@ parameters:
     kaliop_queueing.message_producer.console_command.service.class: Kaliop\QueueingBundle\Services\MessageProducer\ConsoleCommand
     kaliop_queueing.message_consumer.console_command.service.class: Kaliop\QueueingBundle\Services\MessageConsumer\ConsoleCommand
     kaliop_queueing.message_consumer.symfony_service.service.class: Kaliop\QueueingBundle\Services\MessageConsumer\SymfonyService
+    kaliop_queueing.message_producer.xmlrpc_call.service.class: Kaliop\QueueingBundle\Services\MessageProducer\XmlrpcCall
+    kaliop_queueing.message_consumer.xmlrpc_call.service.class: Kaliop\QueueingBundle\Services\MessageConsumer\XmlrpcCall
 
 services:
 
@@ -46,4 +48,14 @@ services:
     kaliop_queueing.message_consumer.symfony_service.service:
         class: %kaliop_queueing.message_consumer.symfony_service.service.class%
         arguments: [ @kaliop_queueing.worker_manager.service ]
+        parent: kaliop_queueing.message_consumer.service
+
+    kaliop_queueing.message_producer.xmlrpc_call.service:
+        class: %kaliop_queueing.message_producer.xmlrpc_call.service.class%
+        arguments: [ ]
+        parent: kaliop_queueing.message_producer.service
+
+    kaliop_queueing.message_consumer.xmlrpc_call.service:
+        class: %kaliop_queueing.message_consumer.xmlrpc_call.service.class%
+        arguments: [ ]
         parent: kaliop_queueing.message_consumer.service

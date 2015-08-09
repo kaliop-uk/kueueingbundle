@@ -29,6 +29,12 @@ old_sound_rabbit_mq:
                 name: kaliop_queueing.symfony_service.exchange
                 type: topic
 
+        xmlrpc_call:
+            connection: default
+            exchange_options:
+                name: kaliop_queueing.xmlrpc_call.exchange
+                type: topic
+
     consumers:
         # This is the name used in the worker command-line: php console rabbitmq:consumer -w <name>
         # You can create many similar registrations if you want to run different workers in parallel
@@ -65,3 +71,18 @@ old_sound_rabbit_mq:
                 routing_keys: [ '#' ]
             # the name of the callback is fixed
             callback: kaliop_queueing.message_consumer.symfony_service.service
+
+        xmlrpc_call_executor:
+            connection: default
+            exchange_options:
+                name: kaliop_queueing.xmlrpc_call.exchange
+                type: topic
+            queue_options:
+                name: kaliop_queueing.xmlrpc_call.default_queue
+                # Routing keys available on this queue are the server name followed by method, with doublecolon replaced by dots
+                # A hash sign is a wildcard, while a star matches one word only
+                # Ex: kaliop.# matches all commands starting with 'kaliop:'
+                # NB take extra care about securing your environment when you allow execution of commands sent from remote hosts
+                routing_keys: [ '#' ]
+            # the name of the callback is fixed
+            callback: kaliop_queueing.message_consumer.xmlrpc_call.service
