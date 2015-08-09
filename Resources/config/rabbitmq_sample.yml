@@ -2,55 +2,66 @@
 # Example of configuration of the queue used to distribute execution of console commands to workers.
 # NB: this file is NOT parsed, you will have to add a similar configuration to your bundle/application
 
-producers:
-    # Definition of a queue (producer) where commands to execute remotely are pushed to.
-    # The name of the producer is used with php console kaliop_queueing:queuecommand <name>
-    # Important: type = topic.
-    console_command:
-        connection: default
-        exchange_options:
-            name: kaliop_queueing.console_command.exchange
-            type: topic
+old_sound_rabbit_mq:
 
-    symfony_service:
-        connection: default
-        exchange_options:
-            name: kaliop_queueing.symfony_service.exchange
-            type: topic
+    connections:
+        default:
+            host:     'localhost'
+            port:     5672
+            user:     'guest'
+            password: 'guest'
+            vhost:    '/'
+            lazy:     false
 
-consumers:
-    # This is the name used in the worker command-line: php console rabbitmq:consumer -w <name>
-    # You can create many similar registrations if you want to run different workers in parallel
-    console_command_executor:
-        connection: default
-        exchange_options:
-            name: kaliop_queueing.console_command.exchange
-            type: topic
-        queue_options:
-            name: kaliop_queueing.console_command.default_queue
-            # Routing keys available on this queue are the command to be executed, with doublecolon replaced by dots
-            # A hash sign is a widlcard, while a star matches one word only
-            # Ex: kaliop.# matches all commands starting with 'kaliop:'
-            # NB take extra care about securing your environment when you allow execution of commands sent from remote hosts
-            routing_keys: [ # ]
-        # the name of the callback is fixed
-        callback: kaliop_queueing.message_consumer.console_command.service
+    producers:
+        # Definition of a queue (producer) where commands to execute remotely are pushed to.
+        # The name of the producer is used with php console kaliop_queueing:queuecommand <name>
+        # Important: type = topic.
+        console_command:
+            connection: default
+            exchange_options:
+                name: kaliop_queueing.console_command.exchange
+                type: topic
 
-    # This is the name used in the worker command-line: php console rabbitmq:consumer -w <name>
-    # You can create many similar registrations if you want to run different workers in parallel
-    symfony_service_executor:
-        connection: default
-        exchange_options:
-            # queued scripts can not the same exchange as all other console commands, unless we separate them by routing keys...
-            # This should be changed at some point, as otherwise
-            name: kaliop_queueing.symfony_service.exchange
-            type: topic
-        queue_options:
-            name: kaliop_queueing.symfony_service.default_queue
-            # Routing keys available on this queue are the command to be executed, with doublecolon replaced by dots
-            # A hash sign is a wildcard, while a star matches one word only
-            # Ex: kaliop.# matches all commands starting with 'kaliop:'
-            # NB take extra care about securing your environment when you allow execution of commands sent from remote hosts
-            routing_keys: [ '#' ]
-        # the name of the callback is fixed
-        callback: kaliop_queueing.message_consumer.symfony_service.service
+        symfony_service:
+            connection: default
+            exchange_options:
+                name: kaliop_queueing.symfony_service.exchange
+                type: topic
+
+    consumers:
+        # This is the name used in the worker command-line: php console rabbitmq:consumer -w <name>
+        # You can create many similar registrations if you want to run different workers in parallel
+        console_command_executor:
+            connection: default
+            exchange_options:
+                name: kaliop_queueing.console_command.exchange
+                type: topic
+            queue_options:
+                name: kaliop_queueing.console_command.default_queue
+                # Routing keys available on this queue are the command to be executed, with doublecolon replaced by dots
+                # A hash sign is a widlcard, while a star matches one word only
+                # Ex: kaliop.# matches all commands starting with 'kaliop:'
+                # NB take extra care about securing your environment when you allow execution of commands sent from remote hosts
+                routing_keys: [ # ]
+            # the name of the callback is fixed
+            callback: kaliop_queueing.message_consumer.console_command.service
+
+        # This is the name used in the worker command-line: php console rabbitmq:consumer -w <name>
+        # You can create many similar registrations if you want to run different workers in parallel
+        symfony_service_executor:
+            connection: default
+            exchange_options:
+                # queued scripts can not the same exchange as all other console commands, unless we separate them by routing keys...
+                # This should be changed at some point, as otherwise
+                name: kaliop_queueing.symfony_service.exchange
+                type: topic
+            queue_options:
+                name: kaliop_queueing.symfony_service.default_queue
+                # Routing keys available on this queue are the command to be executed, with doublecolon replaced by dots
+                # A hash sign is a wildcard, while a star matches one word only
+                # Ex: kaliop.# matches all commands starting with 'kaliop:'
+                # NB take extra care about securing your environment when you allow execution of commands sent from remote hosts
+                routing_keys: [ '#' ]
+            # the name of the callback is fixed
+            callback: kaliop_queueing.message_consumer.symfony_service.service
