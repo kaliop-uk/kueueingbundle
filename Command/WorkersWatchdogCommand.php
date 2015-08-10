@@ -14,7 +14,6 @@ use Kaliop\QueueingBundle\Helper\BaseCommand;
  * Checks if all the desired worker process are running, restarts dead ones
  *
  * @todo in 'check' mode display uptime of worker processes
- * @todo add 'list' mode to display list of existing groups
  */
 class WorkersWatchdogCommand extends BaseCommand
 {
@@ -23,7 +22,6 @@ class WorkersWatchdogCommand extends BaseCommand
         $this
             ->setName( 'kaliop_queueing:workerswatchdog' )
             ->addArgument( 'mode', InputArgument::OPTIONAL, 'start/stop/check workers', 'start' )
-            ->addOption( 'group', 'g', InputOption::VALUE_REQUIRED, 'Use this, along with config, to create different sets of workers to run on different servers' )
             ->setDescription( 'Checks that all configured worker processes are alive, restarts any found missing' )
         ;
     }
@@ -40,12 +38,6 @@ class WorkersWatchdogCommand extends BaseCommand
             throw new \InvalidArgumentException( "Mode '$command' is not valid" );
         }
 
-        $groupName = $input->getOption( 'group' );
-        if ( $groupName == '' )
-        {
-            $groupName = 'default';
-        }
-
         // by default we do not force an environment on the commands we ant to execute.
         // We do if we have been invoked with one - which is checked using the tricky test below here
         $env = null;
@@ -55,15 +47,15 @@ class WorkersWatchdogCommand extends BaseCommand
         }
 
         $manager = $this->getContainer()->get( 'kaliop_queueing.worker_manager.service' );
-        $commandList = $manager->getWorkersCommands( $groupName, $env );
-        $this->writeln( "Checking " . count( $commandList ) . " worker processes for group '$groupName'", OutputInterface::VERBOSITY_VERBOSE );
+        $commandList = $manager->getWorkersCommands( $env );
+        $this->writeln( "Checking " . count( $commandList ) . " worker processes", OutputInterface::VERBOSITY_VERBOSE );
 
         $watchdog = new Watchdog();
         foreach( $commandList as $workerName => $cmd )
         {
             // To see if the command is executing, we need to retrieve a version of it which was not escaped for the shell
             // NB: this is most likely NOT failproof!
-            $workerCommand = $manager->getWorkerCommand( $workerName, $groupName, $env, true );
+            $workerCommand = $manager->getWorkerCommand( $workerName, $env, true );
 
             $this->writeln( "Looking for process with command line: $workerCommand", OutputInterface::VERBOSITY_VERBOSE );
 

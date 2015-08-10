@@ -24,7 +24,7 @@ services:
 
     kaliop_queueing.worker_manager.service:
          class: %kaliop_queueing.worker_manager.service.class%
-         arguments: [ @ezpublish.config.resolver, %kernel.root_dir% ]
+         arguments: [ %kaliop_queueing.default.workers.list%, %kernel.root_dir% ]
 
     kaliop_queueing.message_producer.service:
          class: %kaliop_queueing.message_producer.service.class%

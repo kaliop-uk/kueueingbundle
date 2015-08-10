@@ -2,7 +2,6 @@
 
 namespace Kaliop\QueueingBundle\Services;
 
-use eZ\Publish\Core\MVC\ConfigResolverInterface;
 use Symfony\Component\Process\PhpExecutableFinder;
 
 /**
@@ -14,54 +13,45 @@ use Symfony\Component\Process\PhpExecutableFinder;
  */
 class WorkerManager
 {
-    protected $configResolver;
+    protected $workersList;
     protected $kernelRootDir;
     protected static $paramName = 'workers.list';
     protected static $paramScope = 'kaliop_queueing';
 
-    public function __construct( ConfigResolverInterface $configResolver, $kernelRootDir = '.' )
+    public function __construct( array $workersList, $kernelRootDir = '.' )
     {
-        $this->configResolver = $configResolver;
+        $this->workersList = $workersList;
         $this->kernelRootDir = $kernelRootDir;
     }
 
     /**
      * Returns the list of commands for all workers configured to be running as daemons
      *
-     * @param string $groupName
      * @param string $env
      * @return array key: worker name, value: command to execute to start the worker
      * @throws \Exception
      */
-    public function getWorkersCommands( $groupName = 'default', $env = null )
+    public function getWorkersCommands( $env = null )
     {
 
         $procs = array();
-        foreach( $this->getWorkersNames( $groupName ) as $name )
+        foreach( $this->getWorkersNames() as $name )
         {
-            $procs[$name] = $this->getWorkerCommand( $name, $groupName, $env );
+            $procs[$name] = $this->getWorkerCommand( $name, $env );
         }
         return $procs;
     }
 
     /**
-     * Returns the list of workers groups available
-     */
-    public function getWorkersGroups()
-    {
-        return array_keys( $this->configResolver->getParameter( self::$paramName, self::$paramScope ) );
-    }
-
-    /**
      * Returns the list of workers configured to be running as daemons
      */
-    public function getWorkersNames( $groupName ='default' )
+    public function getWorkersNames()
     {
-        return array_keys( $this->configResolver->getParameter( self::$paramName . '.' . $groupName, self::$paramScope ) );
+        return array_keys( $this->workersList );
     }
 
     /**
-     * Returns the command line of a workers configured to be running as daemon
+     * Returns the command line of a worker configured to be running as daemon
      *
      * @param string $name
      * @param bool $unescaped do not add shell escaping to the command. NB: never use this option for executing stuff, only for grepping
@@ -76,9 +66,9 @@ class WorkerManager
      * @todo get the name of the console command from himself
      */
 
-    public function getWorkerCommand( $name, $groupName ='default', $env=null, $unescaped=false )
+    public function getWorkerCommand( $name, $env=null, $unescaped=false )
     {
-        $defs = $this->configResolver->getParameter( self::$paramName . '.' . $groupName, self::$paramScope );
+        $defs = $this->workersList;
         if ( !isset( $defs[$name] ) )
         {
             throw new \Exception( "No worker configuration for $name" );
