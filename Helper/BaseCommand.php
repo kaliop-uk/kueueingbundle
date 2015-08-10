@@ -33,6 +33,9 @@ class BaseCommand extends ContainerAwareCommand
 
     protected function formatDate( $timestamp=null )
     {
+        if ($timestamp === null) {
+            $timestamp = time();
+        }
         return strftime( static::$DATE_FORMAT, $timestamp );
     }
 }
