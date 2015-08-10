@@ -7,7 +7,6 @@ use PhpAmqpLib\Message\AMQPMessage;
 use Psr\Log\LoggerInterface;
 use Kaliop\QueueingBundle\Events\EventsList;
 use Kaliop\QueueingBundle\Events\MessageReceivedEvent;
-use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**

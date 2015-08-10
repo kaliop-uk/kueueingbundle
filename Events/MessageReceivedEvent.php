@@ -14,17 +14,18 @@ class MessageReceivedEvent extends Event
     public function __construct( $body, AMQPMessage $message, $consumer )
     {
         $this->body = $body;
+        $this->message = $message;
         $this->consumer = $consumer;
-    }
-
-    public function getMessage()
-    {
-        return $this->body;
     }
 
     public function getBody()
     {
         return $this->body;
+    }
+
+    public function getMessage()
+    {
+        return $this->message;
     }
 
     public function getConsumer()
