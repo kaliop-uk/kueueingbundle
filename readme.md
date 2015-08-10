@@ -134,6 +134,15 @@ For a start, the same Symfony installation will be used both as message producer
     To check that all the configured worker processes are executing and restart them if they are not
 
 
+## Events available:
+
+* Kaliop\QueueingBundle\Events\EventsList::MESSAGE_RECEIVED emitted when a message is gotten from the queue, before it is consumed
+
+* Kaliop\QueueingBundle\Events\EventsList::PROCESS_STARTED emitted when the watchdog starts a process
+
+* Kaliop\QueueingBundle\Events\EventsList::PROCESS_STOPPED emitted when the watchdog stops a process
+
+
 ## Todo
 
 * more docs: graphical schemas representing the bits and pieces and data flow
