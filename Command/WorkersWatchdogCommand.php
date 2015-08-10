@@ -6,7 +6,6 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Kaliop\QueueingBundle\Helper\Watchdog;
 use Symfony\Component\Process\Exception\RuntimeException;
 use Kaliop\QueueingBundle\Helper\BaseCommand;
 
@@ -50,7 +49,7 @@ class WorkersWatchdogCommand extends BaseCommand
         $commandList = $manager->getWorkersCommands( $env );
         $this->writeln( "Checking " . count( $commandList ) . " worker processes", OutputInterface::VERBOSITY_VERBOSE );
 
-        $watchdog = new Watchdog();
+        $watchdog = $this->getContainer()->get( 'kaliop_queueing.watchdog.service' );
         foreach( $commandList as $workerName => $cmd )
         {
             // To see if the command is executing, we need to retrieve a version of it which was not escaped for the shell

@@ -4,12 +4,22 @@ namespace Kaliop\QueueingBundle\Helper;
 
 use Symfony\Component\Process\Process;
 use Symfony\Component\Process\Exception\RuntimeException;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Kaliop\QueueingBundle\Events\EventsList;
+use Kaliop\QueueingBundle\Events\ProcessStartedEvent;
+use Kaliop\QueueingBundle\Events\ProcessStoppedEvent;
 
 /**
  * Used to check that the "daemon" processes we want to keep running are alive
  */
 class Watchdog
 {
+
+    public function __construct( EventDispatcherInterface $dispatcher=null )
+    {
+        $this->dispatcher = $dispatcher;
+    }
+
     /**
      * Starts a process in the background - waits for 1 second to check that the process did not die prematurely
      * (it is supposed to be a long-running task)
@@ -28,6 +38,13 @@ class Watchdog
         {
             throw new RuntimeException( "Process terminated immediately" );
         }
+
+        // while at it, emit a message
+        if ($this->dispatcher) {
+            $event = new ProcessStartedEvent( $process->getPid(), $command );
+            $this->dispatcher->dispatch( EventsList::PROCESS_STARTED, $event);
+        }
+
         return $process->getPid();
     }
 
@@ -44,6 +61,12 @@ class Watchdog
             if ( (int)$pid > 0 )
             {
                 posix_kill( (int)$pid, $signal );
+
+                // while at it, emit a message
+                if ($this->dispatcher) {
+                    $event = new ProcessStoppedEvent( $pid );
+                    $this->dispatcher->dispatch( EventsList::PROCESS_STOPPED, $event);
+                }
             }
             else
             {

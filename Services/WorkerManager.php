@@ -15,8 +15,6 @@ class WorkerManager
 {
     protected $workersList;
     protected $kernelRootDir;
-    protected static $paramName = 'workers.list';
-    protected static $paramScope = 'kaliop_queueing';
 
     public function __construct( array $workersList, $kernelRootDir = '.' )
     {

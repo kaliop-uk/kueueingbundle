@@ -1,5 +1,6 @@
 parameters:
     kaliop_queueing.worker_manager.service.class: Kaliop\QueueingBundle\Services\WorkerManager
+    kaliop_queueing.watchdog.service.class: Kaliop\QueueingBundle\Helper\Watchdog
     kaliop_queueing.event_dispatcher.class: Symfony\Component\EventDispatcher\ContainerAwareEventDispatcher
     kaliop_queueing.message_consumer.monitor.service.class: Kaliop\QueueingBundle\Services\MessageConsumer\EventListener\Monitor
 
@@ -25,6 +26,10 @@ services:
     kaliop_queueing.worker_manager.service:
          class: %kaliop_queueing.worker_manager.service.class%
          arguments: [ %kaliop_queueing.default.workers.list%, %kernel.root_dir% ]
+
+    kaliop_queueing.watchdog.service:
+        class: %kaliop_queueing.watchdog.service.class%
+        arguments: [ @kaliop_queueing.event_dispatcher.service ]
 
     kaliop_queueing.message_producer.service:
          class: %kaliop_queueing.message_producer.service.class%
