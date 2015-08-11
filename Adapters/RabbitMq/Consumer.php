@@ -5,7 +5,7 @@
  * Time: 21.40
  */
 
-namespace Kaliop\QueueingBundle\RabbitMq;
+namespace Kaliop\QueueingBundle\Adapters\RabbitMq;
 
 use OldSound\RabbitMqBundle\RabbitMq\Consumer as BaseConsumer;
 

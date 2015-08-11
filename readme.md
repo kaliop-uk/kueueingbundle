@@ -3,7 +3,8 @@
 A Symfony Bundle offering functionality related to message queuing systems.
 
 Ideally, it should shield the rest of the app from the messaging system in use
-(as of now is the only one supported is RabbitMQ via the RabbitMqBundle)
+(as of now is the only one supported is RabbitMQ via the RabbitMqBundle;
+other brokers supporting the amqp protocol are likely to work but untested)
 
 
 ## Features implemented
@@ -161,5 +162,4 @@ For a start, the same Symfony installation will be used both as message producer
 
 * set up filters for existing producers:
     - limit allowed services to a whitelist
-    - limit allowed console commands to a whitelist
     - set up a list of target servers with options for xmlrpc

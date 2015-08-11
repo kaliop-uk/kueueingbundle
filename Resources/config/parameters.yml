@@ -1,7 +1,7 @@
 parameters:
     # Take control of the rabbitmq producer and consumer classes so we can extend them a bit for our needs
-    old_sound_rabbit_mq.producer.class: Kaliop\QueueingBundle\RabbitMq\Producer
-    old_sound_rabbit_mq.consumer.class: Kaliop\QueueingBundle\RabbitMq\Consumer
+    old_sound_rabbit_mq.producer.class: Kaliop\QueueingBundle\Adapters\RabbitMq\Producer
+    old_sound_rabbit_mq.consumer.class: Kaliop\QueueingBundle\Adapters\RabbitMq\Consumer
 
     # To be configured in a bundle depending on this one (or in the application):
     # worker processes to be monitored via watchdog console command

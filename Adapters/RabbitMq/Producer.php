@@ -1,6 +1,6 @@
 <?php
 
-namespace Kaliop\QueueingBundle\RabbitMq;
+namespace Kaliop\QueueingBundle\Adapters\RabbitMq;
 
 use OldSound\RabbitMqBundle\RabbitMq\Producer as BaseProducer;
 use PhpAmqpLib\Message\AMQPMessage;
