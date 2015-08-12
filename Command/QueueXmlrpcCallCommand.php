@@ -25,7 +25,7 @@ class QueueXmlrpcCallCommand extends BaseCommand
             ->addArgument( 'queue_name', InputArgument::REQUIRED, 'The queue name (string)' )
             ->addArgument( 'server', InputArgument::REQUIRED, 'The server to call (string)' )
             ->addArgument( 'method', InputArgument::REQUIRED, 'The method to call (string)' )
-            ->addArgument( 'argument', InputArgument::IS_ARRAY, 'Arguments and options for the executed command' )
+            ->addArgument( 'argument', InputArgument::IS_ARRAY, 'Parameters for the executed call. Only scalars supported for now' )
             ->addOption( 'ttl', 't', InputOption::VALUE_OPTIONAL, 'Validity of message (in seconds)', null )
             ->addOption('debug', 'd', InputOption::VALUE_NONE, 'Enable Debugging' )
         ;
