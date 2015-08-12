@@ -6,6 +6,7 @@ parameters:
 
     kaliop_queueing.message_producer.service.class: Kaliop\QueueingBundle\Services\MessageProducer
     kaliop_queueing.message_consumer.service.class: Kaliop\QueueingBundle\Services\MessageConsumer
+    kaliop_queueing.message_producer.generic_message.service.class: Kaliop\QueueingBundle\Services\MessageProducer\GenericMessage
     kaliop_queueing.message_producer.queue_control.service.class: Kaliop\QueueingBundle\Services\MessageProducer\QueueControl
 
     kaliop_queueing.message_producer.console_command.service.class: Kaliop\QueueingBundle\Services\MessageProducer\ConsoleCommand
@@ -47,6 +48,10 @@ services:
         parent: kaliop_queueing.message_producer.service
         # nb: we assign by default no rabbitmqbundle producer to this service, otherwise it would look like the following:
         #calls: [ setQueueName, [ producer_name ] ]
+
+    kaliop_queueing.message_producer.generic_message.service:
+        class: %kaliop_queueing.message_producer.generic_message.service.class%
+        parent: kaliop_queueing.message_producer.service
 
     kaliop_queueing.message_consumer.service:
         class: %kaliop_queueing.message_consumer.service.class%
@@ -117,5 +122,5 @@ services:
         class: %kaliop_queueing.message_consumer.timing.filter.service.class%
         # the number of messages to time
         arguments: [ 10 ]
-    #    tags:
-    #         - { name: kaliop_queueing.event_listener, event: kaliop_queueing.message_received }
+        tags:
+             - { name: kaliop_queueing.event_listener, event: kaliop_queueing.message_received }

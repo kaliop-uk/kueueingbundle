@@ -10,9 +10,9 @@ use Kaliop\QueueingBundle\Helper\BaseCommand;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 
 /**
- * Sends to a queue a message to execute a symfony console command
+ * Sends to a queue a message specified as json
  */
-class QueueXmlrpcCallCommand extends BaseCommand
+class QueueGenericMessageCommand extends BaseCommand
 {
     /// @var \Symfony\Component\Console\Output\OutputInterface $output
     protected $output;
@@ -20,12 +20,13 @@ class QueueXmlrpcCallCommand extends BaseCommand
     protected function configure()
     {
         $this
-            ->setName( 'kaliop_queueing:queuexmlrpc' )
-            ->setDescription( "Sends to a queue a message to execute an xmlrpc call" )
+            ->setName( 'kaliop_queueing:queuemessage' )
+            ->setDescription( "Sends to a queue a pre-formatted message" )
             ->addArgument( 'queue_name', InputArgument::REQUIRED, 'The queue name (string)' )
-            ->addArgument( 'server', InputArgument::REQUIRED, 'The server to call (string)' )
-            ->addArgument( 'method', InputArgument::REQUIRED, 'The method to call (string)' )
-            ->addArgument( 'argument', InputArgument::IS_ARRAY, 'Parameters for the executed call. Only scalars supported for now' )
+            ->addArgument( 'message', InputArgument::REQUIRED, 'The message body (string)' )
+            ->addOption( 'routing-key', 'k', InputOption::VALUE_OPTIONAL, 'The routing key, if needed (string)', null )
+            ->addOption( 'content-type', 'c', InputOption::VALUE_OPTIONAL, 'The message body content-type, defaults to application/json (string)', null )
+            ->addOption( 'repeat', 'r', InputOption::VALUE_OPTIONAL, 'The number of times to send the message, 1 by default (int)', 1 )
             ->addOption( 'ttl', 't', InputOption::VALUE_OPTIONAL, 'Validity of message (in seconds)', null )
             ->addOption('debug', 'd', InputOption::VALUE_NONE, 'Enable Debugging' )
         ;
@@ -47,22 +48,25 @@ class QueueXmlrpcCallCommand extends BaseCommand
         }
 
         $queue = $input->getArgument( 'queue_name' );
-        $server = $input->getArgument( 'server' );
-        $method = $input->getArgument( 'method' );
-        $arguments = $input->getArgument( 'argument' );
+        $message = $input->getArgument( 'message' );
+        $contentType = $input->getOption( 'content-type' );
+        $key = $input->getOption( 'routing-key' );
+        $repeat = $input->getOption( 'repeat' );
+        $ttl = $input->getOption( 'ttl' );
 
-        $messageProducer = $this->getContainer()->get( 'kaliop_queueing.message_producer.xmlrpc_call.service' );
+        $messageProducer = $this->getContainer()->get( 'kaliop_queueing.message_producer.generic_message.service' );
         $messageProducer->setQueueName( $queue );
         try
         {
-            $messageProducer->publish(
-                $server,
-                $method,
-                $arguments,
-                $ttl = $input->getOption( 'ttl' )
-            );
+            for( $i = 0; $i < $repeat; $i++)
+                $messageProducer->publish(
+                    $message,
+                    $contentType,
+                    $key,
+                    $ttl
+                );
 
-            $this->writeln( "Xmlrpc call queued for execution" . ( $ttl ? ", will be valid for $ttl seconds" : '' ) );
+            $this->writeln( "$repeat message(s) queued" . ( $ttl ? ", will be valid for $ttl seconds" : '' ) );
         }
         catch( ServiceNotFoundException $e )
         {
