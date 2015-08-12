@@ -19,6 +19,9 @@ parameters:
     kaliop_queueing.message_producer.xmlrpc_call.service.class: Kaliop\QueueingBundle\Services\MessageProducer\XmlrpcCall
     kaliop_queueing.message_consumer.xmlrpc_call.service.class: Kaliop\QueueingBundle\Services\MessageConsumer\XmlrpcCall
 
+    kaliop_queueing.message_consumer.noop.service.class: Kaliop\QueueingBundle\Services\MessageConsumer\Noop
+    kaliop_queueing.message_consumer.timing.filter.service.class: Kaliop\QueueingBundle\Services\MessageConsumer\EventListener\TimingFilter
+
 services:
 
     kaliop_queueing.event_dispatcher.service:
@@ -52,12 +55,6 @@ services:
             - [ setDispatcher, [ @kaliop_queueing.event_dispatcher.service ] ]
         tags:
             - { name: monolog.logger, channel: kaliop_queueing }
-
-    # you can enable this service to get debug info of received messages
-    kaliop_queueing.message_consumer.monitor.service:
-        class: %kaliop_queueing.message_consumer.monitor.service.class%
-        tags:
-             - { name: kaliop_queueing.event_listener, event: kaliop_queueing.message_received }
 
     kaliop_queueing.message_producer.console_command.service:
         class: %kaliop_queueing.message_producer.console_command.service.class%
@@ -97,10 +94,28 @@ services:
 
     kaliop_queueing.message_producer.xmlrpc_call.service:
         class: %kaliop_queueing.message_producer.xmlrpc_call.service.class%
-        arguments: [ ]
         parent: kaliop_queueing.message_producer.service
 
     kaliop_queueing.message_consumer.xmlrpc_call.service:
         class: %kaliop_queueing.message_consumer.xmlrpc_call.service.class%
-        arguments: [ ]
         parent: kaliop_queueing.message_consumer.service
+
+    # A 'do nothing' message consumer. Used for testing/development
+    kaliop_queueing.message_consumer.noop.service:
+        class: %kaliop_queueing.message_consumer.noop.service.class%
+        parent: kaliop_queueing.message_consumer.service
+
+    # you can enable this service to get debug info of received messages
+    # NB: this slows down considerably the message receiving, enable (tag it) only during development
+    kaliop_queueing.message_consumer.monitor.service:
+        class: %kaliop_queueing.message_consumer.monitor.service.class%
+    #    tags:
+    #         - { name: kaliop_queueing.event_listener, event: kaliop_queueing.message_received }
+
+    # A filter used to time message consumption. Enable  (tag it) for testing/development
+    kaliop_queueing.message_consumer.timing.filter.service:
+        class: %kaliop_queueing.message_consumer.timing.filter.service.class%
+        # the number of messages to time
+        arguments: [ 10 ]
+    #    tags:
+    #         - { name: kaliop_queueing.event_listener, event: kaliop_queueing.message_received }

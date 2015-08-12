@@ -44,7 +44,7 @@ class EchoBackCommand extends BaseCommand
         $fileName = $input->getOption( 'file' );
         if ( $fileName != '' )
         {
-           file_put_contents( $fileName, $msg, FILE_APPEND );
+            file_put_contents( $fileName, $msg, FILE_APPEND );
         }
     }
 }

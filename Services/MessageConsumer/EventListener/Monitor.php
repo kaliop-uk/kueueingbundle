@@ -6,6 +6,8 @@ use Kaliop\QueueingBundle\Events\MessageReceivedEvent;
 
 /**
  * A braindead class which can be used to debug consumption of queue messages, by being registered as listener.
+ *
+ * @todo inject the Sf logger and use it for output instead of plain echo?
  */
 class Monitor
 {
