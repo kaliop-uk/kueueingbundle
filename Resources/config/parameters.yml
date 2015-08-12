@@ -26,9 +26,20 @@ parameters:
         - regexp:/.*/
 
     # To be configured in a bundle depending on this one (or in the application):
-    # the Sf services which we allow to execute via queue messages
+    # the Sf services which we allow to execute via queue messages. For each, the allowed php methods as an array
     # If you want to use a regexp, start it with regexp:
-    kaliop_queueing.default.allowed_services: []
+    kaliop_queueing.default.allowed_services:
+        # example service we allow to be used: the logger
+            logger:
+                - log
+        # another example: the mailer
+        #mailer:
+        #    - send
+        ###
+        # IMPORTANT!!! you should most likely disable this in production for security reasons
+        ###
+        #"regexp:/.*/":
+        #    regexp:/.*/
 
     kaliop_queueing.default.available_xmlrpc_servers:
         demo:

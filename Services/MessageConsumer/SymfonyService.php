@@ -44,7 +44,7 @@ class SymfonyService extends MessageConsumer
             ( isset( $body['arguments'] ) && !is_array( $body['arguments'] ) )
         )
         {
-            throw new \UnexpectedValueException( "Message format unsupported: missing 'command'" );
+            throw new \UnexpectedValueException( "Message format unsupported: missing 'service' or 'method' or invalid 'arguments'" );
         }
 
         // for a speed/resource gain, we test: if service is not registered, do not try to run it

@@ -22,9 +22,11 @@ other brokers supporting the amqp protocol are likely to work but untested)
 * A CLI command which can be used to test the above (scheduling remote execution of console commands)
 
 * MessageConsumer, MessageProducer and test cli command to schedule execution of XMLRPC calls to remote servers
-   (note that you will need to install the phpxmlrpc\phpxmlrpc package for this to work)
+    (note that you will need to install the phpxmlrpc\phpxmlrpc package for this to work)
 
-* A MessageConsumer class which can execute methods exposed by Symfony services
+* MessageConsumer and MessageProducer classes which can execute methods exposed by Symfony services.
+    A basic limitation you can implement is to whitelist the service methods  available for execution via queue messages;
+    this is set up via parameters.yml
 
 * An event: kaliop_queueing.message_received, which your services can listen to by usage of tag kaliop_queueing.event_listener
     This allows to filter received messages to introduce e.g. security, logging or other cross-cutting concerns.
@@ -161,5 +163,4 @@ For a start, the same Symfony installation will be used both as message producer
 * the usage of the term "queue" should probably be better explained (it is not the same as rabbit queue name)
 
 * set up filters for existing producers:
-    - limit allowed services to a whitelist
     - set up a list of target servers with options for xmlrpc

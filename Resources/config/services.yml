@@ -12,7 +12,9 @@ parameters:
     kaliop_queueing.message_consumer.console_command.service.class: Kaliop\QueueingBundle\Services\MessageConsumer\ConsoleCommand
     kaliop_queueing.message_consumer.console_command.filter.service.class: Kaliop\QueueingBundle\Services\MessageConsumer\EventListener\ConsoleCommandFilter
 
+    kaliop_queueing.message_producer.symfony_service.service.class: Kaliop\QueueingBundle\Services\MessageProducer\SymfonyService
     kaliop_queueing.message_consumer.symfony_service.service.class: Kaliop\QueueingBundle\Services\MessageConsumer\SymfonyService
+    kaliop_queueing.message_consumer.symfony_service.filter.service.class: Kaliop\QueueingBundle\Services\MessageConsumer\EventListener\SymfonyServiceFilter
 
     kaliop_queueing.message_producer.xmlrpc_call.service.class: Kaliop\QueueingBundle\Services\MessageProducer\XmlrpcCall
     kaliop_queueing.message_consumer.xmlrpc_call.service.class: Kaliop\QueueingBundle\Services\MessageConsumer\XmlrpcCall
@@ -75,10 +77,23 @@ services:
         tags:
              - { name: kaliop_queueing.event_listener, event: kaliop_queueing.message_received }
 
+    kaliop_queueing.message_producer.symfony_service.service:
+        class: %kaliop_queueing.message_producer.symfony_service.service.class%
+        parent: kaliop_queueing.message_producer.service
+        # nb: we assign by default no rabbitmqbundle producer to this service, otherwise it would look like the following:
+        #calls: [ setQueueName, [ producer_name ] ]
+
     kaliop_queueing.message_consumer.symfony_service.service:
         class: %kaliop_queueing.message_consumer.symfony_service.service.class%
-        arguments: [ @kaliop_queueing.worker_manager.service ]
+        arguments: [@service_container]
         parent: kaliop_queueing.message_consumer.service
+
+    # a filter used to limit which service methods can be execute via queue messages
+    kaliop_queueing.message_consumer.symfony_service.filter.service:
+        class: %kaliop_queueing.message_consumer.symfony_service.filter.service.class%
+        arguments: [ %kaliop_queueing.default.allowed_services% ]
+        tags:
+             - { name: kaliop_queueing.event_listener, event: kaliop_queueing.message_received }
 
     kaliop_queueing.message_producer.xmlrpc_call.service:
         class: %kaliop_queueing.message_producer.xmlrpc_call.service.class%
