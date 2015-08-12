@@ -19,14 +19,14 @@ other brokers supporting the amqp protocol are likely to work but untested)
     A basic limitation you can implement is to whitelist the commands available for execution via queue messages; this
     is set up via parameters.yml
 
-* A CLI command which can be used to test the above (scheduling remote execution of console commands)
+* A CLI command which can be used to test the above (distribute execution of console commands)
 
-* MessageConsumer, MessageProducer and test cli command to schedule execution of XMLRPC calls to remote servers
+* MessageConsumer and MessageProducer classes to distribute execution of XMLRPC calls to remote servers
     (note that you will need to install the phpxmlrpc\phpxmlrpc package for this to work)
 
 * MessageConsumer and MessageProducer classes which can execute methods exposed by Symfony services.
     A basic limitation you can implement is to whitelist the service methods  available for execution via queue messages;
-    this is set up via parameters.yml
+    this is set up via parameters.yml    
 
 * An event: kaliop_queueing.message_received, which your services can listen to by usage of tag kaliop_queueing.event_listener
     This allows to filter received messages to introduce e.g. security, logging or other cross-cutting concerns.
@@ -120,9 +120,9 @@ For a start, the same Symfony installation will be used both as message producer
 
     To send to a queue a message specifying execution of the given symfony console command
 
-* php console kaliop_queueing:queuexmlrpc [-ttl=<secs>] [--novalidate] <producer> <server> <method> <args*>
+* php console kaliop_queueing:queuemessage [-ttl=<secs>] [-k=<routing key>] [-c=<content-type>] [-r=<repeat>] <producer> <body>
 
-    To send to a queue a message specifying execution of an xmlrpc call
+    To send to a queue a message in a pre-formatted payload
 
 * php console rabbitmq:consumer -w <consumer>
 
@@ -157,8 +157,6 @@ For a start, the same Symfony installation will be used both as message producer
 * make MessageProducers self-documenting (eg. via usage of xsd or jsonschema)
 
 * allow consumers to easily validate received data: see f.e. https://github.com/justinrainbow/json-schema
-
-* add a new message producer to remotely execute services (methods on services?) instead of console commands
 
 * the usage of the term "queue" should probably be better explained (it is not the same as rabbit queue name)
 
