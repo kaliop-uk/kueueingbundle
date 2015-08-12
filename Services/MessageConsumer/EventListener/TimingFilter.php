@@ -36,8 +36,10 @@ class TimingFilter
             $this->started = microtime(true);
         }
         else if ($this->received === $this->count) {
-            $elapsed = microtime(true) - $this->started;
+            $time = microtime(true);
+            $elapsed = $time - $this->started;
             printf("Time spent to receive {$this->count} messages: %.3f secs (%.3f m/s)\n", $elapsed, $this->count / $elapsed );
+            $this->started = $time;
             $this->received = 0;
         }
         $this->received++;
