@@ -41,6 +41,11 @@ parameters:
         #"regexp:/.*/":
         #    regexp:/.*/
 
+    # To be configured in a bundle depending on this one (or in the application):
+    # the servers which we allow to send http requests to, as an array of server names.
+    # If you want to use a regexp, start it with regexp: - it will match the full url then instead of just the server name
+    kaliop_queueing.default.allowed_urls: []
+
     kaliop_queueing.default.available_xmlrpc_servers:
         demo:
             url:
