@@ -7,7 +7,7 @@
     },
     "require": {
         "ext-curl": "*",
-        "oldsound/rabbitmq-bundle": "1.2.*"
+        "oldsound/rabbitmq-bundle": "~1.2"
     },
     "suggest": {
         "phpxmlrpc/phpxmlrpc": "Used by the message consumer which executes xmlrpc calls. Ver 4.0 or later required"
