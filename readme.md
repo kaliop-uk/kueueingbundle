@@ -53,7 +53,7 @@ other brokers supporting the amqp protocol are likely to work but untested)
     Make sure you have the oldsound/rabbitmq-bundle package installed in Symfony
     (this happens automatically if you are using Composer)
 
-3. Enable the KaliopQueueingBundle bundle, as well as the OldSoundRabbitMqBundle, in your kernel class registerBundles.    
+3. Enable *both* the KaliopQueueingBundle bundle and the OldSoundRabbitMqBundle, in your kernel class registerBundles.    
 
 4. Clear all caches if not on a dev environment
 
