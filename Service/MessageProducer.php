@@ -12,6 +12,7 @@ use Symfony\Component\DependencyInjection\ContainerAware;
  * - define a standard serialization format: json (and support 2 more)
  *
  * @todo it would be nice if we could force subclasses to implement a way to document their message format using e.g. jsonschema
+ * @todo make this independent from rabbitmq bundle - see how a driver was introduced for the consumer part...
  */
 abstract class MessageProducer extends ContainerAware
 {

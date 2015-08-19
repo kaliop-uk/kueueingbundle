@@ -26,9 +26,17 @@ class GenericMessage extends BaseMessageProducer
             $contentType = $this->getContentType();
         }
 
-        // to avoid re-encoding, we partially reimplement here parent::doPublish
-        $this->getProducerService()
-            ->setContentType( $contentType )
-            ->publish( $data, $routingKey, $extras );
+        $this->doPublish( $data, $routingKey, $extras );
+    }
+
+    /**
+     * Since we expect to receive data already encoded as json, no need to reencode
+     *
+     * @param mixed $data
+     * @return mixed
+     */
+    protected function encodeMessageBody( $data )
+    {
+        return $data;
     }
 }
