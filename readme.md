@@ -145,6 +145,9 @@ For a start, the same Symfony installation will be used both as message producer
 
 * Kaliop\QueueingBundle\Events\EventsList::PROCESS_STOPPED emitted when the watchdog stops a process
 
+Note : these events are not dispatched by Symfony2's event dispatcher as such you cannot register listeners with the
+``kernel.event_listener`` tag, or the ``@DI\Observe`` annotation. See the examples in services.yml on how to use them.
+
 
 ## Todo
 
