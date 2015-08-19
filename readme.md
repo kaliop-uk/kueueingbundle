@@ -141,11 +141,11 @@ For a start, the same Symfony installation will be used both as message producer
 
 ## Events available:
 
-* Kaliop\QueueingBundle\Events\EventsList::MESSAGE_RECEIVED emitted when a message is gotten from the queue, before it is consumed
+* Kaliop\QueueingBundle\Event\EventsList::MESSAGE_RECEIVED emitted when a message is gotten from the queue, before it is consumed
 
-* Kaliop\QueueingBundle\Events\EventsList::PROCESS_STARTED emitted when the watchdog starts a process
+* Kaliop\QueueingBundle\Event\EventsList::PROCESS_STARTED emitted when the watchdog starts a process
 
-* Kaliop\QueueingBundle\Events\EventsList::PROCESS_STOPPED emitted when the watchdog stops a process
+* Kaliop\QueueingBundle\Event\EventsList::PROCESS_STOPPED emitted when the watchdog stops a process
 
 Note : these events are not dispatched by Symfony2's event dispatcher as such you cannot register listeners with the
 ``kernel.event_listener`` tag, or the ``@DI\Observe`` annotation. See the examples in services.yml on how to use them.

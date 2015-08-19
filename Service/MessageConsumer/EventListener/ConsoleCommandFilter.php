@@ -1,8 +1,8 @@
 <?php
 
-namespace Kaliop\QueueingBundle\Services\MessageConsumer\EventListener;
+namespace Kaliop\QueueingBundle\Service\MessageConsumer\EventListener;
 
-use Kaliop\QueueingBundle\Events\MessageReceivedEvent;
+use Kaliop\QueueingBundle\Event\MessageReceivedEvent;
 
 /**
  * A class which can be registered as listener in order to filter ConsoleCommand messages
@@ -19,7 +19,7 @@ class ConsoleCommandFilter
     public function onMessageReceived(MessageReceivedEvent $event)
     {
         // filter out unwanted events
-        if (! $event->getConsumer() instanceof \Kaliop\QueueingBundle\Services\MessageConsumer\ConsoleCommand)
+        if (! $event->getConsumer() instanceof \Kaliop\QueueingBundle\Service\MessageConsumer\ConsoleCommand)
             return;
 
         $body = $event->getBody();

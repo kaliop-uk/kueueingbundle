@@ -5,9 +5,9 @@ namespace Kaliop\QueueingBundle\Helper;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Process\Exception\RuntimeException;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Kaliop\QueueingBundle\Events\EventsList;
-use Kaliop\QueueingBundle\Events\ProcessStartedEvent;
-use Kaliop\QueueingBundle\Events\ProcessStoppedEvent;
+use Kaliop\QueueingBundle\Event\EventsList;
+use Kaliop\QueueingBundle\Event\ProcessStartedEvent;
+use Kaliop\QueueingBundle\Event\ProcessStoppedEvent;
 
 /**
  * Used to check that the "daemon" processes we want to keep running are alive

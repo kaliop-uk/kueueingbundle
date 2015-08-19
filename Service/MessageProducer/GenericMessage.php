@@ -1,8 +1,8 @@
 <?php
 
-namespace Kaliop\QueueingBundle\Services\MessageProducer;
+namespace Kaliop\QueueingBundle\Service\MessageProducer;
 
-use Kaliop\QueueingBundle\Services\MessageProducer as BaseMessageProducer;
+use Kaliop\QueueingBundle\Service\MessageProducer as BaseMessageProducer;
 
 /**
  * Pushes messages which come already formatted

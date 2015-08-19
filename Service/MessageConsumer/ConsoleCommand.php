@@ -1,8 +1,8 @@
 <?php
 
-namespace Kaliop\QueueingBundle\Services\MessageConsumer;
+namespace Kaliop\QueueingBundle\Service\MessageConsumer;
 
-use Kaliop\QueueingBundle\Services\MessageConsumer;
+use Kaliop\QueueingBundle\Service\MessageConsumer;
 use Kaliop\QueueingBundle\Command\ConsumerCommand;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Process\Process;

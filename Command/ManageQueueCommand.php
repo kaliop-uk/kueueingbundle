@@ -44,7 +44,7 @@ class ManageQueueCommand extends BaseCommand
         $command = $input->getArgument( 'mode' );
         $queue = $input->getArgument( 'queue_name' );
 
-        /// @var \Kaliop\QueueingBundle\Services\MessageProducer\ $messageBroker
+        /// @var \Kaliop\QueueingBundle\Service\MessageProducer\ $messageBroker
         $messageBroker = $this->getContainer()->get( 'kaliop_queueing.message_producer.queue_control.service' );
 
         if ( $command == 'list' || $command == 'help' )

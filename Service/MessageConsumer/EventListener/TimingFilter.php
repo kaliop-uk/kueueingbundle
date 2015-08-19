@@ -1,8 +1,8 @@
 <?php
 
-namespace Kaliop\QueueingBundle\Services\MessageConsumer\EventListener;
+namespace Kaliop\QueueingBundle\Service\MessageConsumer\EventListener;
 
-use Kaliop\QueueingBundle\Events\MessageReceivedEvent;
+use Kaliop\QueueingBundle\Event\MessageReceivedEvent;
 
 /**
  * A class which can be registered as listener in order to measure the speed of message consumption:

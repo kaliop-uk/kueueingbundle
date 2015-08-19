@@ -5,8 +5,8 @@ namespace Kaliop\QueueingBundle\Services;
 use OldSound\RabbitMqBundle\RabbitMq\ConsumerInterface;
 use PhpAmqpLib\Message\AMQPMessage;
 use Psr\Log\LoggerInterface;
-use Kaliop\QueueingBundle\Events\EventsList;
-use Kaliop\QueueingBundle\Events\MessageReceivedEvent;
+use Kaliop\QueueingBundle\Event\EventsList;
+use Kaliop\QueueingBundle\Event\MessageReceivedEvent;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**

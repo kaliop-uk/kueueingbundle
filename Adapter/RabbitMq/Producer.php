@@ -1,20 +1,30 @@
 <?php
-/**
- * User: gaetano.giunta
- * Date: 19/05/14
- * Time: 21.40
- */
 
-namespace Kaliop\QueueingBundle\Adapters\RabbitMq;
+namespace Kaliop\QueueingBundle\Adapter\RabbitMq;
 
-use OldSound\RabbitMqBundle\RabbitMq\Consumer as BaseConsumer;
+use OldSound\RabbitMqBundle\RabbitMq\Producer as BaseProducer;
+use PhpAmqpLib\Message\AMQPMessage;
 
 /**
- * Extends the parent class to allow users to get access to the queue
+ * Extends the parent class to add some extra parameters per-message when sending, and allow users to get access to the queue
  */
-class Consumer extends BaseConsumer
+class Producer extends BaseProducer
 {
     protected $queueStats = array();
+
+    public function publish( $msgBody, $routingKey = '', $params=array() )
+    {
+        if ( $this->autoSetupFabric )
+        {
+            $this->setupFabric();
+        }
+
+        $msg = new AMQPMessage(
+            $msgBody,
+            array_merge( array( 'content_type' => $this->contentType, 'delivery_mode' => $this->deliveryMode ), $params )
+        );
+        $this->getChannel()->basic_publish( $msg, $this->exchangeOptions['name'], $routingKey );
+    }
 
     public function getQueueOptions()
     {

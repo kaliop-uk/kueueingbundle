@@ -1,31 +1,31 @@
 parameters:
-    kaliop_queueing.worker_manager.service.class: Kaliop\QueueingBundle\Services\WorkerManager
+    kaliop_queueing.worker_manager.service.class: Kaliop\QueueingBundle\Service\WorkerManager
     kaliop_queueing.watchdog.service.class: Kaliop\QueueingBundle\Helper\Watchdog
     kaliop_queueing.event_dispatcher.class: Symfony\Component\EventDispatcher\ContainerAwareEventDispatcher
-    kaliop_queueing.message_consumer.monitor.service.class: Kaliop\QueueingBundle\Services\MessageConsumer\EventListener\Monitor
+    kaliop_queueing.message_consumer.monitor.service.class: Kaliop\QueueingBundle\Service\MessageConsumer\EventListener\Monitor
 
-    kaliop_queueing.message_producer.service.class: Kaliop\QueueingBundle\Services\MessageProducer
-    kaliop_queueing.message_consumer.service.class: Kaliop\QueueingBundle\Services\MessageConsumer
-    kaliop_queueing.message_producer.generic_message.service.class: Kaliop\QueueingBundle\Services\MessageProducer\GenericMessage
-    kaliop_queueing.message_producer.queue_control.service.class: Kaliop\QueueingBundle\Services\MessageProducer\QueueControl
+    kaliop_queueing.message_producer.service.class: Kaliop\QueueingBundle\Service\MessageProducer
+    kaliop_queueing.message_consumer.service.class: Kaliop\QueueingBundle\Service\MessageConsumer
+    kaliop_queueing.message_producer.generic_message.service.class: Kaliop\QueueingBundle\Service\MessageProducer\GenericMessage
+    kaliop_queueing.message_producer.queue_control.service.class: Kaliop\QueueingBundle\Service\MessageProducer\QueueControl
 
-    kaliop_queueing.message_producer.console_command.service.class: Kaliop\QueueingBundle\Services\MessageProducer\ConsoleCommand
-    kaliop_queueing.message_consumer.console_command.service.class: Kaliop\QueueingBundle\Services\MessageConsumer\ConsoleCommand
-    kaliop_queueing.message_consumer.console_command.filter.service.class: Kaliop\QueueingBundle\Services\MessageConsumer\EventListener\ConsoleCommandFilter
+    kaliop_queueing.message_producer.console_command.service.class: Kaliop\QueueingBundle\Service\MessageProducer\ConsoleCommand
+    kaliop_queueing.message_consumer.console_command.service.class: Kaliop\QueueingBundle\Service\MessageConsumer\ConsoleCommand
+    kaliop_queueing.message_consumer.console_command.filter.service.class: Kaliop\QueueingBundle\Service\MessageConsumer\EventListener\ConsoleCommandFilter
 
-    kaliop_queueing.message_producer.symfony_service.service.class: Kaliop\QueueingBundle\Services\MessageProducer\SymfonyService
-    kaliop_queueing.message_consumer.symfony_service.service.class: Kaliop\QueueingBundle\Services\MessageConsumer\SymfonyService
-    kaliop_queueing.message_consumer.symfony_service.filter.service.class: Kaliop\QueueingBundle\Services\MessageConsumer\EventListener\SymfonyServiceFilter
+    kaliop_queueing.message_producer.symfony_service.service.class: Kaliop\QueueingBundle\Service\MessageProducer\SymfonyService
+    kaliop_queueing.message_consumer.symfony_service.service.class: Kaliop\QueueingBundle\Service\MessageConsumer\SymfonyService
+    kaliop_queueing.message_consumer.symfony_service.filter.service.class: Kaliop\QueueingBundle\Service\MessageConsumer\EventListener\SymfonyServiceFilter
 
-    kaliop_queueing.message_producer.xmlrpc_call.service.class: Kaliop\QueueingBundle\Services\MessageProducer\XmlrpcCall
-    kaliop_queueing.message_consumer.xmlrpc_call.service.class: Kaliop\QueueingBundle\Services\MessageConsumer\XmlrpcCall
+    kaliop_queueing.message_producer.xmlrpc_call.service.class: Kaliop\QueueingBundle\Service\MessageProducer\XmlrpcCall
+    kaliop_queueing.message_consumer.xmlrpc_call.service.class: Kaliop\QueueingBundle\Service\MessageConsumer\XmlrpcCall
 
-    kaliop_queueing.message_producer.http_request.service.class: Kaliop\QueueingBundle\Services\MessageProducer\HTTPRequest
-    kaliop_queueing.message_consumer.http_request.service.class: Kaliop\QueueingBundle\Services\MessageConsumer\HTTPRequest
-    kaliop_queueing.message_consumer.http_request.filter.service.class: Kaliop\QueueingBundle\Services\MessageConsumer\EventListener\HTTPRequestFilter
+    kaliop_queueing.message_producer.http_request.service.class: Kaliop\QueueingBundle\Service\MessageProducer\HTTPRequest
+    kaliop_queueing.message_consumer.http_request.service.class: Kaliop\QueueingBundle\Service\MessageConsumer\HTTPRequest
+    kaliop_queueing.message_consumer.http_request.filter.service.class: Kaliop\QueueingBundle\Service\MessageConsumer\EventListener\HTTPRequestFilter
 
-    kaliop_queueing.message_consumer.noop.service.class: Kaliop\QueueingBundle\Services\MessageConsumer\Noop
-    kaliop_queueing.message_consumer.timing.filter.service.class: Kaliop\QueueingBundle\Services\MessageConsumer\EventListener\TimingFilter
+    kaliop_queueing.message_consumer.noop.service.class: Kaliop\QueueingBundle\Service\MessageConsumer\Noop
+    kaliop_queueing.message_consumer.timing.filter.service.class: Kaliop\QueueingBundle\Service\MessageConsumer\EventListener\TimingFilter
 
 services:
 

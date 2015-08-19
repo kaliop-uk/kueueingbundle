@@ -1,6 +1,6 @@
 <?php
 
-namespace Kaliop\QueueingBundle\Events;
+namespace Kaliop\QueueingBundle\Event;
 
 final class EventsList
 {

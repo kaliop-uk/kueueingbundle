@@ -1,6 +1,6 @@
 <?php
 
-namespace Kaliop\QueueingBundle\Events;
+namespace Kaliop\QueueingBundle\Event;
 
 use Symfony\Component\EventDispatcher\Event;
 use PhpAmqpLib\Message\AMQPMessage;

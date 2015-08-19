@@ -5,9 +5,9 @@
  * Time: 19.08
  */
 
-namespace Kaliop\QueueingBundle\Services\MessageProducer;
+namespace Kaliop\QueueingBundle\Service\MessageProducer;
 
-use Kaliop\QueueingBundle\Services\MessageProducer as BaseMessageProducer;
+use Kaliop\QueueingBundle\Service\MessageProducer as BaseMessageProducer;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use InvalidArgumentException;
 

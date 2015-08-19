@@ -1,8 +1,8 @@
 <?php
 
-namespace Kaliop\QueueingBundle\Services\MessageConsumer\EventListener;
+namespace Kaliop\QueueingBundle\Service\MessageConsumer\EventListener;
 
-use Kaliop\QueueingBundle\Events\MessageReceivedEvent;
+use Kaliop\QueueingBundle\Event\MessageReceivedEvent;
 
 /**
  * A class which can be registered as listener in order to filter SymfonyService messages
@@ -19,7 +19,7 @@ class HTTPRequestFilter
     public function onMessageReceived(MessageReceivedEvent $event)
     {
         // filter out unwanted events
-        if (! $event->getConsumer() instanceof \Kaliop\QueueingBundle\Services\MessageConsumer\HTTPRequest)
+        if (! $event->getConsumer() instanceof \Kaliop\QueueingBundle\Service\MessageConsumer\HTTPRequest)
             return;
 
         $body = $event->getBody();

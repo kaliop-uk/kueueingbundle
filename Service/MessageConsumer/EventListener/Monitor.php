@@ -1,8 +1,8 @@
 <?php
 
-namespace Kaliop\QueueingBundle\Services\MessageConsumer\EventListener;
+namespace Kaliop\QueueingBundle\Service\MessageConsumer\EventListener;
 
-use Kaliop\QueueingBundle\Events\MessageReceivedEvent;
+use Kaliop\QueueingBundle\Event\MessageReceivedEvent;
 
 /**
  * A braindead class which can be used to debug consumption of queue messages, by being registered as listener.
