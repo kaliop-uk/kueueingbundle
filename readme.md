@@ -151,19 +151,24 @@ Note : these events are not dispatched by Symfony2's event dispatcher as such yo
 ``kernel.event_listener`` tag, or the ``@DI\Observe`` annotation. See the examples in services.yml on how to use them.
 
 
-## Todo
+## Similar packages
 
-* more docs: graphical schemas representing the bits and pieces and data flow
+The work done here is by no means unique; it seems that there are already a lot of php packages dealing with queues
+and abstracting away from the details of the transport protocols. 
 
-* add an interface to be implemented by message producers (can we do it with a method with variable arguments?)
+What follows is neither an endorsement statement, nor a definitive list by any measure, more of a reminder for the
+developers of this library of where to turn to to get inspiration and borrow code from ;-)
 
-* add an optional timeout parameter for remote command execution (not the time to wait in the queue)
+* zendframework/zend-queue - https://github.com/zendframework/ZendQueue
 
-* make MessageProducers self-documenting (eg. via usage of xsd or jsonschema)
+* slm/queue - https://github.com/juriansluiman/SlmQueue
 
-* allow consumers to easily validate received data: see f.e. https://github.com/justinrainbow/json-schema
+* jms/job-queue-bundle - https://github.com/schmittjoh/JMSJobQueueBundle
 
-* the usage of the term "queue" should probably be better explained (it is not the same as rabbit queue name)
+* bernard/bernard - https://github.com/bernardphp/bernard
 
-* set up filters for existing producers:
-    - set up a list of target servers with options for xmlrpc
+* wowo/wowo-queue-bundle - https://github.com/wowo/WowoQueueBundle
+
+* grimkirill/queue - https://github.com/grimkirill/queue
+
+* swarrot/swarrot - https://github.com/swarrot/swarrot
