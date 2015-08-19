@@ -1,6 +1,9 @@
 
 # Example of configuration of the queue used to distribute execution of console commands to workers.
+
 # NB: this file is NOT parsed, you will have to add a similar configuration to your bundle/application
+
+# NB: if you get an error that this configuration is invalid, it might be because you forgot to activate the OldSoundRabbitMqBundle
 
 old_sound_rabbit_mq:
 
