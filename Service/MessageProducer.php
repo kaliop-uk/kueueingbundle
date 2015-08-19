@@ -1,6 +1,6 @@
 <?php
 
-namespace Kaliop\QueueingBundle\Services;
+namespace Kaliop\QueueingBundle\Service;
 
 use Symfony\Component\DependencyInjection\ContainerAware;
 
@@ -79,7 +79,7 @@ abstract class MessageProducer extends ContainerAware
 
     /**
      * Encodes data according to current content type.
-     * If you reimplement this in a subclass, do not forget to also add new types to self::$knownContenTypes
+     * If you reimplement this in a subclass, do not forget to also add new types to self::$knownContentTypes
      * @param mixed $data
      * @return string
      * @throws \UnexpectedValueException

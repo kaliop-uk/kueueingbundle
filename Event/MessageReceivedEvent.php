@@ -3,7 +3,7 @@
 namespace Kaliop\QueueingBundle\Event;
 
 use Symfony\Component\EventDispatcher\Event;
-use PhpAmqpLib\Message\AMQPMessage;
+use Kaliop\QueueingBundle\Queue\MessageInterface;
 
 class MessageReceivedEvent extends Event
 {
@@ -11,7 +11,7 @@ class MessageReceivedEvent extends Event
     protected $message;
     protected $consumer;
 
-    public function __construct( $body, AMQPMessage $message, $consumer )
+    public function __construct( $body, MessageInterface $message, $consumer )
     {
         $this->body = $body;
         $this->message = $message;

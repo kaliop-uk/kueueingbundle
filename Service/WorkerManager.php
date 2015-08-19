@@ -1,6 +1,6 @@
 <?php
 
-namespace Kaliop\QueueingBundle\Services;
+namespace Kaliop\QueueingBundle\Service;
 
 use Symfony\Component\Process\PhpExecutableFinder;
 

@@ -1,4 +1,5 @@
 parameters:
+    kaliop_queueing.driver.rabbitmq.service.class: Kaliop\QueueingBundle\Adapter\RabbitMq\Driver
     kaliop_queueing.worker_manager.service.class: Kaliop\QueueingBundle\Service\WorkerManager
     kaliop_queueing.watchdog.service.class: Kaliop\QueueingBundle\Helper\Watchdog
     kaliop_queueing.event_dispatcher.class: Symfony\Component\EventDispatcher\ContainerAwareEventDispatcher
@@ -28,6 +29,9 @@ parameters:
     kaliop_queueing.message_consumer.timing.filter.service.class: Kaliop\QueueingBundle\Service\MessageConsumer\EventListener\TimingFilter
 
 services:
+
+    kaliop_queueing.driver.rabbitmq.service:
+        class: %kaliop_queueing.driver.rabbitmq.service.class%
 
     kaliop_queueing.event_dispatcher.service:
         class: %kaliop_queueing.event_dispatcher.class%
@@ -62,6 +66,7 @@ services:
         calls:
             - [ setLogger, [ @?logger ] ]
             - [ setDispatcher, [ @kaliop_queueing.event_dispatcher.service ] ]
+            - [ registerDriver, [ @kaliop_queueing.driver.rabbitmq.service ] ]
         tags:
             - { name: monolog.logger, channel: kaliop_queueing }
 

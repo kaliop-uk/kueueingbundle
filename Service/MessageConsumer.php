@@ -1,12 +1,14 @@
 <?php
 
-namespace Kaliop\QueueingBundle\Services;
+namespace Kaliop\QueueingBundle\Service;
 
 use OldSound\RabbitMqBundle\RabbitMq\ConsumerInterface;
 use PhpAmqpLib\Message\AMQPMessage;
 use Psr\Log\LoggerInterface;
 use Kaliop\QueueingBundle\Event\EventsList;
 use Kaliop\QueueingBundle\Event\MessageReceivedEvent;
+use Kaliop\QueueingBundle\Queue\MessageInterface;
+use Kaliop\QueueingBundle\Adapter\DriverInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -20,11 +22,13 @@ abstract class MessageConsumer implements ConsumerInterface
     protected $acceptedContentTypes = array(
         'application/json',
     );
-    // we do not specify a type for this, as we could have different messages depending on transport (one day)
+    /** @var  \Kaliop\QueueingBundle\Queue\MessageInterface */
     protected $message;
     /** @var  \Psr\Log\LoggerInterface $logger */
     protected $logger;
     protected $dispatcher;
+    /** @var DriverInterface[] */
+    protected $drivers = array();
 
     /**
      * The method to be implemented by subclasses, executed upon reception of a message.
@@ -44,6 +48,14 @@ abstract class MessageConsumer implements ConsumerInterface
     public function setDispatcher( EventDispatcherInterface $dispatcher=null )
     {
         $this->dispatcher = $dispatcher;
+    }
+
+    /**
+     * @param DriverInterface $driver
+     */
+    public function registerDriver(DriverInterface $driver)
+    {
+        $this->drivers[] = $driver;
     }
 
     /**
@@ -75,11 +87,38 @@ abstract class MessageConsumer implements ConsumerInterface
     }
 
     /**
+     * We need this method to be declared in order for this class to be usable as consumer by the RabbitMQ bundle
      * @param AMQPMessage $msg
+     */
+    public function execute( AMQPMessage $msg )
+    {
+        $this->decodeAndConsume($this->getDriver($msg)->decodeMessage($msg));
+    }
+
+    /**
+     * Finds a driver appropriate to decode the message
+     *
+     * @param mixed $message
+     * @return DriverInterface
+     * @throws \Exception
+     */
+    protected function getDriver($message)
+    {
+        foreach($this->drivers as $driver) {
+            if ($driver->acceptMessage($message))
+                return $driver;
+        }
+
+        throw new \Exception('No driver found to decode message of type: '.get_class($message));
+    }
+
+    /**
+     * Decodes the message body, dispatches the reception event, and calls consume()
+     * @param MessageInterface $msg
      *
      * @todo validate message format
      */
-    public function execute( AMQPMessage $msg )
+    protected function decodeAndConsume( MessageInterface $msg )
     {
         try
         {
@@ -109,14 +148,15 @@ abstract class MessageConsumer implements ConsumerInterface
 
     /**
      * Works on the basis of the assumed and accepted content types
-     * @param AMQPMessage $msg
+     *
+     * @param MessageInterface $msg
      * @return mixed
      * @throws \RuntimeException
      * @throws \UnexpectedValueException
      */
-    protected function decodeMessageBody( AMQPMessage $msg )
+    protected function decodeMessageBody( MessageInterface $msg )
     {
-        $properties = $msg->get_properties();
+        $properties = $msg->getProperties();
         // do we accept this type? (nb: this is an optional property)
         $type = @$properties['content_type'];
         if ( $type == '' && $this->assumedContentType != '' )
@@ -132,7 +172,7 @@ abstract class MessageConsumer implements ConsumerInterface
         switch( $properties['content_type'] )
         {
             case 'application/json':
-                $data = json_decode( $msg->body, true );
+                $data = json_decode( $msg->getBody(), true );
                 if ( $error = json_last_error() )
                 {
                     throw new \UnexpectedValueException( "Error decoding json payload: " . $error );
@@ -150,4 +190,5 @@ abstract class MessageConsumer implements ConsumerInterface
                 throw new \UnexpectedValueException( "Serialization format unsupported: " . $type );
         }
     }
+
 }
