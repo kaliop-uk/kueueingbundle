@@ -2,7 +2,7 @@
 
 namespace Kaliop\QueueingBundle\Service;
 
-use Symfony\Component\DependencyInjection\ContainerAware;
+use Kaliop\QueueingBundle\Adapter\DriverInterface;
 
 /**
  * A helper class, exposed as service.
@@ -14,7 +14,7 @@ use Symfony\Component\DependencyInjection\ContainerAware;
  * @todo it would be nice if we could force subclasses to implement a way to document their message format using e.g. jsonschema
  * @todo make this independent from rabbitmq bundle - see how a driver was introduced for the consumer part...
  */
-abstract class MessageProducer extends ContainerAware
+abstract class MessageProducer
 {
     protected $queue = null;
     protected $contentType = 'application/json';
@@ -23,6 +23,16 @@ abstract class MessageProducer extends ContainerAware
         'application/x-httpd-php-source',
         'vnd.php.serialized'
     );
+    /** @var DriverInterface */
+    protected $driver;
+
+    /**
+     * @param DriverInterface $driver
+     */
+    public function __construct(DriverInterface $driver)
+    {
+        $this->driver = $driver;
+    }
 
     /**
      * NB: when used for RabbitMQ, the queue name is the name of the producer as defined in old_sound_rabbit_mq.producers,
@@ -48,11 +58,11 @@ abstract class MessageProducer extends ContainerAware
     }
 
     /**
-     * @return \OldSound\RabbitMqBundle\RabbitMq\Producer
+     * @return \Kaliop\QueueingBundle\Queue\MessageProducerInterface
      */
     protected function getProducerService()
     {
-        return $this->container->get( 'old_sound_rabbit_mq.' . $this->getQueueName() .'_producer' );
+        return $this->driver->getMessageProducer( $this->getQueueName());
     }
 
     /**

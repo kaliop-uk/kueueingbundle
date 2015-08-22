@@ -50,6 +50,7 @@ class QueueConsoleCommandCommand extends BaseCommand
             }
         }
 
+        /// @todo move into the driver
         if ( defined( 'AMQP_DEBUG' ) === false )
         {
             define( 'AMQP_DEBUG', (bool)$input->getOption( 'debug' ) );
@@ -69,7 +70,7 @@ class QueueConsoleCommandCommand extends BaseCommand
             }
         }
 
-        $messageProducer = $this->getContainer()->get( 'kaliop_queueing.message_producer.console_command.service' );
+        $messageProducer = $this->getContainer()->get( 'kaliop_queueing.message_producer.console_command' );
         $messageProducer->setQueueName( $queue );
         try
         {

@@ -12,7 +12,7 @@ use Kaliop\QueueingBundle\Event\MessageReceivedEvent;
  *
  * @todo inject the Sf logger and use it for output instead of plain echo?
  */
-class TimingFilter
+class StopwatchFilter
 {
     protected $count;
     protected $received = 0;

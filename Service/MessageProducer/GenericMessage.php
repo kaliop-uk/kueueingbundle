@@ -30,7 +30,7 @@ class GenericMessage extends BaseMessageProducer
     }
 
     /**
-     * Since we expect to receive data already encoded as json, no need to reencode
+     * Since we expect to receive data already encoded, no need to reencode
      *
      * @param mixed $data
      * @return mixed

@@ -54,7 +54,7 @@ old_sound_rabbit_mq:
                 # NB take extra care about securing your environment when you allow execution of commands sent from remote hosts
                 routing_keys: [ # ]
             # the name of the callback is fixed
-            callback: kaliop_queueing.message_consumer.console_command.service
+            callback: kaliop_queueing.message_consumer.console_command
 
         # This is the name used in the worker command-line: php console rabbitmq:consumer -w <name>
         # You can create many similar registrations if you want to run different workers in parallel
@@ -73,7 +73,7 @@ old_sound_rabbit_mq:
                 # NB take extra care about securing your environment when you allow execution of commands sent from remote hosts
                 routing_keys: [ '#' ]
             # the name of the callback is fixed
-            callback: kaliop_queueing.message_consumer.symfony_service.service
+            callback: kaliop_queueing.message_consumer.symfony_service
 
         xmlrpc_call_executor:
             connection: default
@@ -88,4 +88,4 @@ old_sound_rabbit_mq:
                 # NB take extra care about securing your environment when you allow execution of commands sent from remote hosts
                 routing_keys: [ '#' ]
             # the name of the callback is fixed
-            callback: kaliop_queueing.message_consumer.xmlrpc_call.service
+            callback: kaliop_queueing.message_consumer.xmlrpc_call

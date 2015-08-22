@@ -1,153 +1,177 @@
 parameters:
-    kaliop_queueing.driver.rabbitmq.service.class: Kaliop\QueueingBundle\Adapter\RabbitMq\Driver
-    kaliop_queueing.worker_manager.service.class: Kaliop\QueueingBundle\Service\WorkerManager
-    kaliop_queueing.watchdog.service.class: Kaliop\QueueingBundle\Helper\Watchdog
+    kaliop_queueing.driver.rabbitmq.class: Kaliop\QueueingBundle\Adapter\RabbitMq\Driver
+    kaliop_queueing.worker_manager.class: Kaliop\QueueingBundle\Service\WorkerManager
+    kaliop_queueing.watchdog.class: Kaliop\QueueingBundle\Helper\Watchdog
     kaliop_queueing.event_dispatcher.class: Symfony\Component\EventDispatcher\ContainerAwareEventDispatcher
-    kaliop_queueing.message_consumer.monitor.service.class: Kaliop\QueueingBundle\Service\MessageConsumer\EventListener\Monitor
 
-    kaliop_queueing.message_producer.service.class: Kaliop\QueueingBundle\Service\MessageProducer
-    kaliop_queueing.message_consumer.service.class: Kaliop\QueueingBundle\Service\MessageConsumer
-    kaliop_queueing.message_producer.generic_message.service.class: Kaliop\QueueingBundle\Service\MessageProducer\GenericMessage
-    kaliop_queueing.message_producer.queue_control.service.class: Kaliop\QueueingBundle\Service\MessageProducer\QueueControl
 
-    kaliop_queueing.message_producer.console_command.service.class: Kaliop\QueueingBundle\Service\MessageProducer\ConsoleCommand
-    kaliop_queueing.message_consumer.console_command.service.class: Kaliop\QueueingBundle\Service\MessageConsumer\ConsoleCommand
-    kaliop_queueing.message_consumer.console_command.filter.service.class: Kaliop\QueueingBundle\Service\MessageConsumer\EventListener\ConsoleCommandFilter
+    kaliop_queueing.message_producer.class: Kaliop\QueueingBundle\Service\MessageProducer
+    kaliop_queueing.message_consumer.class: Kaliop\QueueingBundle\Service\MessageConsumer
 
-    kaliop_queueing.message_producer.symfony_service.service.class: Kaliop\QueueingBundle\Service\MessageProducer\SymfonyService
-    kaliop_queueing.message_consumer.symfony_service.service.class: Kaliop\QueueingBundle\Service\MessageConsumer\SymfonyService
-    kaliop_queueing.message_consumer.symfony_service.filter.service.class: Kaliop\QueueingBundle\Service\MessageConsumer\EventListener\SymfonyServiceFilter
+    kaliop_queueing.message_producer.generic_message.class: Kaliop\QueueingBundle\Service\MessageProducer\GenericMessage
 
-    kaliop_queueing.message_producer.xmlrpc_call.service.class: Kaliop\QueueingBundle\Service\MessageProducer\XmlrpcCall
-    kaliop_queueing.message_consumer.xmlrpc_call.service.class: Kaliop\QueueingBundle\Service\MessageConsumer\XmlrpcCall
+    kaliop_queueing.message_producer.console_command.class: Kaliop\QueueingBundle\Service\MessageProducer\ConsoleCommand
+    kaliop_queueing.message_consumer.console_command.class: Kaliop\QueueingBundle\Service\MessageConsumer\ConsoleCommand
+    kaliop_queueing.message_consumer.console_command.filter.class: Kaliop\QueueingBundle\Service\MessageConsumer\EventListener\ConsoleCommandFilter
 
-    kaliop_queueing.message_producer.http_request.service.class: Kaliop\QueueingBundle\Service\MessageProducer\HTTPRequest
-    kaliop_queueing.message_consumer.http_request.service.class: Kaliop\QueueingBundle\Service\MessageConsumer\HTTPRequest
-    kaliop_queueing.message_consumer.http_request.filter.service.class: Kaliop\QueueingBundle\Service\MessageConsumer\EventListener\HTTPRequestFilter
+    kaliop_queueing.message_producer.symfony_service.class: Kaliop\QueueingBundle\Service\MessageProducer\SymfonyService
+    kaliop_queueing.message_consumer.symfony_service.class: Kaliop\QueueingBundle\Service\MessageConsumer\SymfonyService
+    kaliop_queueing.message_consumer.symfony_service.filter.class: Kaliop\QueueingBundle\Service\MessageConsumer\EventListener\SymfonyServiceFilter
 
-    kaliop_queueing.message_consumer.noop.service.class: Kaliop\QueueingBundle\Service\MessageConsumer\Noop
-    kaliop_queueing.message_consumer.timing.filter.service.class: Kaliop\QueueingBundle\Service\MessageConsumer\EventListener\TimingFilter
+    kaliop_queueing.message_producer.http_request.class: Kaliop\QueueingBundle\Service\MessageProducer\HTTPRequest
+    kaliop_queueing.message_consumer.http_request.class: Kaliop\QueueingBundle\Service\MessageConsumer\HTTPRequest
+    kaliop_queueing.message_consumer.http_request.filter.class: Kaliop\QueueingBundle\Service\MessageConsumer\EventListener\HTTPRequestFilter
+
+    kaliop_queueing.message_producer.xmlrpc_call.class: Kaliop\QueueingBundle\Service\MessageProducer\XmlrpcCall
+    kaliop_queueing.message_consumer.xmlrpc_call.class: Kaliop\QueueingBundle\Service\MessageConsumer\XmlrpcCall
+
+    kaliop_queueing.message_producer.queue_control.class: Kaliop\QueueingBundle\Service\MessageProducer\AMQPQueueControl
+
+    kaliop_queueing.message_consumer.noop.class: Kaliop\QueueingBundle\Service\MessageConsumer\Noop
+
+    kaliop_queueing.message_consumer.filter.monitor.class: Kaliop\QueueingBundle\Service\MessageConsumer\EventListener\Monitor
+    kaliop_queueing.message_consumer.filter.stopwatch.class: Kaliop\QueueingBundle\Service\MessageConsumer\EventListener\StopwatchFilter
 
 services:
 
-    kaliop_queueing.driver.rabbitmq.service:
-        class: %kaliop_queueing.driver.rabbitmq.service.class%
+    kaliop_queueing.driver.rabbitmq:
+        class: %kaliop_queueing.driver.rabbitmq.class%
+        calls:
+            - [ setContainer, [ @service_container ] ]
 
-    kaliop_queueing.event_dispatcher.service:
+    kaliop_queueing.event_dispatcher:
         class: %kaliop_queueing.event_dispatcher.class%
         arguments: [@service_container]
 
-    kaliop_queueing.worker_manager.service:
-         class: %kaliop_queueing.worker_manager.service.class%
+    kaliop_queueing.worker_manager:
+         class: %kaliop_queueing.worker_manager.class%
          arguments: [ %kaliop_queueing.default.workers.list%, %kernel.root_dir% ]
 
-    kaliop_queueing.watchdog.service:
-        class: %kaliop_queueing.watchdog.service.class%
-        arguments: [ @kaliop_queueing.event_dispatcher.service ]
+    kaliop_queueing.watchdog:
+        class: %kaliop_queueing.watchdog.class%
+        arguments: [ @kaliop_queueing.event_dispatcher ]
 
-    kaliop_queueing.message_producer.service:
-         class: %kaliop_queueing.message_producer.service.class%
-         calls:
-             # the name of the queue is declared on the command line, no need to put it here via setQueuename
-             - [ setContainer, [ @service_container ] ]
+    ### Producers ###
 
-    kaliop_queueing.message_producer.queue_control.service:
-        class: %kaliop_queueing.message_producer.queue_control.service.class%
-        parent: kaliop_queueing.message_producer.service
+    # The base service - mapped to an abstract class
+    kaliop_queueing.message_producer:
+         class: %kaliop_queueing.message_producer.class%
+         arguments: [ @kaliop_queueing.driver.rabbitmq ]
+
+    # Produces 'generic' messages - message encoding is left to the application
+    kaliop_queueing.message_producer.generic_message:
+        class: %kaliop_queueing.message_producer.generic_message.class%
+        parent: kaliop_queueing.message_producer
+
+    # Produces messages used to distrubute execution of Sf console commands
+    kaliop_queueing.message_producer.console_command:
+        class: %kaliop_queueing.message_producer.console_command.class%
+        parent: kaliop_queueing.message_producer
         # nb: we assign by default no rabbitmqbundle producer to this service, otherwise it would look like the following:
         #calls: [ setQueueName, [ producer_name ] ]
 
-    kaliop_queueing.message_producer.generic_message.service:
-        class: %kaliop_queueing.message_producer.generic_message.service.class%
-        parent: kaliop_queueing.message_producer.service
+    # Produces messages used to distrubute execution of Sf services methods
+    kaliop_queueing.message_producer.symfony_service:
+        class: %kaliop_queueing.message_producer.symfony_service.class%
+        parent: kaliop_queueing.message_producer
+        # nb: we assign by default no rabbitmqbundle producer to this service, otherwise it would look like the following:
+        #calls: [ setQueueName, [ producer_name ] ]
 
-    kaliop_queueing.message_consumer.service:
-        class: %kaliop_queueing.message_consumer.service.class%
+    # Produces messages used to distrubute execution of http requests
+    kaliop_queueing.message_producer.http_request:
+        class: %kaliop_queueing.message_producer.http_request.class%
+        parent: kaliop_queueing.message_producer
+        # nb: we assign by default no rabbitmqbundle producer to this service, otherwise it would look like the following:
+        #calls: [ setQueueName, [ producer_name ] ]
+
+    # Produces messages used to distrubute execution of xmlrpc calls
+    kaliop_queueing.message_producer.xmlrpc_call:
+        class: %kaliop_queueing.message_producer.xmlrpc_call.class%
+        parent: kaliop_queueing.message_producer
+
+    # Produces messages used to manage the queues themselves. At the moment amqp only
+    kaliop_queueing.message_producer.queue_control:
+        class: %kaliop_queueing.message_producer.queue_control.class%
+        parent: kaliop_queueing.message_producer
+        calls:
+            - [ setContainer, [ @service_container ] ]
+        # nb: we assign by default no rabbitmqbundle producer to this service, otherwise it would look like the following:
+        #calls: [ setQueueName, [ producer_name ] ]
+
+    ### Consumers ###
+
+    # The base service - mapped to an abstract class
+    kaliop_queueing.message_consumer:
+        class: %kaliop_queueing.message_consumer.class%
         calls:
             - [ setLogger, [ @?logger ] ]
-            - [ setDispatcher, [ @kaliop_queueing.event_dispatcher.service ] ]
-            - [ registerDriver, [ @kaliop_queueing.driver.rabbitmq.service ] ]
+            - [ setDispatcher, [ @kaliop_queueing.event_dispatcher ] ]
+            - [ registerDriver, [ @kaliop_queueing.driver.rabbitmq ] ]
         tags:
             - { name: monolog.logger, channel: kaliop_queueing }
 
-    kaliop_queueing.message_producer.console_command.service:
-        class: %kaliop_queueing.message_producer.console_command.service.class%
-        parent: kaliop_queueing.message_producer.service
-        # nb: we assign by default no rabbitmqbundle producer to this service, otherwise it would look like the following:
-        #calls: [ setQueueName, [ producer_name ] ]
+    # Executes Sf cosnsole commands
+    kaliop_queueing.message_consumer.console_command:
+        class: %kaliop_queueing.message_consumer.console_command.class%
+        arguments: [ @kaliop_queueing.worker_manager ]
+        parent: kaliop_queueing.message_consumer
 
-    kaliop_queueing.message_consumer.console_command.service:
-        class: %kaliop_queueing.message_consumer.console_command.service.class%
-        arguments: [ @kaliop_queueing.worker_manager.service ]
-        parent: kaliop_queueing.message_consumer.service
+    # Executes Sf services methods
+    kaliop_queueing.message_consumer.symfony_service:
+        class: %kaliop_queueing.message_consumer.symfony_service.class%
+        arguments: [@service_container]
+        parent: kaliop_queueing.message_consumer
 
-    # a filter used to limit which console commands can be execute via queue messages
-    kaliop_queueing.message_consumer.console_command.filter.service:
-        class: %kaliop_queueing.message_consumer.console_command.filter.service.class%
+    # Executes http requests
+    kaliop_queueing.message_consumer.http_request:
+        class: %kaliop_queueing.message_consumer.http_request.class%
+        arguments: [@service_container]
+        parent: kaliop_queueing.message_consumer
+
+    # Executes xmlrpc calls
+    kaliop_queueing.message_consumer.xmlrpc_call:
+        class: %kaliop_queueing.message_consumer.xmlrpc_call.class%
+        parent: kaliop_queueing.message_consumer
+
+    # A 'do nothing' consumer. Useful for testing/development
+    kaliop_queueing.message_consumer.noop:
+        class: %kaliop_queueing.message_consumer.noop.class%
+        parent: kaliop_queueing.message_consumer
+
+    ### Filters ###
+
+    # a filter used to limit which Sf console commands can be execute via queue messages
+    kaliop_queueing.message_consumer.console_command.filter:
+        class: %kaliop_queueing.message_consumer.console_command.filter.class%
         arguments: [ %kaliop_queueing.default.allowed_commands% ]
         tags:
              - { name: kaliop_queueing.event_listener, event: kaliop_queueing.message_received }
 
-    kaliop_queueing.message_producer.symfony_service.service:
-        class: %kaliop_queueing.message_producer.symfony_service.service.class%
-        parent: kaliop_queueing.message_producer.service
-        # nb: we assign by default no rabbitmqbundle producer to this service, otherwise it would look like the following:
-        #calls: [ setQueueName, [ producer_name ] ]
-
-    kaliop_queueing.message_consumer.symfony_service.service:
-        class: %kaliop_queueing.message_consumer.symfony_service.service.class%
-        arguments: [@service_container]
-        parent: kaliop_queueing.message_consumer.service
-
-    # a filter used to limit which service methods can be execute via queue messages
-    kaliop_queueing.message_consumer.symfony_service.filter.service:
-        class: %kaliop_queueing.message_consumer.symfony_service.filter.service.class%
+    # a filter used to limit which Sf services methods can be execute via queue messages
+    kaliop_queueing.message_consumer.symfony_service.filter:
+        class: %kaliop_queueing.message_consumer.symfony_service.filter.class%
         arguments: [ %kaliop_queueing.default.allowed_services% ]
         tags:
              - { name: kaliop_queueing.event_listener, event: kaliop_queueing.message_received }
-
-    kaliop_queueing.message_producer.xmlrpc_call.service:
-        class: %kaliop_queueing.message_producer.xmlrpc_call.service.class%
-        parent: kaliop_queueing.message_producer.service
-
-    kaliop_queueing.message_consumer.xmlrpc_call.service:
-        class: %kaliop_queueing.message_consumer.xmlrpc_call.service.class%
-        parent: kaliop_queueing.message_consumer.service
-
-    kaliop_queueing.message_producer.http_request.service:
-        class: %kaliop_queueing.message_producer.http_request.service.class%
-        parent: kaliop_queueing.message_producer.service
-        # nb: we assign by default no rabbitmqbundle producer to this service, otherwise it would look like the following:
-        #calls: [ setQueueName, [ producer_name ] ]
-
-    kaliop_queueing.message_consumer.http_request.service:
-        class: %kaliop_queueing.message_consumer.http_request.service.class%
-        arguments: [@service_container]
-        parent: kaliop_queueing.message_consumer.service
 
     # a filter used to limit which remote servers can be contacted
-    kaliop_queueing.message_consumer.http_request.filter.service:
-        class: %kaliop_queueing.message_consumer.http_request.filter.service.class%
+    kaliop_queueing.message_consumer.http_request.filter:
+        class: %kaliop_queueing.message_consumer.http_request.filter.class%
         arguments: [ %kaliop_queueing.default.allowed_services% ]
         tags:
              - { name: kaliop_queueing.event_listener, event: kaliop_queueing.message_received }
 
-    # A 'do nothing' message consumer. Used for testing/development
-    kaliop_queueing.message_consumer.noop.service:
-        class: %kaliop_queueing.message_consumer.noop.service.class%
-        parent: kaliop_queueing.message_consumer.service
-
-    # you can enable this service to get debug info of received messages
+    # you can enable this filter to get debug info of received messages - by uncommenting the tag
     # NB: this slows down considerably the message receiving, enable (tag it) only during development
-    kaliop_queueing.message_consumer.monitor.service:
-        class: %kaliop_queueing.message_consumer.monitor.service.class%
-    #    tags:
-    #         - { name: kaliop_queueing.event_listener, event: kaliop_queueing.message_received }
+    kaliop_queueing.message_consumer.filter.monitor:
+        class: %kaliop_queueing.message_consumer.filter.monitor.class%
+        tags:
+             - { name: kaliop_queueing.event_listener, event: kaliop_queueing.message_received }
 
-    # A filter used to time message consumption. Enable  (tag it) for testing/development
-    kaliop_queueing.message_consumer.timing.filter.service:
-        class: %kaliop_queueing.message_consumer.timing.filter.service.class%
-        # the number of messages to time
+    # A filter used to time message consumption. Enable it (uncomment the tag) for testing/development
+    kaliop_queueing.message_consumer.filter.stopwatch:
+        class: %kaliop_queueing.message_consumer.filter.stopwatch.class%
+        # the stopwatch will measure the time taken to process this many messages
         arguments: [ 10 ]
         tags:
              - { name: kaliop_queueing.event_listener, event: kaliop_queueing.message_received }

@@ -8,7 +8,9 @@
 namespace Kaliop\QueueingBundle\Service\MessageProducer;
 
 use Kaliop\QueueingBundle\Service\MessageProducer as BaseMessageProducer;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use InvalidArgumentException;
 
 /**
@@ -17,8 +19,14 @@ use InvalidArgumentException;
  * @todo introduce an interface
  * @todo add a new action: listing available queues (i.e. defined in config)
  */
-class QueueControl extends BaseMessageProducer
+class AMQPQueueControl extends BaseMessageProducer implements ContainerAwareInterface
 {
+
+    public function setContainer(ContainerInterface $container = null)
+    {
+        $this->container = $container;
+    }
+
     public function listActions( $queueName )
     {
         return array( 'purge', 'delete', 'info' );
@@ -97,7 +105,9 @@ class QueueControl extends BaseMessageProducer
     }
 
     /**
-     * Hack: generally queues are defined consumer-side, so we try that 1st and producer-side 2nd (but that only gives us channel usually)
+     * Hack: generally queues are defined consumer-side, so we try that 1st and producer-side 2nd (but that only gives
+     * us channel usually).
+     * Note also that we bypass the driver here, as this message producer is quite specific
      */
     protected function getProducerService()
     {

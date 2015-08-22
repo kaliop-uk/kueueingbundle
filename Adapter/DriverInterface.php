@@ -3,12 +3,24 @@
 namespace Kaliop\QueueingBundle\Adapter;
 
 /**
- * Drivers are tasked to decode native messages into bundle messages
+ * Drivers are tasked to
+ * 1. manage MessageProducer objects, tasked to send messages
+ * 2. decode native messages into bundle messages
  */
 interface DriverInterface
 {
+    // *** Producer side ***
+
     /**
-     * Returns true if the driver can decode the native message
+     * @param $queueName
+     * @return \Kaliop\QueueingBundle\Queue\MessageProducerInterface
+     */
+    public function getMessageProducer($queueName);
+
+    // *** Consumer side ***
+
+    /**
+     * Returns true if the driver can decode the native (as delivered by the networking layer) message
      *
      * @param mixed $msg
      * @return bool
@@ -16,8 +28,10 @@ interface DriverInterface
     public function acceptMessage($msg);
 
     /**
+     * This will be called only after a successful acceptMessage()
+     *
      * @param mixed $msg
-     * @return Kaliop\QueueingBundle\Queue\MessageInterface
+     * @return \Kaliop\QueueingBundle\Queue\MessageInterface
      */
     public function decodeMessage($msg);
 }

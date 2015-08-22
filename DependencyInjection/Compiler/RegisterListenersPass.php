@@ -17,7 +17,7 @@ class RegisterListenersPass implements CompilerPassInterface
     protected $subscriberTag;
 
     public function __construct(
-        $dispatcherService = 'kaliop_queueing.event_dispatcher.service',
+        $dispatcherService = 'kaliop_queueing.event_dispatcher',
         $listenerTag = 'kaliop_queueing.event_listener',
         $subscriberTag = 'kaliop_queueing.event_subscriber'
     )

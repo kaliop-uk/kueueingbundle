@@ -45,11 +45,11 @@ class WorkersWatchdogCommand extends BaseCommand
             $env = $input->getOption( 'env' );
         }
 
-        $manager = $this->getContainer()->get( 'kaliop_queueing.worker_manager.service' );
+        $manager = $this->getContainer()->get( 'kaliop_queueing.worker_manager' );
         $commandList = $manager->getWorkersCommands( $env );
         $this->writeln( "Checking " . count( $commandList ) . " worker processes", OutputInterface::VERBOSITY_VERBOSE );
 
-        $watchdog = $this->getContainer()->get( 'kaliop_queueing.watchdog.service' );
+        $watchdog = $this->getContainer()->get( 'kaliop_queueing.watchdog' );
         foreach( $commandList as $workerName => $cmd )
         {
             // To see if the command is executing, we need to retrieve a version of it which was not escaped for the shell
