@@ -5,29 +5,31 @@
  * Time: 19.08
  */
 
-namespace Kaliop\QueueingBundle\Service\MessageProducer;
+namespace Kaliop\QueueingBundle\Adapter\RabbitMq;
 
 use Kaliop\QueueingBundle\Service\MessageProducer as BaseMessageProducer;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use InvalidArgumentException;
+use Kaliop\QueueingBundle\Queue\QueueManagerInterface;
 
 /**
  * A class dedicated not really to sending messages to a queue, bur rather to sending control commands
  *
- * @todo introduce an interface
  * @todo add a new action: listing available queues (i.e. defined in config)
  */
-class AMQPQueueControl extends BaseMessageProducer implements ContainerAwareInterface
+class QueueManager extends BaseMessageProducer implements ContainerAwareInterface, QueueManagerInterface
 {
+
+    protected $container;
 
     public function setContainer(ContainerInterface $container = null)
     {
         $this->container = $container;
     }
 
-    public function listActions( $queueName )
+    public function listActions()
     {
         return array( 'purge', 'delete', 'info' );
     }

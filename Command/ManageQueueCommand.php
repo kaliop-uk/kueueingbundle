@@ -20,7 +20,7 @@ class ManageQueueCommand extends BaseCommand
         $this
             ->setName( 'kaliop_queueing:managequeue' )
             ->setDescription( "Sends control commands to a queue to f.e. purge it or grab some stats" )
-            ->addArgument( 'action', InputArgument::REQUIRED, 'The action to execute. use "list" to see all available' )
+            ->addArgument( 'action', InputArgument::REQUIRED, 'The action to execute. use "help" to see all available' )
             ->addArgument( 'queue_name', InputArgument::OPTIONAL, 'The queue name (string)', '' )
             ->addOption('debug', 'd', InputOption::VALUE_NONE, 'Enable Debugging' )
         ;

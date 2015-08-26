@@ -25,7 +25,7 @@ parameters:
     kaliop_queueing.message_producer.xmlrpc_call.class: Kaliop\QueueingBundle\Service\MessageProducer\XmlrpcCall
     kaliop_queueing.message_consumer.xmlrpc_call.class: Kaliop\QueueingBundle\Service\MessageConsumer\XmlrpcCall
 
-    kaliop_queueing.message_producer.queue_control.class: Kaliop\QueueingBundle\Service\MessageProducer\AMQPQueueControl
+    kaliop_queueing.message_producer.queue_control.class: Kaliop\QueueingBundle\Adapter\RabbitMq\QueueManager
 
     kaliop_queueing.message_consumer.noop.class: Kaliop\QueueingBundle\Service\MessageConsumer\Noop
 
@@ -140,21 +140,21 @@ services:
 
     ### Filters ###
 
-    # a filter used to limit which Sf console commands can be execute via queue messages
+    # A filter used to limit which Sf console commands can be execute via queue messages
     kaliop_queueing.message_consumer.console_command.filter:
         class: %kaliop_queueing.message_consumer.console_command.filter.class%
         arguments: [ %kaliop_queueing.default.allowed_commands% ]
         tags:
              - { name: kaliop_queueing.event_listener, event: kaliop_queueing.message_received }
 
-    # a filter used to limit which Sf services methods can be execute via queue messages
+    # A filter used to limit which Sf services methods can be execute via queue messages
     kaliop_queueing.message_consumer.symfony_service.filter:
         class: %kaliop_queueing.message_consumer.symfony_service.filter.class%
         arguments: [ %kaliop_queueing.default.allowed_services% ]
         tags:
              - { name: kaliop_queueing.event_listener, event: kaliop_queueing.message_received }
 
-    # a filter used to limit which remote servers can be contacted
+    # A filter used to limit which remote servers can be contacted
     kaliop_queueing.message_consumer.http_request.filter:
         class: %kaliop_queueing.message_consumer.http_request.filter.class%
         arguments: [ %kaliop_queueing.default.allowed_services% ]
@@ -166,7 +166,7 @@ services:
     kaliop_queueing.message_consumer.filter.monitor:
         class: %kaliop_queueing.message_consumer.filter.monitor.class%
         tags:
-             - { name: kaliop_queueing.event_listener, event: kaliop_queueing.message_received }
+        #     - { name: kaliop_queueing.event_listener, event: kaliop_queueing.message_received }
 
     # A filter used to time message consumption. Enable it (uncomment the tag) for testing/development
     kaliop_queueing.message_consumer.filter.stopwatch:
@@ -174,4 +174,4 @@ services:
         # the stopwatch will measure the time taken to process this many messages
         arguments: [ 10 ]
         tags:
-             - { name: kaliop_queueing.event_listener, event: kaliop_queueing.message_received }
+        #     - { name: kaliop_queueing.event_listener, event: kaliop_queueing.message_received }
