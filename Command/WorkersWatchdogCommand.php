@@ -20,7 +20,7 @@ class WorkersWatchdogCommand extends BaseCommand
     {
         $this
             ->setName( 'kaliop_queueing:workerswatchdog' )
-            ->addArgument( 'mode', InputArgument::OPTIONAL, 'start/stop/check workers', 'start' )
+            ->addArgument( 'action', InputArgument::OPTIONAL, 'start/stop/check workers', 'start' )
             ->setDescription( 'Checks that all configured worker processes are alive, restarts any found missing' )
         ;
     }
@@ -31,10 +31,10 @@ class WorkersWatchdogCommand extends BaseCommand
 
         $this->writeln( "Watchdog started at " . $this->formatDate(), OutputInterface::VERBOSITY_VERY_VERBOSE );
 
-        $command = $input->getArgument( 'mode' );
+        $command = $input->getArgument( 'action' );
         if ( !in_array( $command, array( 'start', 'stop', 'check' ) ) )
         {
-            throw new \InvalidArgumentException( "Mode '$command' is not valid" );
+            throw new \InvalidArgumentException( "Action '$command' is not valid" );
         }
 
         // by default we do not force an environment on the commands we ant to execute.
