@@ -26,12 +26,12 @@ class ConsoleCommand extends MessageConsumer
     // this is used as basic filter against shell injection. Received options names must be compatible with they or will dropped
     protected $validOptionsRegexp = '/[a-zA-Z0-9_\-.]+/';
 
-    public function __construct( $consoleManager )
+    public function __construct($consoleManager)
     {
         $this->consoleCommand = $consoleManager->getConsoleCommand();
     }
 
-    public function setApplication( Application $application )
+    public function setApplication(Application $application)
     {
         $this->application = $application;
     }
@@ -40,23 +40,22 @@ class ConsoleCommand extends MessageConsumer
      * @param array $body
      * @throws \UnexpectedValueException
      */
-    public function consume( $body )
+    public function consume($body)
     {
         // validate members in $body
         if (
-            !is_array( $body ) ||
-            empty( $body['command'] ) ||
-            ( isset( $body['arguments'] ) && !is_array( $body['arguments'] ) ) ||
-            ( isset( $body['options'] ) && !is_array( $body['options'] ) )
-        )
-        {
-            throw new \UnexpectedValueException( "Message format unsupported: missing 'command'. Received: " . json_encode( $body ) );
+            !is_array($body) ||
+            empty($body['command']) ||
+            (isset($body['arguments']) && !is_array($body['arguments'])) ||
+            (isset($body['options']) && !is_array($body['options']))
+        ) {
+            throw new \UnexpectedValueException("Message format unsupported: missing 'command'. Received: " . json_encode($body));
         }
 
         // for a speed/resource gain, we test: if command is not registered, do not try to run it
-        $this->validateCommand( $body['command'], @$body['arguments'], @$body['options'] );
+        $this->validateCommand($body['command'], @$body['arguments'], @$body['options']);
 
-        $this->runCommand( $body['command'], @$body['arguments'], @$body['options'] );
+        $this->runCommand($body['command'], @$body['arguments'], @$body['options']);
     }
 
     /**
@@ -68,13 +67,11 @@ class ConsoleCommand extends MessageConsumer
      * @param array $options
      * @throws \InvalidArgumentException
      */
-    protected function validateCommand( $consoleCommand, $arguments = array(), $options = array() )
+    protected function validateCommand($consoleCommand, $arguments = array(), $options = array())
     {
-        if ( $this->application !== null )
-        {
-            if( !in_array( $consoleCommand, array_keys( $this->application->all() ) ) )
-            {
-                throw new \InvalidArgumentException( "Command '$consoleCommand' is not registered in the symfony console" );
+        if ($this->application !== null) {
+            if (!in_array($consoleCommand, array_keys($this->application->all()))) {
+                throw new \InvalidArgumentException("Command '$consoleCommand' is not registered in the symfony console");
             }
         }
     }
@@ -91,82 +88,70 @@ class ConsoleCommand extends MessageConsumer
      * @todo add support for ttl when executing commands
      * @todo add a verbose mode: echo to stdout or a log file the results of execution
      */
-    protected function runCommand( $consoleCommand, $arguments = array(), $options = array() )
+    protected function runCommand($consoleCommand, $arguments = array(), $options = array())
     {
         $command = $this->consoleCommand;
 
         // forced options come before the command proper
-        foreach( $this->getForcedOptions() as $opt => $value )
-        {
-            $command .= ( strlen( $opt ) == 1 ? ' -' : ' --' ) . $opt;
-            if ( $value !== null )
-            {
-                $command .= ( strlen( $opt ) == 1 ? '' : '=' ) . escapeshellarg( $value );
+        foreach ($this->getForcedOptions() as $opt => $value) {
+            $command .= (strlen($opt) == 1 ? ' -' : ' --') . $opt;
+            if ($value !== null) {
+                $command .= (strlen($opt) == 1 ? '' : '=') . escapeshellarg($value);
             }
         }
 
-        $command .= ' '. escapeshellarg( $consoleCommand );
-        foreach( $arguments as $arg )
-        {
-            $command .= ' '. escapeshellarg( $arg );
+        $command .= ' ' . escapeshellarg($consoleCommand);
+        foreach ($arguments as $arg) {
+            $command .= ' ' . escapeshellarg($arg);
         }
 
         // options come after arguments to allow legacy scripts to be queued
-        foreach( $options as $opt => $value )
-        {
+        foreach ($options as $opt => $value) {
             // We allow callers to tell us how many dashes they want
             // If no dash is given, we use 1 for single letter options,
-            $optName = ltrim( $opt, '-' );
-            $dashes = strlen( $opt ) - strlen( $optName );
-            if ( $dashes == 0 )
-            {
-                $dashes = ( strlen( $optName ) == 1 ) ? 1 : 2;
+            $optName = ltrim($opt, '-');
+            $dashes = strlen($opt) - strlen($optName);
+            if ($dashes == 0) {
+                $dashes = (strlen($optName) == 1) ? 1 : 2;
             }
 
             // silently drop undesirable options
-            if ( preg_match( $this->validOptionsRegexp, $optName ) &&
-                !in_array( $optName, $this->filteredOptions ) )
-            {
-                $command .= " " . str_repeat( '-', $dashes ). $optName;
-                if ( $value !== null )
-                {
+            if (preg_match($this->validOptionsRegexp, $optName) &&
+                !in_array($optName, $this->filteredOptions)
+            ) {
+                $command .= " " . str_repeat('-', $dashes) . $optName;
+                if ($value !== null) {
                     // Options names with 1 dash use space, not equal sign. Or is it option name length which decides?
                     // According to http://mailutils.org/manual/html_node/Option-Basics.html:
                     // short opts (one dash, one letter), take an optional space and value, but space can not be used if value is optional
                     // long opts (one dash, one letter), take either equal or space then value, but space can not be used if value is optional
-                    $command .= ( $dashes == 1 ? '' : '=' ) . escapeshellarg( $value );
+                    $command .= ($dashes == 1 ? '' : '=') . escapeshellarg($value);
                 }
-            }
-            else
-            {
-                if( $this->logger )
-                {
-                    $this->logger->notice( "Dropped option: '$opt'" );
+            } else {
+                if ($this->logger) {
+                    $this->logger->notice("Dropped option: '$opt'");
                 }
             }
         }
 
-        $label = trim( ConsumerCommand::getLabel() );
-        if ( $label != '' )
-        {
+        $label = trim(ConsumerCommand::getLabel());
+        if ($label != '') {
             $label = " '$label'";
         }
 
-        if( $this->logger )
-        {
-            $this->logger->debug( "Console command will be executed from MessageConsumer{$label}: " . $command );
+        if ($this->logger) {
+            $this->logger->debug("Console command will be executed from MessageConsumer{$label}: " . $command);
         }
 
-        $process = new Process( $command );
+        $process = new Process($command);
         $retCode = $process->run();
 
-        $results = array( $retCode, $process->getOutput(), $process->getErrorOutput() );
+        $results = array($retCode, $process->getOutput(), $process->getErrorOutput());
 
-        if ( $retCode != 0 && $this->logger )
-        {
+        if ($retCode != 0 && $this->logger) {
             $this->logger->error(
-                "Console command executed from MessageConsumer{$label} failed. Retcode: $retCode, Error message: '" . trim( $results[2] ) . "'",
-                array() );
+                "Console command executed from MessageConsumer{$label} failed. Retcode: $retCode, Error message: '" . trim($results[2]) . "'",
+                array());
         }
 
         return $results;
@@ -176,8 +161,7 @@ class ConsoleCommand extends MessageConsumer
     {
         $options = $this->forcedOptions;
         $env = ConsumerCommand::getForcedEnv();
-        if ( $env != '' )
-        {
+        if ($env != '') {
             $options['env'] = $env;
         }
         return $options;

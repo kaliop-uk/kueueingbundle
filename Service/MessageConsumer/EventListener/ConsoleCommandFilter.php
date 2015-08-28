@@ -11,7 +11,7 @@ class ConsoleCommandFilter
 {
     protected $allowedCommands;
 
-    public function __construct( array $allowedCommands )
+    public function __construct(array $allowedCommands)
     {
         $this->allowedCommands = $allowedCommands;
     }
@@ -19,7 +19,7 @@ class ConsoleCommandFilter
     public function onMessageReceived(MessageReceivedEvent $event)
     {
         // filter out unwanted events
-        if (! $event->getConsumer() instanceof \Kaliop\QueueingBundle\Service\MessageConsumer\ConsoleCommand)
+        if (!$event->getConsumer() instanceof \Kaliop\QueueingBundle\Service\MessageConsumer\ConsoleCommand)
             return;
 
         $body = $event->getBody();
@@ -34,14 +34,14 @@ class ConsoleCommandFilter
         }
     }
 
-    protected function isCommandAllowed($command) {
-        foreach($this->allowedCommands as $allowedCommand) {
+    protected function isCommandAllowed($command)
+    {
+        foreach ($this->allowedCommands as $allowedCommand) {
             if (substr($allowedCommand, 0, 7) === 'regexp:') {
                 if (preg_match(substr($allowedCommand, 7), $command)) {
                     return true;
                 }
-            }
-            elseif ($allowedCommand === $command) {
+            } elseif ($allowedCommand === $command) {
                 return true;
             }
         }

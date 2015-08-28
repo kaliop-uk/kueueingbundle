@@ -25,7 +25,7 @@ parameters:
     kaliop_queueing.message_producer.xmlrpc_call.class: Kaliop\QueueingBundle\Service\MessageProducer\XmlrpcCall
     kaliop_queueing.message_consumer.xmlrpc_call.class: Kaliop\QueueingBundle\Service\MessageConsumer\XmlrpcCall
 
-    kaliop_queueing.message_producer.queue_control.class: Kaliop\QueueingBundle\Adapter\RabbitMq\QueueManager
+    kaliop_queueing.amqp.queue_manager.class: Kaliop\QueueingBundle\Adapter\RabbitMq\QueueManager
 
     kaliop_queueing.message_consumer.noop.class: Kaliop\QueueingBundle\Service\MessageConsumer\Noop
 
@@ -51,9 +51,19 @@ services:
         class: %kaliop_queueing.watchdog.class%
         arguments: [ @kaliop_queueing.event_dispatcher ]
 
+    # Produces messages used to manage the queues themselves.
+    kaliop_queueing.amqp.queue_manager:
+        class: %kaliop_queueing.amqp.queue_manager.class%
+        parent: kaliop_queueing.message_producer
+        calls:
+            - [ setContainer, [ @service_container ] ]
+        # nb: we assign by default no rabbitmqbundle producer to this service, otherwise it would look like the following:
+        #calls: [ setQueueName, [ producer_name ] ]
+
     ### Producers ###
 
     # The base service - mapped to an abstract class
+    # NB: this is where we map the producer to a specific driver!
     kaliop_queueing.message_producer:
          class: %kaliop_queueing.message_producer.class%
          arguments: [ @kaliop_queueing.driver.rabbitmq ]
@@ -89,18 +99,10 @@ services:
         class: %kaliop_queueing.message_producer.xmlrpc_call.class%
         parent: kaliop_queueing.message_producer
 
-    # Produces messages used to manage the queues themselves. At the moment amqp only
-    kaliop_queueing.message_producer.queue_control:
-        class: %kaliop_queueing.message_producer.queue_control.class%
-        parent: kaliop_queueing.message_producer
-        calls:
-            - [ setContainer, [ @service_container ] ]
-        # nb: we assign by default no rabbitmqbundle producer to this service, otherwise it would look like the following:
-        #calls: [ setQueueName, [ producer_name ] ]
-
     ### Consumers ###
 
     # The base service - mapped to an abstract class
+    # NB: this is where we map the consumer to a list of drivers
     kaliop_queueing.message_consumer:
         class: %kaliop_queueing.message_consumer.class%
         calls:

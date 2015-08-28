@@ -11,7 +11,7 @@ class MessageReceivedEvent extends Event
     protected $message;
     protected $consumer;
 
-    public function __construct( $body, MessageInterface $message, $consumer )
+    public function __construct($body, MessageInterface $message, $consumer)
     {
         $this->body = $body;
         $this->message = $message;

@@ -13,7 +13,7 @@ use Kaliop\QueueingBundle\Service\MessageProducer as BaseMessageProducer;
  */
 class SymfonyService extends BaseMessageProducer
 {
-    public function publish( $service, $method, $arguments=array(), $ttl=null )
+    public function publish($service, $method, $arguments = array(), $ttl = null)
     {
         $msg = array(
             'service' => $service,
@@ -21,13 +21,12 @@ class SymfonyService extends BaseMessageProducer
             'arguments' => $arguments
         );
         $extras = array();
-        if ( $ttl )
-        {
+        if ($ttl) {
             // we want to be able to set a per-message-ttl, which is not currently supported, see https://github.com/videlalvaro/RabbitMqBundle/issues/80
             // so we subclassed the producer class, and add an expiration (in millisecs)
             // see also http://www.rabbitmq.com/ttl.html
-            $extras = array( 'expiration' => $ttl * 1000 );
+            $extras = array('expiration' => $ttl * 1000);
         }
-        $this->doPublish( $msg, str_replace( ':', '.', $service ) . '.' . $method, $extras );
+        $this->doPublish($msg, str_replace(':', '.', $service) . '.' . $method, $extras);
     }
 }

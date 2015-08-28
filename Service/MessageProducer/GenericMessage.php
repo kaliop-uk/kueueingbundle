@@ -11,22 +11,21 @@ use Kaliop\QueueingBundle\Service\MessageProducer as BaseMessageProducer;
  */
 class GenericMessage extends BaseMessageProducer
 {
-    public function publish( $data, $contentType=null, $routingKey='', $ttl=null )
+    public function publish($data, $contentType = null, $routingKey = '', $ttl = null)
     {
         $extras = array();
-        if ( $ttl )
-        {
+        if ($ttl) {
             // we want to be able to set a per-message-ttl, which is not currently supported, see https://github.com/videlalvaro/RabbitMqBundle/issues/80
             // so we subclassed the producer class, and add an expiration (in millisecs)
             // see also http://www.rabbitmq.com/ttl.html
-            $extras = array( 'expiration' => $ttl * 1000 );
+            $extras = array('expiration' => $ttl * 1000);
         }
 
         if ($contentType == null) {
             $contentType = $this->getContentType();
         }
 
-        $this->doPublish( $data, $routingKey, $extras );
+        $this->doPublish($data, $routingKey, $extras);
     }
 
     /**
@@ -35,7 +34,7 @@ class GenericMessage extends BaseMessageProducer
      * @param mixed $data
      * @return mixed
      */
-    protected function encodeMessageBody( $data )
+    protected function encodeMessageBody($data)
     {
         return $data;
     }

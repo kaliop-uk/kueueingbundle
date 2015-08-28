@@ -11,7 +11,7 @@ class HTTPRequestFilter
 {
     protected $allowedServers;
 
-    public function __construct( array $allowedServers )
+    public function __construct(array $allowedServers)
     {
         $this->allowedServers = $allowedServers;
     }
@@ -19,7 +19,7 @@ class HTTPRequestFilter
     public function onMessageReceived(MessageReceivedEvent $event)
     {
         // filter out unwanted events
-        if (! $event->getConsumer() instanceof \Kaliop\QueueingBundle\Service\MessageConsumer\HTTPRequest)
+        if (!$event->getConsumer() instanceof \Kaliop\QueueingBundle\Service\MessageConsumer\HTTPRequest)
             return;
 
         $body = $event->getBody();
@@ -35,18 +35,18 @@ class HTTPRequestFilter
         }
     }
 
-    protected function isServiceAllowed($url, $options) {
+    protected function isServiceAllowed($url, $options)
+    {
 
         $server = parse_url($url, PHP_URL_HOST);
 
-        foreach($this->allowedServers as $allowedServer) {
+        foreach ($this->allowedServers as $allowedServer) {
 
             if (substr($allowedServer, 0, 7) === 'regexp:') {
                 if (preg_match(substr($allowedServer, 7), $url)) {
                     return true;
                 }
-            }
-            elseif ($allowedServer == $server) {
+            } elseif ($allowedServer == $server) {
                 return true;
             }
         }

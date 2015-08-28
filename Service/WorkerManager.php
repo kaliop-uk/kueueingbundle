@@ -16,7 +16,7 @@ class WorkerManager
     protected $workersList;
     protected $kernelRootDir;
 
-    public function __construct( array $workersList, $kernelRootDir = '.' )
+    public function __construct(array $workersList, $kernelRootDir = '.')
     {
         $this->workersList = $workersList;
         $this->kernelRootDir = $kernelRootDir;
@@ -29,13 +29,12 @@ class WorkerManager
      * @return array key: worker name, value: command to execute to start the worker
      * @throws \Exception
      */
-    public function getWorkersCommands( $env = null )
+    public function getWorkersCommands($env = null)
     {
 
         $procs = array();
-        foreach( $this->getWorkersNames() as $name )
-        {
-            $procs[$name] = $this->getWorkerCommand( $name, $env );
+        foreach ($this->getWorkersNames() as $name) {
+            $procs[$name] = $this->getWorkerCommand($name, $env);
         }
         return $procs;
     }
@@ -45,7 +44,7 @@ class WorkerManager
      */
     public function getWorkersNames()
     {
-        return array_keys( $this->workersList );
+        return array_keys($this->workersList);
     }
 
     /**
@@ -64,26 +63,22 @@ class WorkerManager
      * @todo get the name of the console command from himself
      */
 
-    public function getWorkerCommand( $name, $env=null, $unescaped=false )
+    public function getWorkerCommand($name, $env = null, $unescaped = false)
     {
         $defs = $this->workersList;
-        if ( !isset( $defs[$name] ) )
-        {
-            throw new \Exception( "No worker configuration for $name" );
+        if (!isset($defs[$name])) {
+            throw new \Exception("No worker configuration for $name");
         }
         $workerDef = $defs[$name];
-        if ( empty( $workerDef['queue_name'] ) || ( isset( $workerDef['options'] ) && !is_array( $workerDef['options'] ) ) )
-        {
-            throw new \Exception( "Bad worker configuration for $name" );
+        if (empty($workerDef['queue_name']) || (isset($workerDef['options']) && !is_array($workerDef['options']))) {
+            throw new \Exception("Bad worker configuration for $name");
         }
-        $cmd = $this->getConsoleCommand( $env, $unescaped ) .
-            " kaliop_queueing:consumer " . ( $unescaped ? $workerDef['queue_name'] : escapeshellarg( $workerDef['queue_name'] ) ) .
-            " --label=" . ( $unescaped ? $name : escapeshellarg( $name ) ) . " -w";
-        if ( isset( $workerDef['options'] ) )
-        {
-            foreach( $workerDef['options'] as $name => $value )
-            {
-                $cmd .= ' ' . ( strlen( $name ) == 1 ? '-' : '--' ) . $name . '=' . ( $unescaped ? $value : escapeshellarg( $value ) );
+        $cmd = $this->getConsoleCommand($env, $unescaped) .
+            " kaliop_queueing:consumer " . ($unescaped ? $workerDef['queue_name'] : escapeshellarg($workerDef['queue_name'])) .
+            " --label=" . ($unescaped ? $name : escapeshellarg($name)) . " -w";
+        if (isset($workerDef['options'])) {
+            foreach ($workerDef['options'] as $name => $value) {
+                $cmd .= ' ' . (strlen($name) == 1 ? '-' : '--') . $name . '=' . ($unescaped ? $value : escapeshellarg($value));
             }
         }
         return $cmd;
@@ -98,18 +93,16 @@ class WorkerManager
      *
      * @todo should get the name of the 'console' file in some kind of flexible way as well?
      */
-    public function getConsoleCommand( $env = null, $unescaped=false )
+    public function getConsoleCommand($env = null, $unescaped = false)
     {
         $phpFinder = new PhpExecutableFinder;
-        if ( !$php = $phpFinder->find() )
-        {
-            throw new \RuntimeException( 'The php executable could not be found, add it to your PATH environment variable and try again' );
+        if (!$php = $phpFinder->find()) {
+            throw new \RuntimeException('The php executable could not be found, add it to your PATH environment variable and try again');
         }
 
-        $out = $php . ' ' . escapeshellcmd( $this->kernelRootDir . DIRECTORY_SEPARATOR . "console" );
-        if (  $env != '' )
-        {
-            $out .=  ' --env=' . ( $unescaped ? $env : escapeshellarg( $env ) );
+        $out = $php . ' ' . escapeshellcmd($this->kernelRootDir . DIRECTORY_SEPARATOR . "console");
+        if ($env != '') {
+            $out .= ' --env=' . ($unescaped ? $env : escapeshellarg($env));
         }
         return $out;
     }

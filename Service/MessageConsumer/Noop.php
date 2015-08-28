@@ -14,7 +14,7 @@ use PhpXmlRpc\Encoder as XE;
  */
 class Noop extends MessageConsumer
 {
-    public function consume( $body )
+    public function consume($body)
     {
     }
 }

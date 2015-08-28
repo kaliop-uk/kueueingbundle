@@ -15,7 +15,7 @@ use Kaliop\QueueingBundle\Event\ProcessStoppedEvent;
 class Watchdog
 {
 
-    public function __construct( EventDispatcherInterface $dispatcher=null )
+    public function __construct(EventDispatcherInterface $dispatcher = null)
     {
         $this->dispatcher = $dispatcher;
     }
@@ -28,21 +28,20 @@ class Watchdog
      * @return int the pid of the created process
      * @throws \Symfony\Component\Process\Exception\RuntimeException when process could not start / terminated immediately
      */
-    public function startProcess( $command )
+    public function startProcess($command)
     {
-        $process = new Process( $command );
+        $process = new Process($command);
         $process->start();
         // give the OS some time to abort invalid commands
-        sleep( 1 );
-        if ( !$process->isRunning() )
-        {
-            throw new RuntimeException( "Process terminated immediately" );
+        sleep(1);
+        if (!$process->isRunning()) {
+            throw new RuntimeException("Process terminated immediately");
         }
 
         // while at it, emit a message
         if ($this->dispatcher) {
-            $event = new ProcessStartedEvent( $process->getPid(), $command );
-            $this->dispatcher->dispatch( EventsList::PROCESS_STARTED, $event);
+            $event = new ProcessStartedEvent($process->getPid(), $command);
+            $this->dispatcher->dispatch(EventsList::PROCESS_STARTED, $event);
         }
 
         return $process->getPid();
@@ -54,23 +53,19 @@ class Watchdog
      * @param int $signal
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      */
-    public function stopProcesses( array $pids, $signal = SIGTERM )
+    public function stopProcesses(array $pids, $signal = SIGTERM)
     {
-        foreach( $pids as $pid )
-        {
-            if ( (int)$pid > 0 )
-            {
-                posix_kill( (int)$pid, $signal );
+        foreach ($pids as $pid) {
+            if ((int)$pid > 0) {
+                posix_kill((int)$pid, $signal);
 
                 // while at it, emit a message
                 if ($this->dispatcher) {
-                    $event = new ProcessStoppedEvent( $pid );
-                    $this->dispatcher->dispatch( EventsList::PROCESS_STOPPED, $event);
+                    $event = new ProcessStoppedEvent($pid);
+                    $this->dispatcher->dispatch(EventsList::PROCESS_STOPPED, $event);
                 }
-            }
-            else
-            {
-                throw new RuntimeException( "Can not try to kill PID '$pid'" );
+            } else {
+                throw new RuntimeException("Can not try to kill PID '$pid'");
             }
         }
     }
@@ -89,29 +84,24 @@ class Watchdog
      *
      * @todo windows support: use "tasklist /v"
      */
-    public function getProcessPidByCommand( $command )
+    public function getProcessPidByCommand($command)
     {
-        if ( strtoupper( substr( PHP_OS, 0, 3) ) === 'WIN' )
-        {
-            throw new \Exception( "Windows not supported yet" );
-        }
-        else
-        {
+        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+            throw new \Exception("Windows not supported yet");
+        } else {
             exec(
-                // gotta love escaping single quotes in shell
-                "ps -eo pid,args | fgrep '" . str_replace( "'", "'\''", $command ) . "' | fgrep -v fgrep",
+            // gotta love escaping single quotes in shell
+                "ps -eo pid,args | fgrep '" . str_replace("'", "'\''", $command) . "' | fgrep -v fgrep",
                 $output,
-                $retCode );
+                $retCode);
 
-            if ( $retCode != 0 )
-            {
+            if ($retCode != 0) {
                 return array();
             }
 
             $pids = array();
-            foreach( $output as $line )
-            {
-                $line = explode( ' ', trim( $line ), 2 );
+            foreach ($output as $line) {
+                $line = explode(' ', trim($line), 2);
                 $pids[$line[0]] = $line[1];
             }
             return $pids;

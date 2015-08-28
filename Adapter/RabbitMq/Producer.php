@@ -13,18 +13,17 @@ class Producer extends BaseProducer implements MessageProducerInterface
 {
     protected $queueStats = array();
 
-    public function publish( $msgBody, $routingKey = '', $params=array() )
+    public function publish($msgBody, $routingKey = '', $params = array())
     {
-        if ( $this->autoSetupFabric )
-        {
+        if ($this->autoSetupFabric) {
             $this->setupFabric();
         }
 
         $msg = new AMQPMessage(
             $msgBody,
-            array_merge( array( 'content_type' => $this->contentType, 'delivery_mode' => $this->deliveryMode ), $params )
+            array_merge(array('content_type' => $this->contentType, 'delivery_mode' => $this->deliveryMode), $params)
         );
-        $this->getChannel()->basic_publish( $msg, $this->exchangeOptions['name'], $routingKey );
+        $this->getChannel()->basic_publish($msg, $this->exchangeOptions['name'], $routingKey);
     }
 
     public function getQueueOptions()

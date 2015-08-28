@@ -8,7 +8,8 @@ namespace Kaliop\QueueingBundle\Queue;
  * - body
  * - a bag of properties
  */
-interface MessageInterface {
+interface MessageInterface
+{
 
     /** @return string */
     public function getBody();

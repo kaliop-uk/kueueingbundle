@@ -38,14 +38,14 @@ abstract class MessageConsumer implements ConsumerInterface
      * @param mixed $data this is automatically decoded from the received message into a php data structure
      * @return void
      */
-    abstract public function consume( $data );
+    abstract public function consume($data);
 
-    public function setLogger( LoggerInterface $logger=null )
+    public function setLogger(LoggerInterface $logger = null)
     {
         $this->logger = $logger;
     }
 
-    public function setDispatcher( EventDispatcherInterface $dispatcher=null )
+    public function setDispatcher(EventDispatcherInterface $dispatcher = null)
     {
         $this->dispatcher = $dispatcher;
     }
@@ -63,9 +63,9 @@ abstract class MessageConsumer implements ConsumerInterface
      * Only add 'application/x-httpd-php-source' or 'vnd.php.serialized' if you *really* trust the source!
      * @see decodeMessageBody for those which can be natively decoded
      *
-     * @param array[string] $types
+     * @param array [string] $types
      */
-    protected function setAcceptedContentTypes( $types )
+    protected function setAcceptedContentTypes($types)
     {
         $this->acceptedContentTypes = $types;
     }
@@ -77,11 +77,10 @@ abstract class MessageConsumer implements ConsumerInterface
      * @param $type
      * @throws \InvalidArgumentException
      */
-    protected function setAssumedContentType( $type )
+    protected function setAssumedContentType($type)
     {
-        if( !in_array( $type, $this->acceptedContentTypes ) )
-        {
-            throw new \InvalidArgumentException( "Content type '$type' is not accepted, so it can not be assumed" );
+        if (!in_array($type, $this->acceptedContentTypes)) {
+            throw new \InvalidArgumentException("Content type '$type' is not accepted, so it can not be assumed");
         }
         $this->assumedContentType = $type;
     }
@@ -90,7 +89,7 @@ abstract class MessageConsumer implements ConsumerInterface
      * We need this method to be declared in order for this class to be usable as consumer by the RabbitMQ bundle
      * @param AMQPMessage $msg
      */
-    public function execute( AMQPMessage $msg )
+    public function execute(AMQPMessage $msg)
     {
         $this->decodeAndConsume($this->getDriver($msg)->decodeMessage($msg));
     }
@@ -104,12 +103,12 @@ abstract class MessageConsumer implements ConsumerInterface
      */
     protected function getDriver($message)
     {
-        foreach($this->drivers as $driver) {
+        foreach ($this->drivers as $driver) {
             if ($driver->acceptMessage($message))
                 return $driver;
         }
 
-        throw new \Exception('No driver found to decode message of type: '.get_class($message));
+        throw new \Exception('No driver found to decode message of type: ' . get_class($message));
     }
 
     /**
@@ -118,30 +117,26 @@ abstract class MessageConsumer implements ConsumerInterface
      *
      * @todo validate message format
      */
-    protected function decodeAndConsume( MessageInterface $msg )
+    protected function decodeAndConsume(MessageInterface $msg)
     {
-        try
-        {
+        try {
             // save the message, in case child class needs it for whacky stuff
             $this->message = $msg;
-            $body = $this->decodeMessageBody( $msg );
+            $body = $this->decodeMessageBody($msg);
 
             // while at it, emit a message, and allow listeners to prevent further execution
             if ($this->dispatcher) {
-                $event = new MessageReceivedEvent( $body, $msg, $this );
-                if ($this->dispatcher->dispatch( EventsList::MESSAGE_RECEIVED, $event)->isPropagationStopped()) {
+                $event = new MessageReceivedEvent($body, $msg, $this);
+                if ($this->dispatcher->dispatch(EventsList::MESSAGE_RECEIVED, $event)->isPropagationStopped()) {
                     return;
                 }
             }
 
-            $this->consume( $body );
-        }
-        catch( \Exception $e )
-        {
+            $this->consume($body);
+        } catch (\Exception $e) {
             // we keep on working, but log an error
-            if ( $this->logger )
-            {
-                $this->logger->error( 'Unexpected exception trying to decode and consume message: ' . $e->getMessage() );
+            if ($this->logger) {
+                $this->logger->error('Unexpected exception trying to decode and consume message: ' . $e->getMessage());
             }
         }
     }
@@ -154,40 +149,36 @@ abstract class MessageConsumer implements ConsumerInterface
      * @throws \RuntimeException
      * @throws \UnexpectedValueException
      */
-    protected function decodeMessageBody( MessageInterface $msg )
+    protected function decodeMessageBody(MessageInterface $msg)
     {
         $properties = $msg->getProperties();
         // do we accept this type? (nb: this is an optional property)
         $type = @$properties['content_type'];
-        if ( $type == '' && $this->assumedContentType != '' )
-        {
+        if ($type == '' && $this->assumedContentType != '') {
             $type = $this->assumedContentType;
         }
-        if ( $type == '' || !in_array( $type, $this->acceptedContentTypes ) )
-        {
-            throw new \RuntimeException( "Can not decode message with content type: '$type'" );
+        if ($type == '' || !in_array($type, $this->acceptedContentTypes)) {
+            throw new \RuntimeException("Can not decode message with content type: '$type'");
         }
 
         // then decode it
-        switch( $properties['content_type'] )
-        {
+        switch ($properties['content_type']) {
             case 'application/json':
-                $data = json_decode( $msg->getBody(), true );
-                if ( $error = json_last_error() )
-                {
-                    throw new \UnexpectedValueException( "Error decoding json payload: " . $error );
+                $data = json_decode($msg->getBody(), true);
+                if ($error = json_last_error()) {
+                    throw new \UnexpectedValueException("Error decoding json payload: " . $error);
                 }
                 return $data;
-             case 'application/x-httpd-php-source':
+            case 'application/x-httpd-php-source':
                 /// @todo should we wrap this in try/catch, ob_start and set_error_handler, or just make sure it is never used?
-                return eval ( 'return ' . $msg->body . ';' );
+                return eval ('return ' . $msg->body . ';');
             case 'vnd.php.serialized':
-                return unserialize( $msg->body );
+                return unserialize($msg->body);
             case 'text/plain':
             case 'application/octet-stream':
                 return $msg->body;
             default:
-                throw new \UnexpectedValueException( "Serialization format unsupported: " . $type );
+                throw new \UnexpectedValueException("Serialization format unsupported: " . $type);
         }
     }
 

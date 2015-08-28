@@ -40,11 +40,10 @@ abstract class MessageProducer
      * @param string $queue
      * @throws \UnexpectedValueException
      */
-    public function setQueueName( $queue )
+    public function setQueueName($queue)
     {
-        if ( $queue == '' )
-        {
-            throw new \UnexpectedValueException( "Queue name can not be empty" );
+        if ($queue == '') {
+            throw new \UnexpectedValueException("Queue name can not be empty");
         }
         $this->queue = $queue;
     }
@@ -62,7 +61,7 @@ abstract class MessageProducer
      */
     protected function getProducerService()
     {
-        return $this->driver->getMessageProducer( $this->getQueueName());
+        return $this->driver->getMessageProducer($this->getQueueName());
     }
 
     /**
@@ -79,11 +78,10 @@ abstract class MessageProducer
      * @param string $type
      * @throws \InvalidArgumentException
      */
-    public function setContentType( $type )
+    public function setContentType($type)
     {
-        if ( !in_array( $type, static::$knownContentTypes ) )
-        {
-            throw new \InvalidArgumentException( "Content type '$type' is not supported" );
+        if (!in_array($type, static::$knownContentTypes)) {
+            throw new \InvalidArgumentException("Content type '$type' is not supported");
         }
         $this->contentType = $type;
     }
@@ -95,18 +93,17 @@ abstract class MessageProducer
      * @return string
      * @throws \UnexpectedValueException
      */
-    protected function encodeMessageBody( $data )
+    protected function encodeMessageBody($data)
     {
-        switch( $this->contentType )
-        {
+        switch ($this->contentType) {
             case 'application/json':
-                return json_encode( $data );
+                return json_encode($data);
             case 'application/x-httpd-php-source':
-                return var_export( $data, true );
+                return var_export($data, true);
             case 'vnd.php.serialized':
-                return serialize( $data );
+                return serialize($data);
             default:
-                throw new \UnexpectedValueException( "Serialization format unsupported: " . $this->contentType );
+                throw new \UnexpectedValueException("Serialization format unsupported: " . $this->contentType);
         }
     }
 
@@ -120,11 +117,11 @@ abstract class MessageProducer
      * @param string $routingKey
      * @param array $extras
      */
-    protected function doPublish( $data, $routingKey = '', $extras = array() )
+    protected function doPublish($data, $routingKey = '', $extras = array())
     {
         $this->getProducerService()
-            ->setContentType( $this->getContentType() )
-            ->publish( $this->encodeMessageBody( $data ), $routingKey, $extras );
+            ->setContentType($this->getContentType())
+            ->publish($this->encodeMessageBody($data), $routingKey, $extras);
     }
 
 }

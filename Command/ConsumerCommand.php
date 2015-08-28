@@ -10,6 +10,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * Adds a few more options on top of the standard rabbitmq:consumer command,
  * plus it traces the fact that the --env option was used on command line or not
+ *
+ * @todo decouple this command from rabbitmq...
  */
 class ConsumerCommand extends BaseCommand
 {
@@ -24,23 +26,21 @@ class ConsumerCommand extends BaseCommand
         parent::configure();
 
         $this
-            ->setName( 'kaliop_queueing:consumer' )
-            ->addOption( 'label', null, InputOption::VALUE_REQUIRED, 'A name used to distinguish worker processes' )
-            ->setDescription( "Starts a worker (message consumer) process" )
-        ;
+            ->setName('kaliop_queueing:consumer')
+            ->addOption('label', null, InputOption::VALUE_REQUIRED, 'A name used to distinguish worker processes')
+            ->setDescription("Starts a worker (message consumer) process");
     }
 
-    protected function execute( InputInterface $input, OutputInterface $output )
+    protected function execute(InputInterface $input, OutputInterface $output)
     {
-        self::$label = $input->getOption( 'label' );
+        self::$label = $input->getOption('label');
 
         // tricky test, as hasOption( 'env' ) always returns true
-        if ( $input->hasParameterOption( '--env' ) ||  $input->hasParameterOption( '-e' ) )
-        {
-            self::$forcedEnv = $input->getOption( 'env' );
+        if ($input->hasParameterOption('--env') || $input->hasParameterOption('-e')) {
+            self::$forcedEnv = $input->getOption('env');
         }
 
-        parent::execute( $input, $output );
+        parent::execute($input, $output);
 
         // reset label after execution is done, in case of weird usage patterns
         self::$label = null;

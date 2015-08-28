@@ -20,16 +20,15 @@ class QueueGenericMessageCommand extends BaseCommand
     protected function configure()
     {
         $this
-            ->setName( 'kaliop_queueing:queuemessage' )
-            ->setDescription( "Sends to a queue a pre-formatted message" )
-            ->addArgument( 'queue_name', InputArgument::REQUIRED, 'The queue name (string)' )
-            ->addArgument( 'message', InputArgument::REQUIRED, 'The message body (string)' )
-            ->addOption( 'routing-key', 'k', InputOption::VALUE_OPTIONAL, 'The routing key, if needed (string)', null )
-            ->addOption( 'content-type', 'c', InputOption::VALUE_OPTIONAL, 'The message body content-type, defaults to application/json (string)', null )
-            ->addOption( 'repeat', 'r', InputOption::VALUE_OPTIONAL, 'The number of times to send the message, 1 by default (int)', 1 )
-            ->addOption( 'ttl', 't', InputOption::VALUE_OPTIONAL, 'Validity of message (in seconds)', null )
-            ->addOption('debug', 'd', InputOption::VALUE_NONE, 'Enable Debugging' )
-        ;
+            ->setName('kaliop_queueing:queuemessage')
+            ->setDescription("Sends to a queue a pre-formatted message")
+            ->addArgument('queue_name', InputArgument::REQUIRED, 'The queue name (string)')
+            ->addArgument('message', InputArgument::REQUIRED, 'The message body (string)')
+            ->addOption('routing-key', 'k', InputOption::VALUE_OPTIONAL, 'The routing key, if needed (string)', null)
+            ->addOption('content-type', 'c', InputOption::VALUE_OPTIONAL, 'The message body content-type, defaults to application/json (string)', null)
+            ->addOption('repeat', 'r', InputOption::VALUE_OPTIONAL, 'The number of times to send the message, 1 by default (int)', 1)
+            ->addOption('ttl', 't', InputOption::VALUE_OPTIONAL, 'Validity of message (in seconds)', null)
+            ->addOption('debug', 'd', InputOption::VALUE_NONE, 'Enable Debugging');
     }
 
     /**
@@ -38,28 +37,26 @@ class QueueGenericMessageCommand extends BaseCommand
      * @return void
      * @throws \InvalidArgumentException
      */
-    protected function execute( InputInterface $input, OutputInterface $output )
+    protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->setOutput( $output );
+        $this->setOutput($output);
 
         /// @todo move into the driver
-        if ( defined( 'AMQP_DEBUG' ) === false )
-        {
-            define( 'AMQP_DEBUG', (bool)$input->getOption( 'debug' ) );
+        if (defined('AMQP_DEBUG') === false) {
+            define('AMQP_DEBUG', (bool)$input->getOption('debug'));
         }
 
-        $queue = $input->getArgument( 'queue_name' );
-        $message = $input->getArgument( 'message' );
-        $contentType = $input->getOption( 'content-type' );
-        $key = $input->getOption( 'routing-key' );
-        $repeat = $input->getOption( 'repeat' );
-        $ttl = $input->getOption( 'ttl' );
+        $queue = $input->getArgument('queue_name');
+        $message = $input->getArgument('message');
+        $contentType = $input->getOption('content-type');
+        $key = $input->getOption('routing-key');
+        $repeat = $input->getOption('repeat');
+        $ttl = $input->getOption('ttl');
 
-        $messageProducer = $this->getContainer()->get( 'kaliop_queueing.message_producer.generic_message' );
-        $messageProducer->setQueueName( $queue );
-        try
-        {
-            for( $i = 0; $i < $repeat; $i++)
+        $messageProducer = $this->getContainer()->get('kaliop_queueing.message_producer.generic_message');
+        $messageProducer->setQueueName($queue);
+        try {
+            for ($i = 0; $i < $repeat; $i++)
                 $messageProducer->publish(
                     $message,
                     $contentType,
@@ -67,11 +64,9 @@ class QueueGenericMessageCommand extends BaseCommand
                     $ttl
                 );
 
-            $this->writeln( "$repeat message(s) queued" . ( $ttl ? ", will be valid for $ttl seconds" : '' ) );
-        }
-        catch( ServiceNotFoundException $e )
-        {
-            throw new \InvalidArgumentException( "Queue '$queue' is not registered" );
+            $this->writeln("$repeat message(s) queued" . ($ttl ? ", will be valid for $ttl seconds" : ''));
+        } catch (ServiceNotFoundException $e) {
+            throw new \InvalidArgumentException("Queue '$queue' is not registered");
         }
 
     }

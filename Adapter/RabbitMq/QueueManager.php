@@ -31,13 +31,12 @@ class QueueManager extends BaseMessageProducer implements ContainerAwareInterfac
 
     public function listActions()
     {
-        return array( 'purge', 'delete', 'info' );
+        return array('purge', 'delete', 'info');
     }
 
-    public function executeAction( $action )
+    public function executeAction($action)
     {
-        switch( $action )
-        {
+        switch ($action) {
             case 'purge':
                 return $this->purgeQueue();
 
@@ -48,7 +47,7 @@ class QueueManager extends BaseMessageProducer implements ContainerAwareInterfac
                 return $this->queueInfo();
 
             default:
-                throw new InvalidArgumentException( "Action $action not supported" );
+                throw new InvalidArgumentException("Action $action not supported");
         }
     }
 
@@ -60,11 +59,10 @@ class QueueManager extends BaseMessageProducer implements ContainerAwareInterfac
         // Luckily we are pesky little critters, and used the DIC to subclass it [grin]
         $queueOptions = $channelService->getQueueOptions();
         $rabbitQueue = $queueOptions['name'];
-        if ( $rabbitQueue == '' )
-        {
+        if ($rabbitQueue == '') {
             // what to do here ?
         }
-        return $channel->queue_purge( $rabbitQueue );
+        return $channel->queue_purge($rabbitQueue);
     }
 
     /**
@@ -78,11 +76,10 @@ class QueueManager extends BaseMessageProducer implements ContainerAwareInterfac
         // Luckily we are pesky little critters, and used the DIC to subclass it [grin]
         $queueOptions = $channelService->getQueueOptions();
         $rabbitQueue = $queueOptions['name'];
-        if ( $rabbitQueue == '' )
-        {
+        if ($rabbitQueue == '') {
             // what to do here ?
         }
-        return $channel->queue_delete( $rabbitQueue );
+        return $channel->queue_delete($rabbitQueue);
     }
 
     protected function queueInfo()
@@ -95,8 +92,7 @@ class QueueManager extends BaseMessageProducer implements ContainerAwareInterfac
         // Luckily we are pesky little critters, and used the DIC to subclass it [grin]
         $queueOptions = $channelService->getQueueOptions();
         $rabbitQueue = $queueOptions['name'];
-        if ( $rabbitQueue == '' )
-        {
+        if ($rabbitQueue == '') {
             // what to do here ?
         }
         return array(
@@ -113,15 +109,12 @@ class QueueManager extends BaseMessageProducer implements ContainerAwareInterfac
      */
     protected function getProducerService()
     {
-        try
-        {
+        try {
             // nopes... these are not parameters
             //var_dump( $this->container->getParameter( 'old_sound_rabbit_mq.consumers' ) ); //. $this->getQueueName() .'.queue_options.name' ) );
-            return $this->container->get( 'old_sound_rabbit_mq.' . $this->getQueueName() .'_consumer' );
-        }
-        catch( ServiceNotFoundException $e )
-        {
-            return $this->container->get( 'old_sound_rabbit_mq.' . $this->getQueueName() .'_producer' );
+            return $this->container->get('old_sound_rabbit_mq.' . $this->getQueueName() . '_consumer');
+        } catch (ServiceNotFoundException $e) {
+            return $this->container->get('old_sound_rabbit_mq.' . $this->getQueueName() . '_producer');
         }
     }
 }

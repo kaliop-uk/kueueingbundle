@@ -18,24 +18,23 @@ class BaseCommand extends ContainerAwareCommand
     protected $output;
 
     /// Sf writeln api is braindead
-    protected function writeln( $msg, $verbosity = OutputInterface::VERBOSITY_NORMAL )
+    protected function writeln($msg, $verbosity = OutputInterface::VERBOSITY_NORMAL)
     {
-        if ( $this->output->getVerbosity() >= $verbosity )
-        {
-            $this->output->writeln( $msg );
+        if ($this->output->getVerbosity() >= $verbosity) {
+            $this->output->writeln($msg);
         }
     }
 
-    protected function setOutput( OutputInterface $output )
+    protected function setOutput(OutputInterface $output)
     {
         $this->output = $output;
     }
 
-    protected function formatDate( $timestamp=null )
+    protected function formatDate($timestamp = null)
     {
         if ($timestamp === null) {
             $timestamp = time();
         }
-        return strftime( static::$DATE_FORMAT, $timestamp );
+        return strftime(static::$DATE_FORMAT, $timestamp);
     }
 }

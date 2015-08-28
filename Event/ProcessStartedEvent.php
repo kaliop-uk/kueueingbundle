@@ -9,7 +9,7 @@ class ProcessStartedEvent extends Event
     protected $pid;
     protected $command;
 
-    public function __construct( $pid, $command )
+    public function __construct($pid, $command)
     {
         $this->pid = $pid;
         $this->command = $command;

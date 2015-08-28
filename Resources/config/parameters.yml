@@ -46,6 +46,7 @@ parameters:
     # If you want to use a regexp, start it with regexp: - it will match the full url then instead of just the server name
     kaliop_queueing.default.allowed_urls: []
 
+    # UNUSED at the moment
     kaliop_queueing.default.available_xmlrpc_servers:
         demo:
             url:

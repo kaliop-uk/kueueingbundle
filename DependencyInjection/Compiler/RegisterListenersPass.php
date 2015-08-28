@@ -55,11 +55,13 @@ class RegisterListenersPass implements CompilerPassInterface
                 if (!isset($event['method'])) {
                     // this is the only change compared to Symfony\Component\EventDispatcher\DependencyInjection\RegisterListenersPass...
                     // could we just subclass that one instead of having a dedicated class?
-                    $method = str_replace( 'kaliop_queueing.', '', $event['event'] );
-                    $method = 'on'.preg_replace_callback(array(
+                    $method = str_replace('kaliop_queueing.', '', $event['event']);
+                    $method = 'on' . preg_replace_callback(array(
                             '/(?<=\b)[a-z]/i',
                             '/[^a-z0-9]/i',
-                        ), function ($matches) { return strtoupper($matches[0]); }, $method);
+                        ), function ($matches) {
+                            return strtoupper($matches[0]);
+                        }, $method);
                     $event['method'] = preg_replace('/[^a-z0-9]/i', '', $method);
                 }
                 $definition->addMethodCall('addListenerService', array($event['event'], array($id, $event['method']), $priority));

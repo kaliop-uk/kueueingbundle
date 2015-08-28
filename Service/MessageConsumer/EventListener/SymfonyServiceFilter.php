@@ -11,7 +11,7 @@ class SymfonyServiceFilter
 {
     protected $allowedServices;
 
-    public function __construct( array $allowedServices )
+    public function __construct(array $allowedServices)
     {
         $this->allowedServices = $allowedServices;
     }
@@ -19,7 +19,7 @@ class SymfonyServiceFilter
     public function onMessageReceived(MessageReceivedEvent $event)
     {
         // filter out unwanted events
-        if (! $event->getConsumer() instanceof \Kaliop\QueueingBundle\Service\MessageConsumer\SymfonyService)
+        if (!$event->getConsumer() instanceof \Kaliop\QueueingBundle\Service\MessageConsumer\SymfonyService)
             return;
 
         $body = $event->getBody();
@@ -35,26 +35,25 @@ class SymfonyServiceFilter
         }
     }
 
-    protected function isServiceAllowed($service, $method) {
-        foreach($this->allowedServices as $allowedService => $allowedMethods) {
+    protected function isServiceAllowed($service, $method)
+    {
+        foreach ($this->allowedServices as $allowedService => $allowedMethods) {
 
             if (substr($allowedService, 0, 7) === 'regexp:') {
                 if (!preg_match(substr($allowedService, 7), $service)) {
                     continue;
                 }
-            }
-            elseif ($allowedService !== $service) {
+            } elseif ($allowedService !== $service) {
                 continue;
             }
 
             // if we are here, the service is matching, now check the method
-            foreach($allowedMethods as $allowedMethod) {
+            foreach ($allowedMethods as $allowedMethod) {
                 if (substr($allowedMethod, 0, 7) === 'regexp:') {
                     if (preg_match(substr($allowedMethod, 7), $method)) {
                         return true;
                     }
-                }
-                elseif ($allowedMethod === $method) {
+                } elseif ($allowedMethod === $method) {
                     return true;
                 }
 

@@ -8,7 +8,7 @@ class ProcessStoppedEvent extends Event
 {
     protected $pid;
 
-    public function __construct( $pid )
+    public function __construct($pid)
     {
         $this->pid = $pid;
     }

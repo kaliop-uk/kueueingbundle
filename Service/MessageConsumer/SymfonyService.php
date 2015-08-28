@@ -29,28 +29,27 @@ class SymfonyService extends MessageConsumer
 {
     protected $container;
 
-    public function __construct( Container $container )
+    public function __construct(Container $container)
     {
         $this->container = $container;
     }
 
-    public function consume( $body )
+    public function consume($body)
     {
         // validate members in $body
         if (
-            !is_array( $body ) ||
-            empty( $body['service'] ) ||
-            empty( $body['method'] ) ||
-            ( isset( $body['arguments'] ) && !is_array( $body['arguments'] ) )
-        )
-        {
-            throw new \UnexpectedValueException( "Message format unsupported: missing 'service' or 'method' or invalid 'arguments'" );
+            !is_array($body) ||
+            empty($body['service']) ||
+            empty($body['method']) ||
+            (isset($body['arguments']) && !is_array($body['arguments']))
+        ) {
+            throw new \UnexpectedValueException("Message format unsupported: missing 'service' or 'method' or invalid 'arguments'");
         }
 
         // for a speed/resource gain, we test: if service is not registered, do not try to run it
-        $this->validateService( $body['service'], $body['method'], @$body['arguments'] );
+        $this->validateService($body['service'], $body['method'], @$body['arguments']);
 
-        $this->runService( $body['service'], $body['method'], @$body['arguments'] );
+        $this->runService($body['service'], $body['method'], @$body['arguments']);
     }
 
     /**
@@ -61,18 +60,17 @@ class SymfonyService extends MessageConsumer
      * @param array $arguments
      * @throws
      */
-    protected function validateService( $serviceName, $methodName, $arguments = array() )
+    protected function validateService($serviceName, $methodName, $arguments = array())
     {
-        $service = $this->container->get( $serviceName );
-        if ( !is_callable( array( $service, $methodName ) ) )
-        {
-            throw new \UnexpectedValueException( "Method $methodName not found in class " . get_class( $service ) . " implementing service $serviceName" );
+        $service = $this->container->get($serviceName);
+        if (!is_callable(array($service, $methodName))) {
+            throw new \UnexpectedValueException("Method $methodName not found in class " . get_class($service) . " implementing service $serviceName");
         }
     }
 
-    protected function runService( $serviceName, $methodName, $arguments = array() )
+    protected function runService($serviceName, $methodName, $arguments = array())
     {
-        $service = $this->container->get( $serviceName );
-        return call_user_func_array( array( $service, $methodName ), $arguments );
+        $service = $this->container->get($serviceName);
+        return call_user_func_array(array($service, $methodName), $arguments);
     }
 }
