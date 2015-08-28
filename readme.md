@@ -16,9 +16,9 @@ The main use cases supported so far are:
 
 ## Features implemented
 
-* A MessageProducer class which can be used to distribute execution of Symfony console commands to distributed workers
+* A MessageProducer class which can be used to distribute execution of any Symfony console command to distributed workers
 
-* A console command which can be used to test the above (distribute execution of any console command)
+* A console command which can be used to test the above (distribute execution of existing console commands)
 
 * A MessageConsumer class which implements the complementary part of the above
 
@@ -26,6 +26,9 @@ The main use cases supported so far are:
     queue and execute them blindly.
     A basic limitation you can implement is to whitelist the commands available for execution via queue messages; this
     is set up via parameters.yml
+
+* MessageConsumer and MessageProducer classes to distribute execution of HTTP calls
+    Useful f.e. to distribute link-checking tasks to many concurrent workers 
 
 * MessageConsumer and MessageProducer classes to distribute execution of XMLRPC calls to remote servers
     (note that you will need to install the phpxmlrpc\phpxmlrpc package for this to work)
@@ -134,7 +137,7 @@ For a start, the same Symfony installation will be used both as message producer
 
     To manage a given queue: get info about its state, or purge it from messages
 
-* php console kaliop_queueing:watchdog
+* php console kaliop_queueing:watchdog start|stop|check
 
     To check that all the configured worker processes are executing and restart them if they are not
 
@@ -172,3 +175,8 @@ developers of this library of where to turn to to get inspiration and borrow cod
 * grimkirill/queue - https://github.com/grimkirill/queue
 
 * swarrot/swarrot - https://github.com/swarrot/swarrot
+
+
+## More docs
+
+* a slide set, prepared for phpsummercamp 2015: https://docs.google.com/presentation/d/16rjSyejWGx4z7lIUYzvB5sXS8wMuHQc5N3QdIbkgj1A/pub?start=false&loop=false&delayms=10000#slide=id.p
