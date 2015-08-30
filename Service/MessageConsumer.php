@@ -22,9 +22,9 @@ abstract class MessageConsumer implements ConsumerInterface
     protected $acceptedContentTypes = array(
         'application/json',
     );
-    /** @var  \Kaliop\QueueingBundle\Queue\MessageInterface */
+    /** @var \Kaliop\QueueingBundle\Queue\MessageInterface */
     protected $message;
-    /** @var  \Psr\Log\LoggerInterface $logger */
+    /** @var \Psr\Log\LoggerInterface $logger */
     protected $logger;
     protected $dispatcher;
     /** @var DriverInterface[] */
@@ -74,7 +74,7 @@ abstract class MessageConsumer implements ConsumerInterface
      * Sets the content type which is assumed when the incoming message does not specify any
      * @see decodeMessageBody for those which can be natively decoded
      *
-     * @param $type
+     * @param string $type
      * @throws \InvalidArgumentException
      */
     protected function setAssumedContentType($type)
@@ -86,8 +86,11 @@ abstract class MessageConsumer implements ConsumerInterface
     }
 
     /**
-     * We need this method to be declared in order for this class to be usable as consumer by the RabbitMQ bundle
+     * We need this method to be declared in order for this class to be usable as consumer by the RabbitMQ bundle.
+     * Note that by default we never reject and requeue messages (but you might do it in a subclass).
+     *
      * @param AMQPMessage $msg
+     * @return mixed false to reject and requeue, any other value to acknowledge
      */
     public function execute(AMQPMessage $msg)
     {

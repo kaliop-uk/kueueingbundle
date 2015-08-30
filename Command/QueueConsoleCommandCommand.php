@@ -25,6 +25,7 @@ class QueueConsoleCommandCommand extends BaseCommand
             ->addArgument('queue_name', InputArgument::REQUIRED, 'The queue name (string)')
             ->addArgument('console_command', InputArgument::REQUIRED, 'The console command to execute (string)')
             ->addArgument('argument/option', InputArgument::IS_ARRAY, 'Arguments and options for the executed command. Options use the syntax: option.<opt>.<val>')
+            ->addOption('driver_name', 'b', InputOption::VALUE_OPTIONAL, 'The driver (string), if not default', null)
             ->addOption('ttl', 't', InputOption::VALUE_OPTIONAL, 'Validity of message (in seconds)', null)
             ->addOption('novalidate', null, InputOption::VALUE_NONE, 'Skip checking if the command is registered with the sf console')
             ->addOption('debug', 'd', InputOption::VALUE_NONE, 'Enable Debugging');
@@ -52,6 +53,7 @@ class QueueConsoleCommandCommand extends BaseCommand
             define('AMQP_DEBUG', (bool)$input->getOption('debug'));
         }
 
+        $driverName = $input->getOption('driver_name');
         $queue = $input->getArgument('queue_name');
         $arguments = $input->getArgument('argument/option');
         // parse arguments to tell options apart
@@ -64,7 +66,9 @@ class QueueConsoleCommandCommand extends BaseCommand
             }
         }
 
+        $driver = $this->getContainer()->get('kaliop_queueing.driverManager')->getDriver($driverName);
         $messageProducer = $this->getContainer()->get('kaliop_queueing.message_producer.console_command');
+        $messageProducer->setDriver($driver);
         $messageProducer->setQueueName($queue);
         try {
             $messageProducer->publish(

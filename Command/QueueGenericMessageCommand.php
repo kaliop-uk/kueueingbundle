@@ -24,6 +24,7 @@ class QueueGenericMessageCommand extends BaseCommand
             ->setDescription("Sends to a queue a pre-formatted message")
             ->addArgument('queue_name', InputArgument::REQUIRED, 'The queue name (string)')
             ->addArgument('message', InputArgument::REQUIRED, 'The message body (string)')
+            ->addOption('driver_name', 'b', InputOption::VALUE_OPTIONAL, 'The driver (string), if not default', null)
             ->addOption('routing-key', 'k', InputOption::VALUE_OPTIONAL, 'The routing key, if needed (string)', null)
             ->addOption('content-type', 'c', InputOption::VALUE_OPTIONAL, 'The message body content-type, defaults to application/json (string)', null)
             ->addOption('repeat', 'r', InputOption::VALUE_OPTIONAL, 'The number of times to send the message, 1 by default (int)', 1)
@@ -46,6 +47,7 @@ class QueueGenericMessageCommand extends BaseCommand
             define('AMQP_DEBUG', (bool)$input->getOption('debug'));
         }
 
+        $driverName = $input->getOption('driver_name');
         $queue = $input->getArgument('queue_name');
         $message = $input->getArgument('message');
         $contentType = $input->getOption('content-type');
@@ -53,7 +55,9 @@ class QueueGenericMessageCommand extends BaseCommand
         $repeat = $input->getOption('repeat');
         $ttl = $input->getOption('ttl');
 
+        $driver = $this->getContainer()->get('kaliop_queueing.driverManager')->getDriver($driverName);
         $messageProducer = $this->getContainer()->get('kaliop_queueing.message_producer.generic_message');
+        $messageProducer->setDriver($driver);
         $messageProducer->setQueueName($queue);
         try {
             for ($i = 0; $i < $repeat; $i++)

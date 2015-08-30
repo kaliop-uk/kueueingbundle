@@ -3,6 +3,9 @@ parameters:
     old_sound_rabbit_mq.producer.class: Kaliop\QueueingBundle\Adapter\RabbitMq\Producer
     old_sound_rabbit_mq.consumer.class: Kaliop\QueueingBundle\Adapter\RabbitMq\Consumer
 
+    # Used when no driver is specified, f.e. on the command line
+    kaliop_queueing.default.driver: rabbitmq
+
     # To be configured in a bundle depending on this one (or in the application):
     # worker processes to be monitored via watchdog console command
     kaliop_queueing.default.workers.list: {}
@@ -38,7 +41,6 @@ parameters:
         ###
         # IMPORTANT!!! you should most likely disable this in production for security reasons
         ###
-        #"regexp:/.*/":
         #    regexp:/.*/
 
     # To be configured in a bundle depending on this one (or in the application):

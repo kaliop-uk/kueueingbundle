@@ -14,7 +14,7 @@ interface DriverInterface
     // *** Producer side ***
 
     /**
-     * @param $queueName
+     * @param string $queueName
      * @return \Kaliop\QueueingBundle\Queue\MessageProducerInterface
      */
     public function getMessageProducer($queueName);
@@ -37,14 +37,11 @@ interface DriverInterface
      */
     public function decodeMessage($msg);
 
+    // *** The dark side ;-) ***
+
     /**
-     * Returns (if supported) an array of queues configured in the application.
-     * NB: these are the names of queues as seen by the app
-     * - NOT the queues available on the broker
-     * - NOT using the queues names used by the broker (unless those are always identical to the names used by the app)
-     *
-     * @param int $type
-     * @return string[]
+     * @param string $queueName
+     * @return \Kaliop\QueueingBundle\Queue\QueueManagerInterface
      */
-    public function listQueues($type = Queue::TYPE_ANY);
+    public function getQueueManager($queueName);
 }

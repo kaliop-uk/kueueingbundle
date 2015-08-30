@@ -1,9 +1,9 @@
 parameters:
+    kaliop_queueing.drivermanager.class: Kaliop\QueueingBundle\Adapter\DriverManager
     kaliop_queueing.driver.rabbitmq.class: Kaliop\QueueingBundle\Adapter\RabbitMq\Driver
     kaliop_queueing.worker_manager.class: Kaliop\QueueingBundle\Service\WorkerManager
     kaliop_queueing.watchdog.class: Kaliop\QueueingBundle\Helper\Watchdog
     kaliop_queueing.event_dispatcher.class: Symfony\Component\EventDispatcher\ContainerAwareEventDispatcher
-
 
     kaliop_queueing.message_producer.class: Kaliop\QueueingBundle\Service\MessageProducer
     kaliop_queueing.message_consumer.class: Kaliop\QueueingBundle\Service\MessageConsumer
@@ -34,10 +34,18 @@ parameters:
 
 services:
 
+    kaliop_queueing.drivermanager:
+        class: %kaliop_queueing.drivermanager.class%
+        arguments: [@service_container]
+        calls:
+            - [ setDefaultDriver, [ %kaliop_queueing.default.driver% ] ]
+
     kaliop_queueing.driver.rabbitmq:
         class: %kaliop_queueing.driver.rabbitmq.class%
         calls:
             - [ setContainer, [ @service_container ] ]
+        tags:
+            - { name: kaliop_queueing.driver, alias: rabbitmq }
 
     kaliop_queueing.event_dispatcher:
         class: %kaliop_queueing.event_dispatcher.class%
@@ -57,44 +65,38 @@ services:
         parent: kaliop_queueing.message_producer
         calls:
             - [ setContainer, [ @service_container ] ]
-        # nb: we assign by default no rabbitmqbundle producer to this service, otherwise it would look like the following:
-        #calls: [ setQueueName, [ producer_name ] ]
 
     ### Producers ###
 
     # The base service - mapped to an abstract class
-    # NB: this is where we map the producer to a specific driver!
     kaliop_queueing.message_producer:
-         class: %kaliop_queueing.message_producer.class%
-         arguments: [ @kaliop_queueing.driver.rabbitmq ]
+        class: %kaliop_queueing.message_producer.class%
+        # nb: we assign by default no driver to the producer, otherwise it would look like the following:
+        #arguments: [ @kaliop_queueing.driver.rabbitmq ]
+        # nb: we assign by default no rabbitmqbundle producer to this service, otherwise it would look like the following:
+        #calls: [ setQueueName, [ producer_name ] ]
 
     # Produces 'generic' messages - message encoding is left to the application
     kaliop_queueing.message_producer.generic_message:
         class: %kaliop_queueing.message_producer.generic_message.class%
         parent: kaliop_queueing.message_producer
 
-    # Produces messages used to distrubute execution of Sf console commands
+    # Produces messages used to distribute execution of Sf console commands
     kaliop_queueing.message_producer.console_command:
         class: %kaliop_queueing.message_producer.console_command.class%
         parent: kaliop_queueing.message_producer
-        # nb: we assign by default no rabbitmqbundle producer to this service, otherwise it would look like the following:
-        #calls: [ setQueueName, [ producer_name ] ]
 
-    # Produces messages used to distrubute execution of Sf services methods
+    # Produces messages used to distribute execution of Sf services methods
     kaliop_queueing.message_producer.symfony_service:
         class: %kaliop_queueing.message_producer.symfony_service.class%
         parent: kaliop_queueing.message_producer
-        # nb: we assign by default no rabbitmqbundle producer to this service, otherwise it would look like the following:
-        #calls: [ setQueueName, [ producer_name ] ]
 
-    # Produces messages used to distrubute execution of http requests
+    # Produces messages used to distribute execution of http requests
     kaliop_queueing.message_producer.http_request:
         class: %kaliop_queueing.message_producer.http_request.class%
         parent: kaliop_queueing.message_producer
-        # nb: we assign by default no rabbitmqbundle producer to this service, otherwise it would look like the following:
-        #calls: [ setQueueName, [ producer_name ] ]
 
-    # Produces messages used to distrubute execution of xmlrpc calls
+    # Produces messages used to distribute execution of xmlrpc calls
     kaliop_queueing.message_producer.xmlrpc_call:
         class: %kaliop_queueing.message_producer.xmlrpc_call.class%
         parent: kaliop_queueing.message_producer
@@ -112,7 +114,7 @@ services:
         tags:
             - { name: monolog.logger, channel: kaliop_queueing }
 
-    # Executes Sf cosnsole commands
+    # Executes Sf console commands
     kaliop_queueing.message_consumer.console_command:
         class: %kaliop_queueing.message_consumer.console_command.class%
         arguments: [ @kaliop_queueing.worker_manager ]
