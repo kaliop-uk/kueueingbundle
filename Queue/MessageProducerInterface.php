@@ -3,12 +3,10 @@
 namespace Kaliop\QueueingBundle\Queue;
 
 /**
- * Modeled after the RabbitMqBundle producer:
- *
+ * Modeled after the RabbitMqBundle producer
  */
 interface MessageProducerInterface
 {
-
     /**
      * Publishes the message and does what he wants with the properties
      *
