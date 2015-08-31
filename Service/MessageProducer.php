@@ -126,9 +126,9 @@ abstract class MessageProducer
      */
     protected function doPublish($data, $routingKey = '', $extras = array())
     {
-        $this->getProducerService()
-            ->setContentType($this->getContentType())
-            ->publish($this->encodeMessageBody($data), $routingKey, $extras);
+        $producer = $this->getProducerService();
+        $producer->setContentType($this->getContentType());
+        $producer->publish($this->encodeMessageBody($data), $routingKey, $extras);
     }
 
 }
