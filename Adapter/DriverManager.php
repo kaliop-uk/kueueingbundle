@@ -46,4 +46,30 @@ class DriverManager
         /// @todo shall we check that the good interface is declared?
         return $this->container->get($this->aliases[$alias]);
     }
+
+    public function listActions($driverName='')
+    {
+        return array('list');
+    }
+
+    public function executeAction($action, $driverName='')
+    {
+        switch ($action) {
+            case 'list':
+                return $this->listDrivers();
+
+            default:
+                throw new InvalidArgumentException("Action $action not supported");
+        }
+    }
+
+    /**
+     * Lists all registered drivers (aliases)
+     *
+     * @return string[]
+     */
+    public function listDrivers()
+    {
+        return array_keys($this->aliases);
+    }
 }

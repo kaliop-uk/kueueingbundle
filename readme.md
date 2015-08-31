@@ -76,30 +76,42 @@ For a start, the same Symfony installation will be used both as message producer
 
         php console kaliop_queueing:echoback "hello world" -f "testoututput.txt" 
 
-6. In a config file, define workers and producers according to rabbitmq-bundle docs
+6. Check that the 'rabbitmq' driver for the bundle is registered:
+
+        php console kaliop_queueing:managedriver list
+
+7. In a config file, define producers and consumers according to rabbitmq-bundle docs
 
     the rabbitmq_sample.yml file in Resources/config has an example of configuration to define a queue used to
     distribute execution of symfony console commands
 
-7. Start a consumer, putting it in the background
+8. Check that the producers and consumers are properly set up by listing them:
+
+        php console kaliop_queueing:managequeue list
+
+    In the results, queues tagged 1 are producers, queues tagged 2 are consumers
+
+9. Start a consumer, putting it in the background
 
         php console kaliop_queueing:consumer <queue> --label="testconsumer" -w &
 
-    Note that <queue> above is to be substituted with the name of a consumer from the old_sound_rabbit_mq configuration 
+    Note that <queue> above is to be substituted with the name of a consumer from step 8 
 
-8. Test what happens now: when you queue execution of echoback, the consumer should trigger it immediately
+10. Test what happens now: when you queue execution of echoback, the consumer should trigger it immediately
 
         php console kaliop_queueing:queuecommand <queue> kaliop_queueing:echoback "hello world again" option.f.testoututput2.txt
         cat testoututput2.txt
         tail logs/<env>.log
 
-9. Kill the consumer, remove the created testoutput files
+    Note that <queue> above is to be substituted with the name of a producer from step 8
+
+11. Kill the consumer, remove the created testoutput files
 
 ### Configure - moving to production
 
-10. Implement custom message producers and consumers, hook them to Rabbit queues via configuration
+12. Implement custom message producers and consumers, hook them to Rabbit queues via configuration
 
-11. Schedule execution of the watchdog so that it will start consumers automatically:
+13. Schedule execution of the watchdog so that it will start consumers automatically:
 
     - In a config file, define as parameters those workers which you want to run as daemons.
       See the parameters.yml file for more details
@@ -108,23 +120,23 @@ For a start, the same Symfony installation will be used both as message producer
 
             * * * * * cd $APP && $PHP console kaliop_queueing:workerswatchdog > /dev/null
 
-12. PROPERLY SECURE YOUR NETWORK !!!
+14. PROPERLY SECURE YOUR NETWORK !!!
 
     If you are running the consumers which execute Symfony console commands or Symfony services, be warned that for the
     moment they provide no authentication mechanism at all .
     Anyone who can send messages to their queue can have them execute the relevant code. 
 
-13. If you are running the consumers which execute Symfony console commands or Symfony services, set up at least some
+15. If you are running the consumers which execute Symfony console commands or Symfony services, set up at least some
     basic security via filtering of the accepted messages by configuring values in parameters.yml
 
 
 ## Console commands available:
 
-* php console kaliop_queueing:queuecommand [-ttl=<secs>] [--novalidate] <producer> <command> <args*>
+* php console kaliop_queueing:queuecommand [-b=<driver>] [-ttl=<secs>] [--novalidate] <producer> <command> <args*>
 
     To send to a queue a message specifying execution of the given symfony console command
 
-* php console kaliop_queueing:queuemessage [-ttl=<secs>] [-k=<routing key>] [-c=<content-type>] [-r=<repeat>] <producer> <body>
+* php console kaliop_queueing:queuemessage [-b=<driver>] [-ttl=<secs>] [-k=<routing key>] [-c=<content-type>] [-r=<repeat>] <producer> <body>
 
     To send to a queue a message in a pre-formatted payload
 
@@ -133,9 +145,13 @@ For a start, the same Symfony installation will be used both as message producer
     To start a worker process which consumes messages from the specified queue.
     NB: this is preferred over rabbitmq: consumer, as it adds a couple of features
 
-* php console kaliop_queueing:managequeue purge|delete|info <producer>
+* php console kaliop_queueing:managedriver list [<driver>]
 
-    To manage a given queue: get info about its state, or purge it from messages
+    To manage a given driver, or list installed drivers
+    
+* php console kaliop_queueing:managequeue [-b=<driver>] list|purge|delete|info [<producer>]
+
+    To manage a given queue: get info about its state, or purge it from messages. Also to list all queues
 
 * php console kaliop_queueing:watchdog start|stop|check
 
