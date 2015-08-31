@@ -22,7 +22,7 @@ class ManageQueueCommand extends BaseCommand
             ->setDescription("Sends control commands to a queue to f.e. purge it or grab some stats")
             ->addArgument('action', InputArgument::REQUIRED, 'The action to execute. use "help" to see all available')
             ->addArgument('queue_name', InputArgument::OPTIONAL, 'The queue name (string)', '')
-            ->addOption('driver_name', 'b', InputOption::VALUE_OPTIONAL, 'The driver (string), if not default', null)
+            ->addOption('driver', 'b', InputOption::VALUE_OPTIONAL, 'The driver (string), if not default', null)
             ->addOption('debug', 'd', InputOption::VALUE_NONE, 'Enable Debugging');
     }
 
@@ -40,7 +40,7 @@ class ManageQueueCommand extends BaseCommand
             define('AMQP_DEBUG', (bool)$input->getOption('debug'));
         }
 
-        $driverName = $input->getOption('driver_name');
+        $driverName = $input->getOption('driver');
         $command = $input->getArgument('action');
         $queue = $input->getArgument('queue_name');
 
