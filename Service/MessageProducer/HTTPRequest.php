@@ -16,12 +16,13 @@ class HTTPRequest extends BaseMessageProducer
     /**
      * @param string $url
      * @param array $options All CURL options are accepted
+     * @param string $routingKey if null, it will be calculated automatically
      * @param null $ttl
      */
-    public function publish($url, $options = array(), $ttl = null)
+    public function publish($url, $options = array(), $routingKey = null, $ttl = null)
     {
         $msg = array(
-            'url' => $command,
+            'url' => $url,
             'options' => $options
         );
         $extras = array();
@@ -31,6 +32,14 @@ class HTTPRequest extends BaseMessageProducer
             // see also http://www.rabbitmq.com/ttl.html
             $extras = array('expiration' => $ttl * 1000);
         }
-        $this->doPublish($msg, str_replace(array(':', '/'), '.', $command), $extras);
+        if ($routingKey === null) {
+            $routingKey = $this->getRoutingKey($url, $options);
+        }
+        $this->doPublish($msg, $routingKey, $extras);
+    }
+
+    protected function getRoutingKey($url, $options = array())
+    {
+        return str_replace(array(':', '/'), '.', $url);
     }
 }

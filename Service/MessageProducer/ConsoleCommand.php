@@ -13,7 +13,7 @@ use Kaliop\QueueingBundle\Service\MessageProducer as BaseMessageProducer;
  */
 class ConsoleCommand extends BaseMessageProducer
 {
-    public function publish($command, $arguments = array(), $options = array(), $ttl = null)
+    public function publish($command, $arguments = array(), $options = array(), $routingKey = null, $ttl = null)
     {
         $msg = array(
             'command' => $command,
@@ -27,6 +27,14 @@ class ConsoleCommand extends BaseMessageProducer
             // see also http://www.rabbitmq.com/ttl.html
             $extras = array('expiration' => $ttl * 1000);
         }
-        $this->doPublish($msg, str_replace(':', '.', $command), $extras);
+        if ($routingKey === null) {
+            $routingKey = $this->getRoutingKey($command, $arguments = array(), $options);
+        }
+        $this->doPublish($msg, $routingKey, $extras);
+    }
+
+    protected function getRoutingKey($command, $arguments = array(), $options = array())
+    {
+        return str_replace(':', '.', $command);
     }
 }

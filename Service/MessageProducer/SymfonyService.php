@@ -13,7 +13,7 @@ use Kaliop\QueueingBundle\Service\MessageProducer as BaseMessageProducer;
  */
 class SymfonyService extends BaseMessageProducer
 {
-    public function publish($service, $method, $arguments = array(), $ttl = null)
+    public function publish($service, $method, $arguments = array(), $routingKey = null, $ttl = null)
     {
         $msg = array(
             'service' => $service,
@@ -27,6 +27,14 @@ class SymfonyService extends BaseMessageProducer
             // see also http://www.rabbitmq.com/ttl.html
             $extras = array('expiration' => $ttl * 1000);
         }
-        $this->doPublish($msg, str_replace(':', '.', $service) . '.' . $method, $extras);
+        if ($routingKey === null) {
+            $routingKey = $this->getRoutingKey($service, $method, $arguments);
+        }
+        $this->doPublish($msg, $routingKey, $extras);
+    }
+
+    protected function getRoutingKey($service, $method, $arguments = array())
+    {
+        return str_replace(':', '.', $service) . '.' . $method;
     }
 }

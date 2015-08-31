@@ -13,7 +13,7 @@ use Kaliop\QueueingBundle\Service\MessageProducer as BaseMessageProducer;
  */
 class XmlrpcCall extends BaseMessageProducer
 {
-    public function publish($server, $method, $arguments = array(), $ttl = null)
+    public function publish($server, $method, $arguments = array(), $routingKey = null, $ttl = null)
     {
         $msg = array(
             'server' => $server,
@@ -27,6 +27,14 @@ class XmlrpcCall extends BaseMessageProducer
             // see also http://www.rabbitmq.com/ttl.html
             $extras = array('expiration' => $ttl * 1000);
         }
-        $this->doPublish($msg, str_replace(array(':', '/'), '.', $server . '.' . $method), $extras);
+        if ($routingKey === null) {
+            $routingKey = $this->getRoutingKey($server, $method, $arguments);
+        }
+        $this->doPublish($msg, $routingKey, $extras);
+    }
+
+    protected function getRoutingKey($server, $method, $arguments = array())
+    {
+        return str_replace(array(':', '/'), '.', $server . '.' . $method);
     }
 }
