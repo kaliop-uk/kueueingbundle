@@ -1,9 +1,4 @@
 <?php
-/**
- * User: gaetano.giunta
- * Date: 19/05/14
- * Time: 18.29
- */
 
 namespace Kaliop\QueueingBundle\Command;
 
@@ -41,7 +36,7 @@ class ManageQueueCommand extends BaseCommand
         $queue = $input->getArgument('queue_name');
         $debug = $input->getOption('debug');
 
-        $driver = $this->getContainer()->get('kaliop_queueing.driverManager')->getDriver($driverName);
+        $driver = $this->getContainer()->get('kaliop_queueing.drivermanager')->getDriver($driverName);
         if ($debug !== null) {
             $driver->setDebug($debug);
         }

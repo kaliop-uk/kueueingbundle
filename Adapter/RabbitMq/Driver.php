@@ -13,6 +13,11 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class Driver extends ContainerAware implements DriverInterface
 {
+    public function getConsumer($queueName)
+    {
+        return $this->container->get('old_sound_rabbit_mq.' . $queueName . '_consumer');
+    }
+
     public function acceptMessage($message)
     {
         return $message instanceof \PhpAmqpLib\Message\AMQPMessage;
@@ -29,9 +34,9 @@ class Driver extends ContainerAware implements DriverInterface
 
     /**
      * @param string $queueName
-     * @return \Kaliop\QueueingBundle\Queue\MessageProducerInterface
+     * @return \Kaliop\QueueingBundle\Queue\ProducerInterface
      */
-    public function getMessageProducer($queueName)
+    public function getProducer($queueName)
     {
         return $this->container->get('old_sound_rabbit_mq.' . $queueName . '_producer');
     }

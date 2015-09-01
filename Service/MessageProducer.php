@@ -64,11 +64,11 @@ abstract class MessageProducer
     }
 
     /**
-     * @return \Kaliop\QueueingBundle\Queue\MessageProducerInterface
+     * @return \Kaliop\QueueingBundle\Queue\ProducerInterface
      */
     protected function getProducerService()
     {
-        return $this->driver->getMessageProducer($this->getQueueName());
+        return $this->driver->getProducer($this->getQueueName());
     }
 
     /**

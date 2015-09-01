@@ -62,7 +62,6 @@ services:
     # Produces messages used to manage the queues themselves.
     kaliop_queueing.amqp.queue_manager:
         class: %kaliop_queueing.amqp.queue_manager.class%
-        parent: kaliop_queueing.message_producer
         calls:
             - [ setContainer, [ @service_container ] ]
 

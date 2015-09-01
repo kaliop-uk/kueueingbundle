@@ -1,18 +1,14 @@
 <?php
-/**
- * User: gaetano.giunta
- * Date: 19/05/14
- * Time: 21.40
- */
 
 namespace Kaliop\QueueingBundle\Adapter\RabbitMq;
 
+use Kaliop\QueueingBundle\Queue\ConsumerInterface;
 use OldSound\RabbitMqBundle\RabbitMq\Consumer as BaseConsumer;
 
 /**
  * Extends the parent class to allow users to get access to the queue
  */
-class Consumer extends BaseConsumer
+class Consumer extends BaseConsumer implements ConsumerInterface
 {
     protected $queueStats = array();
 

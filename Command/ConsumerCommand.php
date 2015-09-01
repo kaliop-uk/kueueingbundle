@@ -21,6 +21,8 @@ class ConsumerCommand extends BaseCommand
 
     protected static $forcedEnv;
 
+    protected $driver;
+
     protected function configure()
     {
         parent::configure();
@@ -28,6 +30,7 @@ class ConsumerCommand extends BaseCommand
         $this
             ->setName('kaliop_queueing:consumer')
             ->addOption('label', null, InputOption::VALUE_REQUIRED, 'A name used to distinguish worker processes')
+            ->addOption('driver', 'b', InputOption::VALUE_OPTIONAL, 'The driver (string), if not default', null)
             ->setDescription("Starts a worker (message consumer) process");
     }
 
@@ -38,6 +41,14 @@ class ConsumerCommand extends BaseCommand
         // tricky test, as hasOption( 'env' ) always returns true
         if ($input->hasParameterOption('--env') || $input->hasParameterOption('-e')) {
             self::$forcedEnv = $input->getOption('env');
+        }
+
+        $driverName = $input->getOption('driver');
+        $debug = $input->getOption('debug');
+
+        $this->driver = $this->getContainer()->get('kaliop_queueing.drivermanager')->getDriver($driverName);
+        if ($debug !== null) {
+            $this->driver->setDebug($debug);
         }
 
         parent::execute($input, $output);
@@ -56,8 +67,21 @@ class ConsumerCommand extends BaseCommand
         return self::$forcedEnv;
     }
 
-    protected function getConsumerService()
-    {
-        return 'old_sound_rabbit_mq.%s_consumer';
+    /**
+     * Reimplemented to allow drivers to give us a Consumer
+     * @param $input
+     */
+    protected function initConsumer($input) {
+        $this->consumer = $this->driver->getConsumer($input->getArgument('name'));
+
+        if (!is_null($input->getOption('memory-limit')) && ctype_digit((string) $input->getOption('memory-limit')) && $input->getOption('memory-limit') > 0) {
+            $this->consumer->setMemoryLimit($input->getOption('memory-limit'));
+        }
+        $this->consumer->setRoutingKey($input->getOption('route'));
     }
+
+    /*protected function getConsumerService()
+    {
+        return $this->driver->getConsumerServiceId();
+    }*/
 }

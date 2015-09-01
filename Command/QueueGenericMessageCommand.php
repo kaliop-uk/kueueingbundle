@@ -51,7 +51,7 @@ class QueueGenericMessageCommand extends BaseCommand
         $ttl = $input->getOption('ttl');
         $debug = $input->getOption('debug');
 
-        $driver = $this->getContainer()->get('kaliop_queueing.driverManager')->getDriver($driverName);
+        $driver = $this->getContainer()->get('kaliop_queueing.drivermanager')->getDriver($driverName);
         if ($debug !== null) {
             $driver->setDebug($debug);
         }

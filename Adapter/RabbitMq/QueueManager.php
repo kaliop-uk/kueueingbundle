@@ -1,9 +1,4 @@
 <?php
-/**
- * User: gaetano.giunta
- * Date: 19/05/14
- * Time: 19.08
- */
 
 namespace Kaliop\QueueingBundle\Adapter\RabbitMq;
 

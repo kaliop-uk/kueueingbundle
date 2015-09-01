@@ -5,7 +5,7 @@ namespace Kaliop\QueueingBundle\Queue;
 /**
  * Modeled after the RabbitMqBundle producer
  */
-interface MessageProducerInterface
+interface ProducerInterface
 {
     /**
      * Publishes the message and does what he wants with the properties

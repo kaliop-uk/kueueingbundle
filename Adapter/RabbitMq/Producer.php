@@ -4,12 +4,12 @@ namespace Kaliop\QueueingBundle\Adapter\RabbitMq;
 
 use OldSound\RabbitMqBundle\RabbitMq\Producer as BaseProducer;
 use PhpAmqpLib\Message\AMQPMessage;
-use Kaliop\QueueingBundle\Queue\MessageProducerInterface;
+use Kaliop\QueueingBundle\Queue\ProducerInterface;
 
 /**
  * Extends the parent class to add some extra parameters per-message when sending, and allow users to get access to the queue
  */
-class Producer extends BaseProducer implements MessageProducerInterface
+class Producer extends BaseProducer implements ProducerInterface
 {
     protected $queueStats = array();
 

@@ -1,9 +1,4 @@
 <?php
-/**
- * User: gaetano.giunta
- * Date: 01/05/14
- * Time: 23.37
- */
 
 namespace Kaliop\QueueingBundle\Command;
 
