@@ -6,10 +6,10 @@ use Kaliop\QueueingBundle\Queue\Queue;
 
 /**
  * Drivers are tasked to
- * 1. manage MessageProducer objects, tasked to send messages
- * 2. decode native messages into bundle messages
- * 3. enable/disable debug mode
- * 4. provide service ids for consumers
+ * 1. build Producer objects, tasked to send messages
+ * 2. build Consumer objects, tasked to receive messages in a loop and forward them to MessageConsumers
+ * 3. decode native messages into bundle messages
+ * 4. enable/disable debug mode
  */
 interface DriverInterface
 {

@@ -4,6 +4,10 @@ namespace Kaliop\QueueingBundle\Adapter;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
+/**
+ * A factory for drivers, with a few extra capabilities.
+ * Drivers get registered by a compiler pass.
+ */
 class DriverManager
 {
     protected $aliases = array();
