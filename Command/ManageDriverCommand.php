@@ -35,10 +35,6 @@ class ManageDriverCommand extends BaseCommand
     {
         $this->setOutput($output);
 
-        if (defined('AMQP_DEBUG') === false) {
-            define('AMQP_DEBUG', (bool)$input->getOption('debug'));
-        }
-
         $driverName = $input->getOption('driver');
         $command = $input->getArgument('action');
 

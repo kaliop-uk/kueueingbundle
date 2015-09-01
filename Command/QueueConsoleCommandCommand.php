@@ -49,15 +49,13 @@ class QueueConsoleCommandCommand extends BaseCommand
             }
         }
 
-        /// @todo move into the driver
-        if (defined('AMQP_DEBUG') === false) {
-            define('AMQP_DEBUG', (bool)$input->getOption('debug'));
-        }
-
         $driverName = $input->getOption('driver');
         $queue = $input->getArgument('queue_name');
         $key = $input->getOption('routing-key');
+        $ttl = $ttl = $input->getOption('ttl');
+        $debug = $input->getOption('debug');
         $arguments = $input->getArgument('argument/option');
+
         // parse arguments to tell options apart
         $options = array();
         foreach ($arguments as $key => $arg) {
@@ -69,6 +67,9 @@ class QueueConsoleCommandCommand extends BaseCommand
         }
 
         $driver = $this->getContainer()->get('kaliop_queueing.driverManager')->getDriver($driverName);
+        if ($debug !== null) {
+            $driver->setDebug($debug);
+        }
         $messageProducer = $this->getContainer()->get('kaliop_queueing.message_producer.console_command');
         $messageProducer->setDriver($driver);
         $messageProducer->setQueueName($queue);
@@ -78,7 +79,7 @@ class QueueConsoleCommandCommand extends BaseCommand
                 $arguments,
                 $options,
                 $key,
-                $ttl = $input->getOption('ttl')
+                $ttl
             );
 
             $this->writeln("Command queued for execution" . ($ttl ? ", will be valid for $ttl seconds" : ''));

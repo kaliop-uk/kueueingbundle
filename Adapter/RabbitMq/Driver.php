@@ -46,4 +46,15 @@ class Driver extends ContainerAware implements DriverInterface
         $mgr->setQueueName($queueName);
         return $mgr;
     }
+
+    /**
+     * @param bool $debug
+     * @todo emit a warning if AMQP_DEBUG is already defined
+     */
+    public function setDebug($debug)
+    {
+        if (defined('AMQP_DEBUG') === false) {
+            define('AMQP_DEBUG', (bool)$debug);
+        }
+    }
 }

@@ -44,4 +44,9 @@ interface DriverInterface
      * @return \Kaliop\QueueingBundle\Queue\QueueManagerInterface
      */
     public function getQueueManager($queueName);
+
+    /**
+     * @param bool $debug
+     */
+    public function setDebug($debug);
 }

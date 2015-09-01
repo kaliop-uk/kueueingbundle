@@ -42,11 +42,6 @@ class QueueGenericMessageCommand extends BaseCommand
     {
         $this->setOutput($output);
 
-        /// @todo move into the driver
-        if (defined('AMQP_DEBUG') === false) {
-            define('AMQP_DEBUG', (bool)$input->getOption('debug'));
-        }
-
         $driverName = $input->getOption('driver');
         $queue = $input->getArgument('queue_name');
         $message = $input->getArgument('message');
@@ -54,8 +49,12 @@ class QueueGenericMessageCommand extends BaseCommand
         $key = $input->getOption('routing-key');
         $repeat = $input->getOption('repeat');
         $ttl = $input->getOption('ttl');
+        $debug = $input->getOption('debug');
 
         $driver = $this->getContainer()->get('kaliop_queueing.driverManager')->getDriver($driverName);
+        if ($debug !== null) {
+            $driver->setDebug($debug);
+        }
         $messageProducer = $this->getContainer()->get('kaliop_queueing.message_producer.generic_message');
         $messageProducer->setDriver($driver);
         $messageProducer->setQueueName($queue);

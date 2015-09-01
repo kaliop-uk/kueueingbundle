@@ -36,15 +36,15 @@ class ManageQueueCommand extends BaseCommand
     {
         $this->setOutput($output);
 
-        if (defined('AMQP_DEBUG') === false) {
-            define('AMQP_DEBUG', (bool)$input->getOption('debug'));
-        }
-
         $driverName = $input->getOption('driver');
         $command = $input->getArgument('action');
         $queue = $input->getArgument('queue_name');
+        $debug = $input->getOption('debug');
 
         $driver = $this->getContainer()->get('kaliop_queueing.driverManager')->getDriver($driverName);
+        if ($debug !== null) {
+            $driver->setDebug($debug);
+        }
         $queueManager = $driver->getQueueManager($queue);
 
         if ($command == 'help') {
