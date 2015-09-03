@@ -103,13 +103,13 @@ services:
     ### Consumers ###
 
     # The base service - mapped to an abstract class
-    # NB: this is where we map the consumer to a list of drivers
+    # All the services which are tagged 'kaliop_queueing.driver' get registered automatically.
     kaliop_queueing.message_consumer:
         class: %kaliop_queueing.message_consumer.class%
         calls:
             - [ setLogger, [ @?logger ] ]
             - [ setDispatcher, [ @kaliop_queueing.event_dispatcher ] ]
-            - [ registerDriver, [ @kaliop_queueing.driver.rabbitmq ] ]
+            - [ setDriverManager, [ @kaliop_queueing.drivermanager ] ]
         tags:
             - { name: monolog.logger, channel: kaliop_queueing }
 

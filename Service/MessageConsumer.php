@@ -31,7 +31,8 @@ abstract class MessageConsumer implements ConsumerInterface, MessageConsumerInte
     protected $logger;
     protected $dispatcher;
     /** @var DriverInterface[] */
-    protected $drivers = array();
+    protected $drivers = null;
+    protected $driverManager = null;
 
     /**
      * The method to be implemented by subclasses, executed upon reception of a message.
@@ -54,11 +55,21 @@ abstract class MessageConsumer implements ConsumerInterface, MessageConsumerInte
     }
 
     /**
-     * @param DriverInterface $driver
+     * @param string $driverManager
      */
-    public function registerDriver(DriverInterface $driver)
+    public function setDriverManager($driverManager)
     {
-        $this->drivers[] = $driver;
+        $this->driverManager = $driverManager;
+    }
+
+    /**
+     * Lazy-loads all the driver services which have been registered
+     */
+    protected function loadRegisteredDrivers()
+    {
+        if ($this->drivers === null) {
+            $this->drivers = $this->driverManager->getDrivers();
+        }
     }
 
     /**
@@ -120,6 +131,7 @@ abstract class MessageConsumer implements ConsumerInterface, MessageConsumerInte
      */
     protected function getDriver($message)
     {
+        $this->loadRegisteredDrivers();
         foreach ($this->drivers as $driver) {
             if ($driver->acceptMessage($message))
                 return $driver;

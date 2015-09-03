@@ -76,4 +76,17 @@ class DriverManager
     {
         return array_keys($this->aliases);
     }
+
+    /**
+     * returns all drivers
+     * @return array key is alias, value is the service
+     */
+    public function getDrivers()
+    {
+        $drivers = array();
+        foreach($this->aliases as $alias => $service) {
+            $drivers[$alias] = $this->container->get($service);
+        }
+        return $drivers;
+    }
 }
