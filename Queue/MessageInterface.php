@@ -6,6 +6,7 @@ namespace Kaliop\QueueingBundle\Queue;
  * Modeled after the AMQP message:
  *
  * - body
+ * - the content-type, allowing to deserialize the body
  * - a bag of properties
  */
 interface MessageInterface
@@ -23,7 +24,7 @@ interface MessageInterface
     //public $is_truncated;
 
     /** @return string */
-    public function getContentEncoding();
+    public function getContentType();
 
     /** @return array */
     // not needed so far

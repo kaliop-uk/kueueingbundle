@@ -20,11 +20,11 @@ class Message implements MessageInterface
     }
 
     /** @return string */
-    public function getContentEncoding()
+    public function getContentType()
     {
-        return $this->amqpMessage->content_encoding;
+        //return $this->amqpMessage->content_encoding;
+        return $this->amqpMessage->get('content_type');
     }
-
 
     /**
      * Check whether a property exists in the 'properties' dictionary

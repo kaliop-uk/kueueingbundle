@@ -8,13 +8,16 @@ use Psr\Log\LoggerInterface;
 use Kaliop\QueueingBundle\Event\EventsList;
 use Kaliop\QueueingBundle\Event\MessageReceivedEvent;
 use Kaliop\QueueingBundle\Queue\MessageInterface;
+use Kaliop\QueueingBundle\Queue\MessageConsumerInterface;
 use Kaliop\QueueingBundle\Adapter\DriverInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
- * Base class for message consumers
+ * Base class for message consumers.
+ * It can consume messages of different types, by letting the registered drivers decode them.
+ * The only method that subclasses need to implement is consume().
  */
-abstract class MessageConsumer implements ConsumerInterface
+abstract class MessageConsumer implements ConsumerInterface, MessageConsumerInterface
 {
     protected $assumedContentType = null;
     // NB: if you change this value in subclasses, take care about the security implications
@@ -94,6 +97,17 @@ abstract class MessageConsumer implements ConsumerInterface
      */
     public function execute(AMQPMessage $msg)
     {
+        $this->receive($msg);
+    }
+
+    /**
+     * This is the main entry point, called by driver-specific consumers
+     *
+     * @param mixed $msg
+     * @throws \Exception
+     */
+    public function receive($msg)
+    {
         $this->decodeAndConsume($this->getDriver($msg)->decodeMessage($msg));
     }
 
@@ -154,9 +168,8 @@ abstract class MessageConsumer implements ConsumerInterface
      */
     protected function decodeMessageBody(MessageInterface $msg)
     {
-        $properties = $msg->getProperties();
         // do we accept this type? (nb: this is an optional property)
-        $type = @$properties['content_type'];
+        $type = $msg->getContentType();
         if ($type == '' && $this->assumedContentType != '') {
             $type = $this->assumedContentType;
         }
@@ -165,7 +178,7 @@ abstract class MessageConsumer implements ConsumerInterface
         }
 
         // then decode it
-        switch ($properties['content_type']) {
+        switch ($type) {
             case 'application/json':
                 $data = json_decode($msg->getBody(), true);
                 if ($error = json_last_error()) {
