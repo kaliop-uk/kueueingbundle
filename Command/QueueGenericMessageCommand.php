@@ -23,11 +23,11 @@ class QueueGenericMessageCommand extends BaseCommand
             ->setName('kaliop_queueing:queuemessage')
             ->setDescription("Sends to a queue a pre-formatted message")
             ->addArgument('queue_name', InputArgument::REQUIRED, 'The queue name (string)')
-            ->addArgument('message', InputArgument::REQUIRED, 'The message body (string)')
+            ->addArgument('message_body', InputArgument::REQUIRED, 'The message body (string)')
             ->addOption('driver', 'b', InputOption::VALUE_OPTIONAL, 'The driver (string), if not default', null)
-            ->addOption('routing-key', 'k', InputOption::VALUE_OPTIONAL, 'The routing key, if needed (string)', null)
+            ->addOption('routing-key', 'r', InputOption::VALUE_OPTIONAL, 'The routing key, if needed (string)', null)
             ->addOption('content-type', 'c', InputOption::VALUE_OPTIONAL, 'The message body content-type, defaults to application/json (string)', null)
-            ->addOption('repeat', 'r', InputOption::VALUE_OPTIONAL, 'The number of times to send the message, 1 by default (int)', 1)
+            ->addOption('messages', 'm', InputOption::VALUE_OPTIONAL, 'The number of times to send the message, 1 by default (int)', 1)
             ->addOption('ttl', 't', InputOption::VALUE_OPTIONAL, 'Validity of message (in seconds)', null)
             ->addOption('debug', 'd', InputOption::VALUE_NONE, 'Enable Debugging');
     }
@@ -44,7 +44,7 @@ class QueueGenericMessageCommand extends BaseCommand
 
         $driverName = $input->getOption('driver');
         $queue = $input->getArgument('queue_name');
-        $message = $input->getArgument('message');
+        $message = $input->getArgument('message_body');
         $contentType = $input->getOption('content-type');
         $key = $input->getOption('routing-key');
         $repeat = $input->getOption('repeat');

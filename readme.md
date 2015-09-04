@@ -2,9 +2,10 @@
 
 A Symfony Bundle offering functionality related to message queuing systems.
 
-Ideally, it should shield the rest of the app from the messaging system in use
-(as of now is the only one supported is RabbitMQ via the RabbitMqBundle;
-other brokers supporting the amqp protocol are likely to work but untested)
+Ideally, it should shield the rest of the app from the messaging system in use.
+As of now is the only one supported is RabbitMQ via the RabbitMqBundle; other brokers supporting the amqp protocol are
+likely to work but untested.
+Support for the AWS Kinesis protocol is available in a separate bundle.
 
 The main use cases supported so far are:
 
@@ -132,18 +133,17 @@ For a start, the same Symfony installation will be used both as message producer
 
 ## Console commands available:
 
-* php console kaliop_queueing:queuecommand [-b=<driver>] [-ttl=<secs>] [--novalidate] <producer> <command> <args*>
+* php console kaliop_queueing:queuecommand [-b=<driver>] [-ttl=<secs>] [-r=<routing key>] [--novalidate] <producer> <command> <args*>
 
     To send to a queue a message specifying execution of the given symfony console command
 
-* php console kaliop_queueing:queuemessage [-b=<driver>] [-ttl=<secs>] [-k=<routing key>] [-c=<content-type>] [-r=<repeat>] <producer> <body>
+* php console kaliop_queueing:queuemessage [-b=<driver>] [-ttl=<secs>] [-r=<routing key>] [-c=<content-type>] [-m=<repeat>] <producer> <body>
 
     To send to a queue a message in a pre-formatted payload
 
 * php console kaliop_queueing:consumer [-w] <consumer>
 
     To start a worker process which consumes messages from the specified queue.
-    NB: this is preferred over rabbitmq: consumer, as it adds a couple of features
 
 * php console kaliop_queueing:managedriver list [<driver>]
 

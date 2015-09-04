@@ -26,7 +26,7 @@ class QueueConsoleCommandCommand extends BaseCommand
             ->addArgument('console_command', InputArgument::REQUIRED, 'The console command to execute (string)')
             ->addArgument('argument/option', InputArgument::IS_ARRAY, 'Arguments and options for the executed command. Options use the syntax: option.<opt>.<val>')
             ->addOption('driver', 'b', InputOption::VALUE_OPTIONAL, 'The driver (string), if not default', null)
-            ->addOption('routing-key', 'k', InputOption::VALUE_OPTIONAL, 'The routing key, if needed (string)', null)
+            ->addOption('routing-key', 'r', InputOption::VALUE_OPTIONAL, 'The routing key, if needed (string)', null)
             ->addOption('ttl', 't', InputOption::VALUE_OPTIONAL, 'Validity of message (in seconds)', null)
             ->addOption('novalidate', null, InputOption::VALUE_NONE, 'Skip checking if the command is registered with the sf console')
             ->addOption('debug', 'd', InputOption::VALUE_NONE, 'Enable Debugging');
