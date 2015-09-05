@@ -1,5 +1,6 @@
 parameters:
     # Take control of the rabbitmq producer and consumer classes so we can extend them a bit for our needs
+    # You normally do not need to change these.
     old_sound_rabbit_mq.producer.class: Kaliop\QueueingBundle\Adapter\RabbitMq\Producer
     old_sound_rabbit_mq.consumer.class: Kaliop\QueueingBundle\Adapter\RabbitMq\Consumer
 

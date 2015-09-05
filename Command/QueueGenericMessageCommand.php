@@ -47,7 +47,7 @@ class QueueGenericMessageCommand extends BaseCommand
         $message = $input->getArgument('message_body');
         $contentType = $input->getOption('content-type');
         $key = $input->getOption('routing-key');
-        $repeat = $input->getOption('repeat');
+        $repeat = $input->getOption('messages');
         $ttl = $input->getOption('ttl');
         $debug = $input->getOption('debug');
 
