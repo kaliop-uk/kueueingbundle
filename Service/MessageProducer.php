@@ -3,6 +3,7 @@
 namespace Kaliop\QueueingBundle\Service;
 
 use Kaliop\QueueingBundle\Adapter\DriverInterface;
+use Kaliop\QueueingBundle\Queue\MessageProducerInterface;
 
 /**
  * A helper class, exposed as service.
@@ -13,7 +14,7 @@ use Kaliop\QueueingBundle\Adapter\DriverInterface;
  *
  * @todo it would be nice if we could force subclasses to implement a way to document their message format using e.g. jsonschema
  */
-abstract class MessageProducer
+abstract class MessageProducer implements MessageProducerInterface
 {
     protected $queue = null;
     protected $contentType = 'application/json';
