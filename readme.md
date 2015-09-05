@@ -196,3 +196,9 @@ developers of this library of where to turn to to get inspiration and borrow cod
 ## More docs
 
 * a slide set, prepared for phpsummercamp 2015: https://docs.google.com/presentation/d/16rjSyejWGx4z7lIUYzvB5sXS8wMuHQc5N3QdIbkgj1A/pub?start=false&loop=false&delayms=10000#slide=id.p
+
+[![License](https://poser.pugx.org/kaliop/queueingbundle/license)](https://packagist.org/packages/kaliop/queueingbundle)
+[![Latest Stable Version](https://poser.pugx.org/kaliop/queueingbundle/v/stable)](https://packagist.org/packages/kaliop/queueingbundle)
+[![Total Downloads](https://poser.pugx.org/kaliop/queueingbundle/downloads)](https://packagist.org/packages/kaliop/queueingbundle)
+
+[![Build Status](https://travis-ci.org/kaliop-uk/kueueingbundle)](https://travis-ci.org/kaliop-uk/kueueingbundle)
