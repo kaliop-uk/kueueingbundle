@@ -22,7 +22,7 @@ services:
 
 before_install:
   # This is mandatory or 'apt-get install' calls following will fail
-  - sudo apt-get update -qq
+  #- sudo apt-get update -qq
 
 install:
   - composer self-update
