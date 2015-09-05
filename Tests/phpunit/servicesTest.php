@@ -6,8 +6,12 @@ class sampleTest extends WebTestCase
 {
     protected function getContainer()
     {
+        if (null !== static::$kernel) {
+            static::$kernel->shutdown();
+        }
         $options = array();
-        static::bootKernel($options);
+        static::$kernel = static::createKernel($options);
+        static::$kernel->boot();
         return static::$kernel->getContainer();
     }
 
