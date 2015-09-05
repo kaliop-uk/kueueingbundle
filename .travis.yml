@@ -24,7 +24,7 @@ before_install:
 install:
   - composer self-update
   # We might run composer install first, but then most of it would be undone anyway
-  - composer require --prefer-source --dev symfony/process:${SYMFONY_VERSION} symfony/framework-bundle:${SYMFONY_VERSION} ssymfony/finder:${SYMFONY_VERSION} symfony/monolog-bundle:${SYMFONY_VERSION}
+  - composer require --prefer-source --dev symfony/process:${SYMFONY_VERSION} symfony/framework-bundle:${SYMFONY_VERSION} symfony/finder:${SYMFONY_VERSION} symfony/monolog-bundle:${SYMFONY_VERSION}
 
 before_script:
   - cp phpunit.xml.dist phpunit.xml
