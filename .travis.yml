@@ -1,5 +1,8 @@
 language: php
 
+# This should make the builds faster
+sudo: false
+
 php:
   - 5.3
   - 5.4
