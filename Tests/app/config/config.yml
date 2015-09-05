@@ -1,0 +1,4 @@
+# Configuration file used for running tests
+
+framework:
+    secret: "ThisIsNotSoSercretSoWeTestIt"

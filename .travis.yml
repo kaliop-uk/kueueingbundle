@@ -23,12 +23,14 @@ before_install:
 
 install:
   - composer self-update
-  - composer require --prefer-source --dev symfony/symfony:${SYMFONY_VERSION}
+  # We might run composer install first, but then most of it would be undone anyway
+  - composer require --prefer-source --dev symfony/process:${SYMFONY_VERSION} symfony/framework-bundle:${SYMFONY_VERSION} ssymfony/finder:${SYMFONY_VERSION} symfony/monolog-bundle:${SYMFONY_VERSION}
 
 before_script:
+  - cp phpunit.xml.dist phpunit.xml
 
 script:
-  phpunit --coverage-clover=coverage.clover Tests
+  phpunit --coverage-clover=coverage.clover Tests/phpunit
 
 after_failure:
   # Display as much info as we can to help developers

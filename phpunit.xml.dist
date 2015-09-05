@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<phpunit bootstrap="./Tests/bootstrap.php">
+
+    <php>
+        <!-- this env var is needed by Symfony -->
+        <server name="KERNEL_DIR" value="./Tests/app" />
+    </php>
+
+    <!-- code coverage reporting -->
+    <filter>
+        <whitelist>
+            <directory>./</directory>
+            <exclude>
+                <directory>./Resources</directory>
+                <directory>./Tests</directory>
+                <directory>./vendor</directory>
+            </exclude>
+        </whitelist>
+    </filter>
+
+</phpunit>
