@@ -193,6 +193,41 @@ developers of this library of where to turn to to get inspiration and borrow cod
 * swarrot/swarrot - https://github.com/swarrot/swarrot
 
 
+## Code samples
+
+### Sending a message
+
+1. Setting up a new message producer
+
+    - create a subclass of MessageProducer;
+    - implement a `publish` method which calls `doPublish` internally;
+    - declare it as service
+
+2. Execution
+
+        $driver = $container->get('kaliop_queueing.drivermanager')->getDriver($driverName);
+        $messageProducer = $container->get('a_message_producer_service');
+        $messageProducer->setDriver($driver);
+        $messageProducer->setQueueName($queueName);
+        $messageProducer->publish($stuff...);
+
+### Receiving a message
+
+1. Setting up a new message consumer
+
+    - create a subclass of MessageConsumer;
+    - implement a `consume` method;
+    - declare it as service
+    - hook up the service to the desired queue using driver-specific configuration
+
+2. Execution
+
+        $driver = $container->get('kaliop_queueing.drivermanager')->getDriver($driverName);
+        $consumer = $driver->getConsumer($queueName);
+        // optional
+        $consumer->setRoutingKey($key);
+        $consumer->consume($nrOfMessages);
+
 ## More docs
 
 * a slide set, prepared for phpsummercamp 2015: https://docs.google.com/presentation/d/16rjSyejWGx4z7lIUYzvB5sXS8wMuHQc5N3QdIbkgj1A/pub?start=false&loop=false&delayms=10000#slide=id.p
