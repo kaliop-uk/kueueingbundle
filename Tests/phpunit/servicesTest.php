@@ -1,8 +1,8 @@
 <?php
 
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class sampleTest extends KernelTestCase
+class sampleTest extends WebTestCase
 {
     protected function getContainer()
     {
