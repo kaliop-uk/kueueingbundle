@@ -24,6 +24,7 @@ interface DriverInterface
     // *** Consumer side ***
 
     /**
+     * @param string $queueName
      * @return string \Kaliop\QueueingBundle\Queue\ConsumerInterface
      */
     public function getConsumer($queueName);

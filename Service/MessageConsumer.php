@@ -162,6 +162,10 @@ abstract class MessageConsumer implements ConsumerInterface, MessageConsumerInte
             }
 
             $this->consume($body);
+
+
+            /// @todo dispatch a MESSAGE_CONSUMED event?
+
         } catch (\Exception $e) {
             // we keep on working, but log an error
             if ($this->logger) {
