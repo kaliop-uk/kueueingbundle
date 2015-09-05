@@ -130,5 +130,4 @@ abstract class MessageProducer
         $producer->setContentType($this->getContentType());
         $producer->publish($this->encodeMessageBody($data), $routingKey, $extras);
     }
-
 }

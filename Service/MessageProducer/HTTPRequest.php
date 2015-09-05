@@ -16,8 +16,8 @@ class HTTPRequest extends BaseMessageProducer
     /**
      * @param string $url
      * @param array $options All CURL options are accepted
-     * @param string $routingKey if null, it will be calculated automatically
-     * @param null $ttl
+     * @param string $routingKey if null, it will be calculated automatically based on the url
+     * @param int $ttl seconds for the message to live in the queue
      */
     public function publish($url, $options = array(), $routingKey = null, $ttl = null)
     {

@@ -13,6 +13,13 @@ use Kaliop\QueueingBundle\Service\MessageProducer as BaseMessageProducer;
  */
 class XmlrpcCall extends BaseMessageProducer
 {
+    /**
+     * @param string $server hostname of the xmlrpc server to contact
+     * @param string $method the method to execute
+     * @param array $arguments parameters fpr the method
+     * @param null $routingKey if null it will be calculated based on server name + method
+     * @param null $ttl seconds for the message to live in the queue
+     */
     public function publish($server, $method, $arguments = array(), $routingKey = null, $ttl = null)
     {
         $msg = array(

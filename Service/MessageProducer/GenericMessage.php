@@ -5,12 +5,19 @@ namespace Kaliop\QueueingBundle\Service\MessageProducer;
 use Kaliop\QueueingBundle\Service\MessageProducer as BaseMessageProducer;
 
 /**
- * Pushes messages which come already formatted
+ * Pushes messages which come already encoded
  *
  * @todo test if expiration is actually upheld by rabbit
  */
 class GenericMessage extends BaseMessageProducer
 {
+    /**
+     * @param string $data
+     * @param string $contentType if null, application/json is assumed. The $data will not be reencoded with it, but
+     *                            depending on the protocol in use, this info might make it to the consumer
+     * @param string $routingKey
+     * @param int $ttl seconds for the message to live in the queue
+     */
     public function publish($data, $contentType = null, $routingKey = '', $ttl = null)
     {
         $extras = array();
@@ -21,8 +28,8 @@ class GenericMessage extends BaseMessageProducer
             $extras = array('expiration' => $ttl * 1000);
         }
 
-        if ($contentType == null) {
-            $contentType = $this->getContentType();
+        if ($contentType != null) {
+            $this->contentType = $contentType;
         }
 
         $this->doPublish($data, $routingKey, $extras);
@@ -37,5 +44,15 @@ class GenericMessage extends BaseMessageProducer
     protected function encodeMessageBody($data)
     {
         return $data;
+    }
+
+    /**
+     * We disable the check done in parent method that the content-type is supported for encoding
+     *
+     * @param string $type
+     */
+    public function setContentType($type)
+    {
+        $this->contentType = $type;
     }
 }

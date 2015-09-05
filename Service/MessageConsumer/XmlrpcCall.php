@@ -13,12 +13,6 @@ use PhpXmlRpc\Encoder as XE;
  */
 class XmlrpcCall extends MessageConsumer
 {
-
-    /*public function __construct( $consoleManager )
-    {
-        $this->consoleCommand = $consoleManager->getConsoleCommand();
-    }*/
-
     /**
      * @todo add support for options to be set to the xmlrpc client
      * @todo on the other hand, the list of allowed xmlrpc server with options might be stored in settings, just like ggwebservices does...
