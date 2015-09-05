@@ -10,7 +10,8 @@
         "oldsound/rabbitmq-bundle": "~1.2"
     },
     "require_dev": {
-        "symfony/symfony": "~2.3"
+        "symfony/symfony": "~2.3",
+        "phpunit/phpunit": "~4.0"
     },
     "suggest": {
         "phpxmlrpc/phpxmlrpc": "Used by the message consumer which executes xmlrpc calls. Ver 4.0 or later required"
