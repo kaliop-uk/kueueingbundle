@@ -9,6 +9,9 @@
         "ext-curl": "*",
         "oldsound/rabbitmq-bundle": "~1.2"
     },
+    "require_dev": {
+        "symfony/symfony": "~2.3"
+    },
     "suggest": {
         "phpxmlrpc/phpxmlrpc": "Used by the message consumer which executes xmlrpc calls. Ver 4.0 or later required"
     }
