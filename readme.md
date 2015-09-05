@@ -201,4 +201,4 @@ developers of this library of where to turn to to get inspiration and borrow cod
 [![Latest Stable Version](https://poser.pugx.org/kaliop/queueingbundle/v/stable)](https://packagist.org/packages/kaliop/queueingbundle)
 [![Total Downloads](https://poser.pugx.org/kaliop/queueingbundle/downloads)](https://packagist.org/packages/kaliop/queueingbundle)
 
-[![Build Status](https://travis-ci.org/kaliop-uk/kueueingbundle)](https://travis-ci.org/kaliop-uk/kueueingbundle)
+[![Build Status](https://travis-ci.org/kaliop-uk/kueueingbundle.svg?branch=master)](https://travis-ci.org/kaliop-uk/kueueingbundle)
