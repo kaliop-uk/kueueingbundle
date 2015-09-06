@@ -9,11 +9,13 @@ interface ConsumerInterface
 {
     /**
      * @param int $limit
+     * @return $this
      */
     public function setMemoryLimit($limit);
 
     /**
      * @param string $key
+     * @return $this
      */
     public function setRoutingKey($key);
 

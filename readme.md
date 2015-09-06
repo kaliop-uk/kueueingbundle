@@ -146,10 +146,10 @@ For a start, the same Symfony installation will be used both as message producer
 2. Execution
 
         $driver = $container->get('kaliop_queueing.drivermanager')->getDriver($driverName);
-        $messageProducer = $container->get('a_message_producer_service');
-        $messageProducer->setDriver($driver);
-        $messageProducer->setQueueName($queueName);
-        $messageProducer->publish($stuff...);
+        $container->get('a_message_producer_service')
+            ->setDriver($driver)
+            ->setQueueName($queueName);
+            ->publish($stuff...);
 
 ### Receiving a message
 
@@ -163,10 +163,10 @@ For a start, the same Symfony installation will be used both as message producer
 2. Execution
 
         $driver = $container->get('kaliop_queueing.drivermanager')->getDriver($driverName);
-        $consumer = $driver->getConsumer($queueName);
-        // optional
-        $consumer->setRoutingKey($key);
-        $consumer->consume($nrOfMessages);
+        $driver->getConsumer($queueName)
+            // optional
+            ->setRoutingKey($key);
+            ->consume($nrOfMessages);
 
 
 ## Console commands available:

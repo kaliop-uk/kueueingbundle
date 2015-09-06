@@ -8,6 +8,7 @@ interface QueueManagerInterface
     /**
      * Will be called before listActions and executeAction
      * @param string $queue
+     * @return $this
      */
     public function setQueueName($queue);
 

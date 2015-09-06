@@ -55,6 +55,7 @@ interface DriverInterface
 
     /**
      * @param bool $debug
+     * @return $this
      */
     public function setDebug($debug);
 }

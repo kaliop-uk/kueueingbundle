@@ -54,6 +54,7 @@ class Driver extends ContainerAware implements DriverInterface
 
     /**
      * @param bool $debug
+     * @return Driver
      * @todo emit a warning if AMQP_DEBUG is already defined
      */
     public function setDebug($debug)
@@ -61,5 +62,7 @@ class Driver extends ContainerAware implements DriverInterface
         if (defined('AMQP_DEBUG') === false) {
             define('AMQP_DEBUG', (bool)$debug);
         }
+
+        return $this;
     }
 }

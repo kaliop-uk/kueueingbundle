@@ -18,6 +18,7 @@ interface ProducerInterface
 
     /**
      * @param string $contentType
+     * @return $this
      */
     public function setContentType($contentType);
 }

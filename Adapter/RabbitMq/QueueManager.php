@@ -34,10 +34,13 @@ class QueueManager extends BaseMessageProducer implements ContainerAwareInterfac
     /**
      * Reimplemented to avoid throw on empty queue name
      * @param string $queue
+     * @return QueueManager
      */
     public function setQueueName($queue)
     {
         $this->queue = $queue;
+
+        return $this;
     }
 
     public function executeAction($action)

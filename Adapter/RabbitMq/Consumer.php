@@ -53,4 +53,29 @@ class Consumer extends BaseConsumer implements ConsumerInterface
             $this->queueDeclared = true;
         }
     }
+
+    /**
+     * Set the memory limit - overridden to make it fluent
+     *
+     * @param int $memoryLimit
+     * @return Consumer
+     */
+    public function setMemoryLimit($memoryLimit)
+    {
+        $this->memoryLimit = $memoryLimit;
+
+        return $this;
+    }
+
+    /**
+     * Overridden to make it fluent
+     * @param string $routingKey
+     * @return Consumer
+     */
+    public function setRoutingKey($routingKey)
+    {
+        $this->routingKey = $routingKey;
+
+        return $this;
+    }
 }

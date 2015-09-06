@@ -36,16 +36,20 @@ abstract class MessageProducer implements MessageProducerInterface
 
     /**
      * @param DriverInterface $driver
+     * @return MessageProducer
      */
     public function setDriver(DriverInterface $driver)
     {
         $this->driver = $driver;
+
+        return $this;
     }
 
     /**
      * NB: when used for RabbitMQ, the queue name is the name of the producer as defined in old_sound_rabbit_mq.producers,
      *     it is not the name of the actual amqp queue
      * @param string $queue
+     * @return MessageProducer
      * @throws \UnexpectedValueException
      */
     public function setQueueName($queue)
@@ -54,6 +58,8 @@ abstract class MessageProducer implements MessageProducerInterface
             throw new \UnexpectedValueException("Queue name can not be empty");
         }
         $this->queue = $queue;
+
+        return $this;
     }
 
     /**
