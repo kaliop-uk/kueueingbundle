@@ -3,7 +3,7 @@
 namespace Kaliop\QueueingBundle\Event;
 
 use Symfony\Component\EventDispatcher\Event;
-use Kaliop\QueueingBundle\Queue\MessageInterface;
+use Kaliop\QueueingBundle\Queue\MessageConsumerInterface;
 
 class MessageConsumedEvent extends Event
 {
@@ -12,11 +12,10 @@ class MessageConsumedEvent extends Event
     protected $consumer;
     protected $consumptionResult;
 
-    public function __construct($body, $consumptionResult, MessageInterface $message, $consumer)
+    public function __construct($body, $consumptionResult, MessageConsumerInterface $consumer)
     {
         $this->body = $body;
         $this->consumptionResult = $consumptionResult;
-        $this->message = $message;
         $this->consumer = $consumer;
     }
 
@@ -28,11 +27,6 @@ class MessageConsumedEvent extends Event
     public function getConsumptionResult()
     {
         return $this->consumptionResult;
-    }
-
-    public function getMessage()
-    {
-        return $this->message;
     }
 
     public function getConsumer()

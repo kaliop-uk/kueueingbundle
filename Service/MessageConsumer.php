@@ -27,7 +27,7 @@ abstract class MessageConsumer implements ConsumerInterface, MessageConsumerInte
         'application/json',
     );
     /** @var \Kaliop\QueueingBundle\Queue\MessageInterface */
-    protected $message;
+    protected $currentMessage;
     /** @var \Psr\Log\LoggerInterface $logger */
     protected $logger;
     protected $dispatcher;
@@ -120,7 +120,7 @@ abstract class MessageConsumer implements ConsumerInterface, MessageConsumerInte
      */
     public function receive($msg)
     {
-        $this->decodeAndConsume($this->getDriver($msg)->decodeMessage($msg));
+        $this->decodeAndConsume($this->getDriverForMessage($msg)->decodeMessage($msg));
     }
 
     /**
@@ -130,7 +130,7 @@ abstract class MessageConsumer implements ConsumerInterface, MessageConsumerInte
      * @return DriverInterface
      * @throws \Exception
      */
-    protected function getDriver($message)
+    protected function getDriverForMessage($message)
     {
         $this->loadRegisteredDrivers();
         foreach ($this->drivers as $driver) {
@@ -142,22 +142,30 @@ abstract class MessageConsumer implements ConsumerInterface, MessageConsumerInte
     }
 
     /**
+     * @return MessageInterface
+     */
+    public function getCurrentMessage()
+    {
+        return $this->currentMessage;
+    }
+
+    /**
      * Decodes the message body, dispatches the reception event, and calls consume()
      * @param MessageInterface $msg
      *
      * @todo validate message format
-     * @todo !important if we add a getCurrentMessage method, we can simplify both MessageReceivedEvent and MessageConsumedEvent
      */
     protected function decodeAndConsume(MessageInterface $msg)
     {
+        // save the message, in case child class needs it for whacky stuff
+        $this->currentMessage = $msg;
+
         try {
-            // save the message, in case child class needs it for whacky stuff
-            $this->message = $msg;
             $body = $this->decodeMessageBody($msg);
 
             // while at it, emit a message, and allow listeners to prevent further execution
             if ($this->dispatcher) {
-                $event = new MessageReceivedEvent($body, $msg, $this);
+                $event = new MessageReceivedEvent($body, $this);
                 if ($this->dispatcher->dispatch(EventsList::MESSAGE_RECEIVED, $event)->isPropagationStopped()) {
                     return;
                 }
@@ -166,7 +174,7 @@ abstract class MessageConsumer implements ConsumerInterface, MessageConsumerInte
             $result = $this->consume($body);
 
             if ($this->dispatcher) {
-                $event = new MessageConsumedEvent($body, $result, $msg, $this);
+                $event = new MessageConsumedEvent($body, $result, $this);
                 $this->dispatcher->dispatch(EventsList::MESSAGE_CONSUMED, $event);
             }
 
@@ -176,6 +184,8 @@ abstract class MessageConsumer implements ConsumerInterface, MessageConsumerInte
                 $this->logger->error('Unexpected exception trying to decode and consume message: ' . $e->getMessage());
             }
         }
+
+        $this->currentMessage = null;
     }
 
     /**

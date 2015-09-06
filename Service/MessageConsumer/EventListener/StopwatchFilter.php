@@ -29,6 +29,7 @@ class StopwatchFilter
     /**
      * NB: we measure the time consumed for processing of N messages upon receiving the Nth+1 message.
      * This because we have only the before-execution event available.
+     * @param MessageReceivedEvent $event
      */
     public function onMessageReceived(MessageReceivedEvent $event)
     {
