@@ -46,7 +46,9 @@ The main use cases supported so far are:
     (a.k.a. message consumers)
 
 * A console command used to troubleshoot queues, by dumping their config and current message count as well as purging
-  and deleting them
+  and deleting them (exact capabilities depend on each driver)
+
+* A console command used to troubleshoot drivers
 
 * A MessageProducer class from which message producers can be derived
 
@@ -131,68 +133,6 @@ For a start, the same Symfony installation will be used both as message producer
     basic security via filtering of the accepted messages by configuring values in parameters.yml
 
 
-## Console commands available:
-
-* php console kaliop_queueing:queuecommand [-b=<driver>] [-ttl=<secs>] [-r=<routing key>] [--novalidate] <producer> <command> <args*>
-
-    To send to a queue a message specifying execution of the given symfony console command
-
-* php console kaliop_queueing:queuemessage [-b=<driver>] [-ttl=<secs>] [-r=<routing key>] [-c=<content-type>] [-m=<repeat>] <producer> <body>
-
-    To send to a queue a message in a pre-formatted payload
-
-* php console kaliop_queueing:consumer [-w] <consumer>
-
-    To start a worker process which consumes messages from the specified queue.
-
-* php console kaliop_queueing:managedriver list [<driver>]
-
-    To manage a given driver, or list installed drivers
-    
-* php console kaliop_queueing:managequeue [-b=<driver>] list|purge|delete|info [<producer>]
-
-    To manage a given queue: get info about its state, or purge it from messages. Also to list all queues
-
-* php console kaliop_queueing:watchdog start|stop|check
-
-    To check that all the configured worker processes are executing and restart them if they are not
-
-
-## Events available:
-
-* Kaliop\QueueingBundle\Event\EventsList::MESSAGE_RECEIVED emitted when a message is gotten from the queue, before it is consumed
-
-* Kaliop\QueueingBundle\Event\EventsList::PROCESS_STARTED emitted when the watchdog starts a process
-
-* Kaliop\QueueingBundle\Event\EventsList::PROCESS_STOPPED emitted when the watchdog stops a process
-
-Note : these events are not dispatched by Symfony2's event dispatcher as such you cannot register listeners with the
-``kernel.event_listener`` tag, or the ``@DI\Observe`` annotation. See the examples in services.yml on how to use them.
-
-
-## Similar packages
-
-The work done here is by no means unique; it seems that there are already a lot of php packages dealing with queues
-and abstracting away from the details of the transport protocols. 
-
-What follows is neither an endorsement statement, nor a definitive list by any measure, more of a reminder for the
-developers of this library of where to turn to to get inspiration and borrow code from ;-)
-
-* zendframework/zend-queue - https://github.com/zendframework/ZendQueue
-
-* slm/queue - https://github.com/juriansluiman/SlmQueue
-
-* jms/job-queue-bundle - https://github.com/schmittjoh/JMSJobQueueBundle
-
-* bernard/bernard - https://github.com/bernardphp/bernard
-
-* wowo/wowo-queue-bundle - https://github.com/wowo/WowoQueueBundle
-
-* grimkirill/queue - https://github.com/grimkirill/queue
-
-* swarrot/swarrot - https://github.com/swarrot/swarrot
-
-
 ## Code samples
 
 ### Sending a message
@@ -228,9 +168,73 @@ developers of this library of where to turn to to get inspiration and borrow cod
         $consumer->setRoutingKey($key);
         $consumer->consume($nrOfMessages);
 
+
+## Console commands available:
+
+* php console kaliop_queueing:queuecommand [-b=<driver>] [-ttl=<secs>] [-r=<routing key>] [--novalidate] <producer> <command> <args*>
+
+    To send to a queue a message specifying execution of the given symfony console command
+
+* php console kaliop_queueing:queuemessage [-b=<driver>] [-ttl=<secs>] [-r=<routing key>] [-c=<content-type>] [-m=<repeat>] <producer> <body>
+
+    To send to a queue a message in a pre-formatted payload
+
+* php console kaliop_queueing:consumer [-w] [-r=<routing key>] [-m=<messages-to-consume>] <consumer>
+
+    To start a worker process which consumes messages from the specified queue.
+
+* php console kaliop_queueing:managedriver list [<driver>]
+
+    To manage a given driver, or list installed drivers
+    
+* php console kaliop_queueing:managequeue [-b=<driver>] list|purge|delete|info [<producer>]
+
+    To manage a given queue: get info about its state, or purge it from messages. Also to list all queues
+
+* php console kaliop_queueing:watchdog start|stop|check
+
+    To check that all the configured worker processes are executing and restart them if they are not
+
+
+## Events available:
+
+* Kaliop\QueueingBundle\Event\EventsList::MESSAGE_RECEIVED emitted when a message is gotten from the queue, before it is consumed
+
+* Kaliop\QueueingBundle\Event\EventsList::PROCESS_STARTED emitted when the watchdog starts a process
+
+* Kaliop\QueueingBundle\Event\EventsList::PROCESS_STOPPED emitted when the watchdog stops a process
+
+Note : these events are not dispatched by Symfony2's event dispatcher as such you cannot register listeners with the
+``kernel.event_listener`` tag, or the ``@DI\Observe`` annotation. See the examples in services.yml on how to use them.
+
+
 ## More docs
 
 * a slide set, prepared for phpsummercamp 2015: https://docs.google.com/presentation/d/16rjSyejWGx4z7lIUYzvB5sXS8wMuHQc5N3QdIbkgj1A/pub?start=false&loop=false&delayms=10000#slide=id.p
+
+
+## Similar packages
+
+The work done here is by no means unique; it seems that there are already a lot of php packages dealing with queues
+and abstracting away from the details of the transport protocols. 
+
+What follows is neither an endorsement statement, nor a definitive list by any measure, more of a reminder for the
+developers of this library of where to turn to to get inspiration and borrow code from ;-)
+
+* zendframework/zend-queue - https://github.com/zendframework/ZendQueue
+
+* slm/queue - https://github.com/juriansluiman/SlmQueue
+
+* jms/job-queue-bundle - https://github.com/schmittjoh/JMSJobQueueBundle
+
+* bernard/bernard - https://github.com/bernardphp/bernard
+
+* wowo/wowo-queue-bundle - https://github.com/wowo/WowoQueueBundle
+
+* grimkirill/queue - https://github.com/grimkirill/queue
+
+* swarrot/swarrot - https://github.com/swarrot/swarrot
+
 
 [![License](https://poser.pugx.org/kaliop/queueingbundle/license)](https://packagist.org/packages/kaliop/queueingbundle)
 [![Latest Stable Version](https://poser.pugx.org/kaliop/queueingbundle/v/stable)](https://packagist.org/packages/kaliop/queueingbundle)
