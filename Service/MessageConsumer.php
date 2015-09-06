@@ -7,6 +7,7 @@ use PhpAmqpLib\Message\AMQPMessage;
 use Psr\Log\LoggerInterface;
 use Kaliop\QueueingBundle\Event\EventsList;
 use Kaliop\QueueingBundle\Event\MessageReceivedEvent;
+use Kaliop\QueueingBundle\Event\MessageConsumedEvent;
 use Kaliop\QueueingBundle\Queue\MessageInterface;
 use Kaliop\QueueingBundle\Queue\MessageConsumerInterface;
 use Kaliop\QueueingBundle\Adapter\DriverInterface;
@@ -40,7 +41,7 @@ abstract class MessageConsumer implements ConsumerInterface, MessageConsumerInte
      * It should *not* leak memory ;-)
      *
      * @param mixed $data this is automatically decoded from the received message into a php data structure
-     * @return void
+     * @return mixed the result of consumption is passed to the event listeners
      */
     abstract public function consume($data);
 
@@ -145,6 +146,7 @@ abstract class MessageConsumer implements ConsumerInterface, MessageConsumerInte
      * @param MessageInterface $msg
      *
      * @todo validate message format
+     * @todo !important if we add a getCurrentMessage method, we can simplify both MessageReceivedEvent and MessageConsumedEvent
      */
     protected function decodeAndConsume(MessageInterface $msg)
     {
@@ -161,10 +163,12 @@ abstract class MessageConsumer implements ConsumerInterface, MessageConsumerInte
                 }
             }
 
-            $this->consume($body);
+            $result = $this->consume($body);
 
-
-            /// @todo dispatch a MESSAGE_CONSUMED event?
+            if ($this->dispatcher) {
+                $event = new MessageConsumedEvent($body, $result, $msg, $this);
+                $this->dispatcher->dispatch(EventsList::MESSAGE_CONSUMED, $event);
+            }
 
         } catch (\Exception $e) {
             // we keep on working, but log an error

@@ -11,6 +11,13 @@ final class EventsList
     const MESSAGE_RECEIVED = 'kaliop_queueing.message_received';
 
     /**
+     * The MESSAGE_CONSUMED event is thrown each time a message is received,after it is processed.
+     * NB: if a listener for the MESSAGE_RECEIVED event cancels the consuming, this event will not be fired.
+     * The event listener receives a MessageConsumedEvent instance.
+     */
+    const MESSAGE_CONSUMED = 'kaliop_queueing.message_consumed';
+
+    /**
      * The PROCESS_STARTED event is thrown each time the watchdog starts a process (just after)
      * The event listener receives a ProcessStartedEvent instance.
      */

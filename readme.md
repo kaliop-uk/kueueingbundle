@@ -198,7 +198,10 @@ For a start, the same Symfony installation will be used both as message producer
 
 ## Events available:
 
-* Kaliop\QueueingBundle\Event\EventsList::MESSAGE_RECEIVED emitted when a message is gotten from the queue, before it is consumed
+* Kaliop\QueueingBundle\Event\EventsList::MESSAGE_RECEIVED emitted when a message is gotten from the queue, before it is consumed.
+    It can be used to cancel the consuming.
+
+* Kaliop\QueueingBundle\Event\EventsList::MESSAGE_CONSUMED emitted when a message from the queue has been consumed.
 
 * Kaliop\QueueingBundle\Event\EventsList::PROCESS_STARTED emitted when the watchdog starts a process
 
