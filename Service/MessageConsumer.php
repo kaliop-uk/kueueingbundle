@@ -27,7 +27,7 @@ abstract class MessageConsumer implements ConsumerInterface, MessageConsumerInte
         'application/json',
     );
     /** @var \Kaliop\QueueingBundle\Queue\MessageInterface */
-    protected $currentMessage;
+    private $currentMessage;
     /** @var \Psr\Log\LoggerInterface $logger */
     protected $logger;
     protected $dispatcher;
@@ -152,11 +152,16 @@ abstract class MessageConsumer implements ConsumerInterface, MessageConsumerInte
     /**
      * Decodes the message body, dispatches the reception event, and calls consume()
      * @param MessageInterface $msg
+     * @throws \Exception only known case: if event listeners try to abuse the API
      *
      * @todo validate message format
      */
     protected function decodeAndConsume(MessageInterface $msg)
     {
+        if ($this->currentMessage != null) {
+            throw new \Exception("Inception. In reality plane MessageConsumer is not allowed to consume multiple messages in parallel");
+        }
+
         // save the message, in case child class needs it for whacky stuff
         $this->currentMessage = $msg;
 
