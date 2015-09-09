@@ -1,17 +1,21 @@
 
 # Ver 0.2
 
-* introduced a new Event: MessageConsumed (triggered after message processing)
+* NEW: introduced a new Event: MessageConsumed (triggered after message processing)
 
-* the Publisher classes now have to implement a BatchPublish method for optimized sending of multiple messages
+* NEW: the Publisher classes now implement a BatchPublish method for optimized sending of multiple messages
 
-* introduced fluent interfaces (for all setter methods)
+* NEW: introduced fluent interfaces (for all setter methods)
 
-* added an interface for MessageProducer classes
+* NEW: all MessageConsumer classes now return a value from their consume() method  
 
-* changed the MessageReceived event to simplify it a bit
+* NEW: introduced protection against recursion for MessageConsumer::decodeAndConsume
 
-* introduced protection against recursion for MessageConsumer::decodeAndConsume
+* NEW: added an interface for MessageProducer classes
+
+* CHANGED: changed the MessageReceived event to simplify it a bit
+
+* CHANGED: cli commands use '-i' to specify the driver to use instead of '-b'
 
 
 # Ver 0.1
