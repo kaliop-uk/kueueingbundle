@@ -2,17 +2,21 @@
 
 A Symfony Bundle offering functionality related to message queuing systems.
 
-Ideally, it should shield the rest of the app from the messaging system in use.
-As of now is the only one supported is RabbitMQ via the RabbitMqBundle; other brokers supporting the amqp protocol are
-likely to work but untested.
-Support for the AWS Kinesis protocol is available in a separate bundle.
+Main use cases:
 
-The main use cases supported so far are:
-
-- making it easy to write message producers and consumers
-- making it easy to introduce a queueing system in an existing application, allowing remote execution of commands/services/etc
-- helping with the creation of job-processing message consumers which work as daemons, in php, overcoming the inherent
+- make it easy to write message producers and consumers
+- shield the rest of the application from the messaging system in use
+- make it easy to introduce a queueing system in an existing application, allowing remote execution of existing console commands/services/etc
+- help with the creation of job-processing message consumers which work as daemons, in php, overcoming the inherent
   stability problems.
+
+As of now the only messaging broker supported is RabbitMQ via the RabbitMqBundle; other brokers supporting the AMQP
+protocol (version 0.9) are likely to work but untested.
+
+Support for other messaging systems is available in separate bundles:
+
+- AWS Kinesis
+- AWS SQS
 
 
 ## Features implemented

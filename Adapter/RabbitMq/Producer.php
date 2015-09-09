@@ -26,6 +26,32 @@ class Producer extends BaseProducer implements ProducerInterface
         $this->getChannel()->basic_publish($msg, $this->exchangeOptions['name'], $routingKey);
     }
 
+    public function batchPublish(array $messages)
+    {
+        $channel = $this->getChannel();
+
+        foreach($messages as $message) {
+            // we have to remap the received hash into a positional array
+            $msgBody = $message['msgBody'];
+            $additionalProperties = isset($message['additionalProperties']) ? $message['additionalProperties'] : array();
+
+            $channel->batch_basic_publish(
+                new AMQPMessage((string) $msgBody, array_merge($this->getBasicProperties(), $additionalProperties)),
+                $this->exchangeOptions['name'],
+                isset($message['routingKey']) ? (string)$message['routingKey'] : '',
+                isset($message['mandatory']) ? (bool)$message['mandatory'] : false,
+                isset($message['immediate']) ? (bool)$message['immediate'] : false,
+                isset($message['ticket']) ? $message['ticket'] : null
+            );
+        }
+
+        if ($this->autoSetupFabric) {
+            $this->setupFabric();
+        }
+
+        $channel->publish_batch();
+    }
+
     public function getQueueOptions()
     {
         return $this->queueOptions;
