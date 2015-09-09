@@ -36,6 +36,29 @@ class GenericMessage extends BaseMessageProducer
     }
 
     /**
+     * @param array $data
+     * @param string $contentType
+     * @param string $routingKey
+     * @param int $ttl
+     */
+    public function batchPublish(array $data, $contentType = null, $routingKey = '', $ttl = null)
+    {
+        $extras = array();
+        if ($ttl) {
+            // we want to be able to set a per-message-ttl, which is not currently supported, see https://github.com/videlalvaro/RabbitMqBundle/issues/80
+            // so we subclassed the producer class, and add an expiration (in millisecs)
+            // see also http://www.rabbitmq.com/ttl.html
+            $extras = array('expiration' => $ttl * 1000);
+        }
+
+        if ($contentType != null) {
+            $this->contentType = $contentType;
+        }
+
+        $this->doBatchPublish($data, $routingKey, $extras);
+    }
+
+    /**
      * Since we expect to receive data already encoded, no need to reencode
      *
      * @param mixed $data

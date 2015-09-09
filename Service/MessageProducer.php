@@ -137,4 +137,20 @@ abstract class MessageProducer implements MessageProducerInterface
         $producer->setContentType($this->getContentType());
         $producer->publish($this->encodeMessageBody($data), $routingKey, $extras);
     }
+
+    protected function doBatchPublish(array $data, $routingKey = '', $extras = array())
+    {
+        $producer = $this->getProducerService();
+        $producer->setContentType($this->getContentType());
+        $messages = array();
+        foreach($data as $element) {
+            $messages[] = array(
+                'msgBody' => $this->encodeMessageBody($element),
+                'routingKey' => $routingKey,
+                'additionalProperties' => $extras
+            );
+        }
+
+        $producer->batchPublish($messages);
+    }
 }
