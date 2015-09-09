@@ -37,7 +37,7 @@ abstract class MessageConsumer implements ConsumerInterface, MessageConsumerInte
 
     /**
      * The method to be implemented by subclasses, executed upon reception of a message.
-     * It can throw any exception, as those are caught anyway.
+     * It can throw any exception, as those are caught anyway (as long as this method is invoked by decodeAndConsume).
      * It should *not* leak memory ;-)
      *
      * @param mixed $data this is automatically decoded from the received message into a php data structure

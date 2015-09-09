@@ -49,7 +49,7 @@ class SymfonyService extends MessageConsumer
         // for a speed/resource gain, we test: if service is not registered, do not try to run it
         $this->validateService($body['service'], $body['method'], @$body['arguments']);
 
-        $this->runService($body['service'], $body['method'], @$body['arguments']);
+        return $this->runService($body['service'], $body['method'], @$body['arguments']);
     }
 
     /**

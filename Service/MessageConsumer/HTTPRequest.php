@@ -14,6 +14,7 @@ class HTTPRequest extends MessageConsumer
 {
     /**
      * @param array $body
+     * @return string|false
      * @throws \UnexpectedValueException
      */
     public function consume($body)
@@ -31,7 +32,7 @@ class HTTPRequest extends MessageConsumer
             $body['options'] = array();
         }
 
-        $this->executeRequest($body['url'], $body['options']);
+        return $this->executeRequest($body['url'], $body['options']);
     }
 
     /**

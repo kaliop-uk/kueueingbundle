@@ -38,6 +38,7 @@ class ConsoleCommand extends MessageConsumer
 
     /**
      * @param array $body
+     * @return array (positional) retcode, stdout, stderr
      * @throws \UnexpectedValueException
      */
     public function consume($body)
@@ -55,7 +56,7 @@ class ConsoleCommand extends MessageConsumer
         // for a speed/resource gain, we test: if command is not registered, do not try to run it
         $this->validateCommand($body['command'], @$body['arguments'], @$body['options']);
 
-        $this->runCommand($body['command'], @$body['arguments'], @$body['options']);
+        return $this->runCommand($body['command'], @$body['arguments'], @$body['options']);
     }
 
     /**
