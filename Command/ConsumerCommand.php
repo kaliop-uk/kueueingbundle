@@ -30,7 +30,7 @@ class ConsumerCommand extends BaseCommand
         $this
             ->setName('kaliop_queueing:consumer')
             ->addOption('label', null, InputOption::VALUE_REQUIRED, 'A name used to distinguish worker processes')
-            ->addOption('driver', 'b', InputOption::VALUE_OPTIONAL, 'The driver (string), if not default', null)
+            ->addOption('driver', 'i', InputOption::VALUE_OPTIONAL, 'The driver (string), if not default', null)
             ->setDescription("Starts a worker (message consumer) process");
     }
 

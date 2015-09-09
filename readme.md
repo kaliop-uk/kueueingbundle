@@ -175,11 +175,11 @@ For a start, the same Symfony installation will be used both as message producer
 
 ## Console commands available:
 
-* php console kaliop_queueing:queuecommand [-b=<driver>] [-ttl=<secs>] [-r=<routing key>] [--novalidate] <producer> <command> <args*>
+* php console kaliop_queueing:queuecommand [-i=<driver>] [-ttl=<secs>] [-r=<routing key>] [--novalidate] <producer> <command> <args*>
 
     To send to a queue a message specifying execution of the given symfony console command
 
-* php console kaliop_queueing:queuemessage [-b=<driver>] [-ttl=<secs>] [-r=<routing key>] [-c=<content-type>] [-m=<repeat>] <producer> <body>
+* php console kaliop_queueing:queuemessage [-i=<driver>] [-ttl=<secs>] [-r=<routing key>] [-c=<content-type>] [-m=<repeat>] <producer> <body>
 
     To send to a queue a message in a pre-formatted payload
 
@@ -191,7 +191,7 @@ For a start, the same Symfony installation will be used both as message producer
 
     To manage a given driver, or list installed drivers
     
-* php console kaliop_queueing:managequeue [-b=<driver>] list|purge|delete|info [<producer>]
+* php console kaliop_queueing:managequeue [-i=<driver>] list|purge|delete|info [<producer>]
 
     To manage a given queue: get info about its state, or purge it from messages. Also to list all queues
 
