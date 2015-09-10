@@ -158,6 +158,22 @@ For a start, the same Symfony installation will be used both as message producer
             ->setQueueName($queueName);
             ->publish($stuff...);
 
+3. If you want to make the above code simpler, you can define specific message producers as services - as long as you are
+    on Symfony 2.4 or later.
+
+    Example configuration: this service uses the 'sqs' driver and a queue named 'aQueue'
+
+        services:
+            hello.world.producer:
+                class: %kaliop_queueing.message_producer.console_command.class%
+                calls:
+                    - [ setDriver, [ "@=service('kaliop_queueing.drivermanager').getDriver('sqs')" ] ]
+                    - [ setQueueName, [ 'aQueue' ] ]
+
+    And code:
+
+        $container->get('hello.world.producer')->publish($cmd, $args);
+
 ### Receiving a message
 
 1. Setting up a new message consumer
