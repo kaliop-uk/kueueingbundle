@@ -20,7 +20,5 @@ class Monitor
         } else {
             echo "Received a message at " . strftime('%Y/%m/%d - %H:%M:%S', time()) . ": " . var_export($event->getConsumer()->getCurrentMessage(), true) . "\n";
         }
-
-
     }
 }

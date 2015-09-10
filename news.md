@@ -16,6 +16,8 @@
 
 * NEW: added an interface for MessageProducer classes
 
+* NEW: added a new service which can be used as MessageConsumed listener to help debugging: kaliop_queueing.message_consumer.filter.accumulator 
+
 * CHANGED: changed the MessageReceived event to simplify it a bit
 
 * CHANGED: cli commands use '-i' to specify the driver to use instead of '-b'
