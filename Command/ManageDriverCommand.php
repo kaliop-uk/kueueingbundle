@@ -16,7 +16,7 @@ class ManageDriverCommand extends BaseCommand
             ->setName('kaliop_queueing:managedriver')
             ->setDescription("Sends control commands to a driver")
             ->addArgument('action', InputArgument::REQUIRED, 'The action to execute. use "help" to see all available')
-            ->addOption('driver', 'i', InputOption::VALUE_OPTIONAL, 'The driver (string), if not default', null)
+            ->addOption('driver', 'i', InputOption::VALUE_REQUIRED, 'The driver (string), if not default', null)
             ->addOption('debug', 'd', InputOption::VALUE_NONE, 'Enable Debugging');
     }
 

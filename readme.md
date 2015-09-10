@@ -46,13 +46,16 @@ Support for other messaging systems is available in separate bundles:
     This allows to filter received messages to introduce e.g. security, logging or other cross-cutting concerns.
     To 'swallow' a consumed message, your event listener should simply call stopPropagation() on the event 
 
+* A console command used to consume messages, similar to the rabbitmq:consumer command but with more options, such as
+  support for multiple driver and timeouts
+
 * A console command used to 'daemonize' (a.k.a. restart if not executing) multiple php processes which are 'workers'
     (a.k.a. message consumers)
 
 * A console command used to troubleshoot queues, by dumping their config and current message count as well as purging
   and deleting them (exact capabilities depend on each driver)
 
-* A console command used to troubleshoot drivers
+* A console command used to troubleshoot drivers - at the moment it can simply list them 
 
 * A MessageProducer class from which message producers can be derived
 

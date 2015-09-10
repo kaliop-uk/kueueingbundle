@@ -30,7 +30,8 @@ class ConsumerCommand extends BaseCommand
         $this
             ->setName('kaliop_queueing:consumer')
             ->addOption('label', null, InputOption::VALUE_REQUIRED, 'A name used to distinguish worker processes')
-            ->addOption('driver', 'i', InputOption::VALUE_OPTIONAL, 'The driver (string), if not default', null)
+            ->addOption('driver', 'i', InputOption::VALUE_REQUIRED, 'The driver (string), if not default', null)
+            ->addOption('timeout', 't', InputOption::VALUE_REQUIRED, 'A timeout (seconds), after which stop the process', 0)
             ->setDescription("Starts a worker (message consumer) process");
     }
 
@@ -45,13 +46,44 @@ class ConsumerCommand extends BaseCommand
 
         $driverName = $input->getOption('driver');
         $debug = $input->getOption('debug');
+        $timeout = $input->getOption('timeout');
 
         $this->driver = $this->getContainer()->get('kaliop_queueing.drivermanager')->getDriver($driverName);
         if ($debug !== null) {
             $this->driver->setDebug($debug);
         }
 
-        parent::execute($input, $output);
+        // reimplementation of parent::execute($input, $output); to add timeout
+
+        if (defined('AMQP_WITHOUT_SIGNALS') === false) {
+            define('AMQP_WITHOUT_SIGNALS', $input->getOption('without-signals'));
+        }
+
+        if (!AMQP_WITHOUT_SIGNALS && extension_loaded('pcntl')) {
+            if (!function_exists('pcntl_signal')) {
+                throw new \BadFunctionCallException("Function 'pcntl_signal' is referenced in the php.ini 'disable_functions' and can't be called.");
+            }
+
+            pcntl_signal(SIGTERM, array(&$this, 'stopConsumer'));
+            pcntl_signal(SIGINT, array(&$this, 'stopConsumer'));
+            pcntl_signal(SIGHUP, array(&$this, 'restartConsumer'));
+        }
+
+        // this is now handled by the driver
+        //if (defined('AMQP_DEBUG') === false) {
+        //    define('AMQP_DEBUG', (bool) $input->getOption('debug'));
+        //}
+
+        $this->amount = $input->getOption('messages');
+
+        if (0 > $this->amount) {
+            throw new \InvalidArgumentException("The -m option should be null or greater than 0");
+        }
+        $this->initConsumer($input);
+
+        $this->consumer->consume($this->amount, $timeout);
+
+        // end reimplementation
 
         // reset label after execution is done, in case of weird usage patterns
         self::$label = null;
@@ -79,9 +111,4 @@ class ConsumerCommand extends BaseCommand
         }
         $this->consumer->setRoutingKey($input->getOption('route'));
     }
-
-    /*protected function getConsumerService()
-    {
-        return $this->driver->getConsumerServiceId();
-    }*/
 }

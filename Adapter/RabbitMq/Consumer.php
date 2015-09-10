@@ -4,13 +4,15 @@ namespace Kaliop\QueueingBundle\Adapter\RabbitMq;
 
 use Kaliop\QueueingBundle\Queue\ConsumerInterface;
 use OldSound\RabbitMqBundle\RabbitMq\Consumer as BaseConsumer;
+use \PhpAmqpLib\Exception\AMQPTimeoutException;
 
 /**
- * Extends the parent class to allow users to get access to the queue
+ * Extends the parent class to allow users to get access to the queue and set a timeout to consume() calls
  */
 class Consumer extends BaseConsumer implements ConsumerInterface
 {
     protected $queueStats = array();
+    protected $loopBegin = null;
 
     public function getQueueOptions()
     {
@@ -77,5 +79,35 @@ class Consumer extends BaseConsumer implements ConsumerInterface
         $this->routingKey = $routingKey;
 
         return $this;
+    }
+
+    public function consume($msgAmount, $timeout=0)
+    {
+        if ($timeout > 0) {
+            // save initial time
+            $loopBegin = time();
+            $remaining = $timeout;
+
+            // reimplement parent::consume() to inject the timeout
+            $this->target = $msgAmount;
+            $this->setupConsumer();
+            while (count($this->getChannel()->callbacks)) {
+                // avoid waiting more than timeout seconds for message reception
+                $this->setIdleTimeout($remaining);
+                $this->maybeStopConsumer();
+                try {
+                    $this->getChannel()->wait(null, true, $this->getIdleTimeout());
+                } catch (AMQPTimeoutException $e) {
+                    return;
+                }
+                $remaining = $loopBegin + $timeout - time();
+                if ($remaining <= 0) {
+                    $this->forceStopConsumer();
+                }
+            }
+        } else {
+            $this->loopBegin = null;
+            parent::consume($msgAmount);
+        }
     }
 }

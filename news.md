@@ -5,6 +5,9 @@
 
 * NEW: the Publisher classes now implement a BatchPublish method for optimized sending of multiple messages
 
+* NEW: the Consume method of Consumer classes now accepts a $timeout optional parameter.
+       This is also true of the kaliop_queueing:consumer console command 
+
 * NEW: introduced fluent interfaces (for all setter methods)
 
 * NEW: all MessageConsumer classes now return a value from their consume() method  
