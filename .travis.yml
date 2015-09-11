@@ -29,7 +29,7 @@ before_install:
   # This is mandatory or 'apt-get install' calls following will fail
   #- sudo apt-get update -qq
   # Install a custom Xdebug version, as the default one (2.2.7) crashes when generating code coverage
-  - if [ "$TRAVIS_PHP_VERSION" = "5.6" ]; then ./Tests/travis/setup_xdebug.sh; fi
+  - if [ "$TRAVIS_PHP_VERSION" = "5.6" ]; then pecl install xdebug fi
 
 install:
   - composer self-update
