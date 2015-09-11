@@ -7,6 +7,7 @@
 wget http://xdebug.org/files/xdebug-2.3.3.tgz
 tar -xzf xdebug-2.3.3.tgz
 cd xdebug-2.3.3
+phpize
 ./configure --enable-xdebug
 make
 make install
