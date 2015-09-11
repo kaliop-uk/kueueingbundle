@@ -28,6 +28,7 @@ services:
 before_install:
   # This is mandatory or 'apt-get install' calls following will fail
   #- sudo apt-get update -qq
+  - phpenv config-add Tests/travis/travis.php.ini
 
 install:
   - composer self-update
