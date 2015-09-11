@@ -9,7 +9,7 @@
 * NEW: the Consume method of Consumer classes now accepts a $timeout optional parameter.
        This is also true of the kaliop_queueing:consumer console command 
 
-* NEW: introduced fluent interfaces (for all setter methods)
+* NEW: introduced fluent interfaces for all setter methods
 
 * NEW: all MessageConsumer classes now return a value from their consume() method  
 
@@ -24,6 +24,9 @@
 * CHANGED: changed the MessageReceived event to simplify it a bit
 
 * CHANGED: cli commands use '-i' to specify the driver to use instead of '-b'
+
+* FIXED: RabbitMQ Consumers can not change the routing key associated with their queue. The bundle now throws an exception  
+         if this is attempted
 
 
 # Ver 0.1
