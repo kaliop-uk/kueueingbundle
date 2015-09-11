@@ -17,7 +17,7 @@ class ManageQueueCommand extends BaseCommand
             ->setDescription("Sends control commands to a queue to f.e. purge it or grab some stats")
             ->addArgument('action', InputArgument::REQUIRED, 'The action to execute. use "help" to see all available')
             ->addArgument('queue_name', InputArgument::OPTIONAL, 'The queue name (string)', '')
-            ->addOption('argument', 'a', InputOption::VALUE_IS_ARRAY, 'The arguments (varies on the action/driver combination)', array())
+            ->addOption('argument', 'a', InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY, 'The arguments (varies on the action/driver combination)', array())
             ->addOption('driver', 'i', InputOption::VALUE_REQUIRED, 'The driver (string), if not default', null)
             ->addOption('debug', 'd', InputOption::VALUE_NONE, 'Enable Debugging');
     }
