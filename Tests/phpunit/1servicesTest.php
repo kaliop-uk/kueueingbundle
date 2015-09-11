@@ -42,5 +42,6 @@ class sampleTest extends WebTestCase
         $service = $container->get('kaliop_queueing.message_consumer.http_request.filter');
         $service = $container->get('kaliop_queueing.message_consumer.filter.monitor');
         $service = $container->get('kaliop_queueing.message_consumer.filter.stopwatch');
+        $service = $container->get('kaliop_queueing.message_consumer.filter.accumulator');
     }
 }

@@ -10,20 +10,38 @@ use Kaliop\QueueingBundle\Event\MessageConsumedEvent;
  */
 class Accumulator
 {
-    protected $result;
+    protected $results = array();
 
     public function onMessageConsumed(MessageConsumedEvent $event)
     {
-        $this->result = $event->getConsumptionResult();
+        $this->results[] = $event->getConsumptionResult();
     }
 
-    public function getConsumptionResult()
+    /**
+     * @param int $index if null, the last result is returned
+     * @return mixed
+     */
+    public function getConsumptionResult($index = null)
     {
-        return $this->result;
+        if ($index === null) {
+            return end($this->results);
+        }
+        if ($index >= count($this->results)) {
+            throw new \RuntimeException("Accumulator has stored ".count($this->results)." results, can not retrieve the one at index $index");
+        }
+        return $this->results[$index];
+    }
+
+    /**
+     * @return int
+     */
+    public function countConsumptionResult()
+    {
+        return count($this->results);
     }
 
     public function reset()
     {
-        $this->result = null;
+        $this->results = array();
     }
 }

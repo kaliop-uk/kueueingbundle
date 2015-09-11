@@ -28,7 +28,7 @@ class QueueManager extends BaseMessageProducer implements ContainerAwareInterfac
 
     public function listActions()
     {
-        return array('purge', 'delete', 'info', 'list');
+        return array('list', 'info', 'purge', 'delete');
     }
 
     /**
@@ -46,17 +46,17 @@ class QueueManager extends BaseMessageProducer implements ContainerAwareInterfac
     public function executeAction($action, array $arguments=array())
     {
         switch ($action) {
+            case 'list':
+                return $this->listQueues();
+
+            case 'info':
+                return $this->queueInfo();
+
             case 'purge':
                 return $this->purgeQueue();
 
             case 'delete':
                 return $this->deleteQueue();
-
-            case 'info':
-                return $this->queueInfo();
-
-            case 'list':
-                return $this->listQueues();
 
             default:
                 throw new InvalidArgumentException("Action $action not supported");
@@ -194,8 +194,6 @@ class QueueManager extends BaseMessageProducer implements ContainerAwareInterfac
     protected function getProducerService()
     {
         try {
-            // nopes... these are not parameters
-            //var_dump( $this->container->getParameter( 'old_sound_rabbit_mq.consumers' ) ); //. $this->getQueueName() .'.queue_options.name' ) );
             return $this->container->get('old_sound_rabbit_mq.' . $this->getQueueName() . '_consumer');
         } catch (ServiceNotFoundException $e) {
             return $this->container->get('old_sound_rabbit_mq.' . $this->getQueueName() . '_producer');

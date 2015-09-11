@@ -52,7 +52,7 @@ old_sound_rabbit_mq:
                 # A hash sign is a widlcard, while a star matches one word only
                 # Ex: kaliop.# matches all commands starting with 'kaliop:'
                 # NB take extra care about securing your environment when you allow execution of commands sent from remote hosts
-                routing_keys: [ # ]
+                routing_keys: [ '#' ]
             # the name of the callback is fixed
             callback: kaliop_queueing.message_consumer.console_command
 

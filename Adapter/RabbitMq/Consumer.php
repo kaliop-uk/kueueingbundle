@@ -35,10 +35,12 @@ class Consumer extends BaseConsumer implements ConsumerInterface
     protected function queueDeclare()
     {
         if (null !== $this->queueOptions['name']) {
-            list($queueName, $msgCount, $consumerCount) = $this->getChannel()->queue_declare($this->queueOptions['name'], $this->queueOptions['passive'],
+            list($queueName, $msgCount, $consumerCount) = $this->getChannel()->queue_declare(
+                $this->queueOptions['name'], $this->queueOptions['passive'],
                 $this->queueOptions['durable'], $this->queueOptions['exclusive'],
                 $this->queueOptions['auto_delete'], $this->queueOptions['nowait'],
-                $this->queueOptions['arguments'], $this->queueOptions['ticket']);
+                $this->queueOptions['arguments'], $this->queueOptions['ticket']
+            );
             if (isset($this->queueOptions['routing_keys']) && count($this->queueOptions['routing_keys']) > 0) {
                 foreach ($this->queueOptions['routing_keys'] as $routingKey) {
                     $this->getChannel()->queue_bind($queueName, $this->exchangeOptions['name'], $routingKey);
@@ -73,9 +75,14 @@ class Consumer extends BaseConsumer implements ConsumerInterface
      * Overridden to make it fluent
      * @param string $routingKey
      * @return Consumer
+     * @throws \RuntimeException
      */
     public function setRoutingKey($routingKey)
     {
+        // we have to throw an exception, otherwise the new routing key will just be ignored
+        if ($this->queueDeclared && $this->routingKey != $routingKey) {
+            throw new \RuntimeException('AMQP Consumer can not use a new routing key: queue has already been declared');
+        }
         $this->routingKey = $routingKey;
 
         return $this;

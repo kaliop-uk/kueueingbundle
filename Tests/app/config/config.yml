@@ -2,3 +2,90 @@
 
 framework:
     secret: "ThisIsNotSoSercretSoWeTestIt"
+
+services:
+    # enable the accumulator listener
+    kaliop_queueing.message_consumer.filter.accumulator:
+        class: %kaliop_queueing.message_consumer.filter.accumulator.class%
+        tags:
+             - { name: kaliop_queueing.event_listener, event: kaliop_queueing.message_consumed }
+
+old_sound_rabbit_mq:
+    connections:
+        default:
+            host:     'localhost'
+            port:     5672
+            user:     'guest'
+            password: 'guest'
+            vhost:    '/'
+            lazy:     false
+    producers:
+        travis_test:
+            connection: default
+            exchange_options:
+                name: kaliop_queueing.travis_test.exchange
+                type: topic
+    consumers:
+        travis_test:
+            connection: default
+            exchange_options:
+                name: kaliop_queueing.travis_test.exchange
+                type: topic
+            queue_options:
+                name: kaliop_queueing.travis_test.default_queue
+                routing_keys: [ '#' ]
+            callback: kaliop_queueing.message_consumer.noop
+        travis_test_hellodotstar:
+            connection: default
+            exchange_options:
+                name: kaliop_queueing.travis_test.exchange
+                type: topic
+            queue_options:
+                name: kaliop_queueing.travis_test.hellodotstar
+                routing_keys: [ 'hello.*' ]
+            callback: kaliop_queueing.message_consumer.noop
+        travis_test_stardotworld:
+            connection: default
+            exchange_options:
+                name: kaliop_queueing.travis_test.exchange
+                type: topic
+            queue_options:
+                name: kaliop_queueing.travis_test.stardotworld
+                routing_keys: [ '*.world' ]
+            callback: kaliop_queueing.message_consumer.noop
+        travis_test_hellodothash:
+            connection: default
+            exchange_options:
+                name: kaliop_queueing.travis_test.exchange
+                type: topic
+            queue_options:
+                name: kaliop_queueing.travis_test.hellodothash
+                routing_keys: [ 'hello.#' ]
+            callback: kaliop_queueing.message_consumer.noop
+        travis_test_hashdotworld:
+            connection: default
+            exchange_options:
+                name: kaliop_queueing.travis_test.exchange
+                type: topic
+            queue_options:
+                name: kaliop_queueing.travis_test.hashdotworld
+                routing_keys: [ '#.world' ]
+            callback: kaliop_queueing.message_consumer.noop
+        travis_test_hellodotworld:
+            connection: default
+            exchange_options:
+                name: kaliop_queueing.travis_test.exchange
+                type: topic
+            queue_options:
+                name: kaliop_queueing.travis_test.hellodotworld
+                routing_keys: [ 'hello.world' ]
+            callback: kaliop_queueing.message_consumer.noop
+        travis_test_bonjourdotmonde:
+            connection: default
+            exchange_options:
+                name: kaliop_queueing.travis_test.exchange
+                type: topic
+            queue_options:
+                name: kaliop_queueing.travis_test.bonjourdotmonde
+                routing_keys: [ 'bonjour.monde' ]
+            callback: kaliop_queueing.message_consumer.noop

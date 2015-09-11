@@ -194,7 +194,7 @@ For a start, the same Symfony installation will be used both as message producer
             ->consume($nrOfMessages);
 
 
-## Console commands available:
+## Console commands available
 
 * php console kaliop_queueing:queuecommand [-i=<driver>] [-ttl=<secs>] [-r=<routing key>] [--novalidate] <producer> <command> <args*>
 
@@ -221,7 +221,7 @@ For a start, the same Symfony installation will be used both as message producer
     To check that all the configured worker processes are executing and restart them if they are not
 
 
-## Events available:
+## Events available
 
 * Kaliop\QueueingBundle\Event\EventsList::MESSAGE_RECEIVED emitted when a message is gotten from the queue, before it is consumed.
     It can be used to cancel the consuming.
@@ -235,11 +235,14 @@ For a start, the same Symfony installation will be used both as message producer
 Note : these events are not dispatched by Symfony2's event dispatcher as such you cannot register listeners with the
 ``kernel.event_listener`` tag, or the ``@DI\Observe`` annotation. See the examples in services.yml on how to use them.
 
+
 ## Cookbook
 
 ### Error management
 
 ### ACK/NACK, what the heck
+
+### Bundle Queues and Routing Keys - how do they map to Messaging Systems 
 
 ### Implementing a new driver
 
