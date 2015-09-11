@@ -6,7 +6,7 @@ use Symfony\Component\Process\PhpExecutableFinder;
 
 /**
  * Class used to manage a series of "worker processes".
- * Each worker is a php process running a rabbitmq consumer (as symfony console command).
+ * Each worker is a php process running a message consumer (as symfony console command).
  * The list of workers is defined using configuration parameters.
  *
  * @todo define an interface for the part of this code which deals with getConsoleCommand() - maybe split it off altogether
@@ -31,7 +31,6 @@ class WorkerManager
      */
     public function getWorkersCommands($env = null)
     {
-
         $procs = array();
         foreach ($this->getWorkersNames() as $name) {
             $procs[$name] = $this->getWorkerCommand($name, $env);
@@ -51,8 +50,8 @@ class WorkerManager
      * Returns the command line of a worker configured to be running as daemon
      *
      * @param string $name
-     * @param bool $unescaped do not add shell escaping to the command. NB: never use this option for executing stuff, only for grepping
      * @param string $env set it to non null to force execution using a specific environment
+     * @param bool $unescaped do not add shell escaping to the command. NB: never use this option for executing stuff, only for grepping
      * @return string
      * @throws \Exception
      *
@@ -62,7 +61,6 @@ class WorkerManager
      * @todo tighten security: option names should be checked against the valid ones in the rabbitmq:consumer process
      * @todo get the name of the console command from himself
      */
-
     public function getWorkerCommand($name, $env = null, $unescaped = false)
     {
         $defs = $this->workersList;
@@ -88,6 +86,7 @@ class WorkerManager
      * Generates the php command to run the sf console
      *
      * @param string $env when not null an environment is set for the cmd to execute
+     * @param bool $unescaped do not add shell escaping to the command. NB: never use this option for executing stuff, only for grepping
      * @return string
      * @throws \RuntimeException
      *
