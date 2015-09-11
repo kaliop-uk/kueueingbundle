@@ -49,17 +49,17 @@ script:
 
 after_failure:
   # Display as much info as we can to help developers
+  - if [ "$TRAVIS_PHP_VERSION" != "hhvm" ]; then php -i; fi
   #- cat apache_error.log
   #- cat apache_access.log
   #- cat /var/log/hhvm/error.log
-  #- if [ "$TRAVIS_PHP_VERSION" = "hhvm" ]; then php -i; fi
 
 after_script:
   # Upload code-coverage to Scrutinizer
-  - if [ "$TRAVIS_PHP_VERSION" = "5.6" ]; then wget https://scrutinizer-ci.com/ocular.phar; fi
-  - if [ "$TRAVIS_PHP_VERSION" = "5.6" ]; then php ocular.phar code-coverage:upload --format=php-clover coverage.clover; fi
+  - if [ "$TRAVIS_PHP_VERSION" = "5.6" -a -f coverage.clover ]; then wget https://scrutinizer-ci.com/ocular.phar; fi
+  - if [ "$TRAVIS_PHP_VERSION" = "5.6" -a -f coverage.clover ]; then php ocular.phar code-coverage:upload --format=php-clover coverage.clover; fi
   # Upload code-coverage to CodeClimate
-  - if [ "$TRAVIS_PHP_VERSION" = "5.6" ]; then CODECLIMATE_REPO_TOKEN=TOBEGOTTEN ./vendor/bin/test-reporter --coverage-report=coverage.clover; fi
+  - if [ "$TRAVIS_PHP_VERSION" = "5.6" -a -f coverage.clover ]; then CODECLIMATE_REPO_TOKEN=TOBEGOTTEN ./vendor/bin/test-reporter --coverage-report=coverage.clover; fi
 
 cache:
   directories:
