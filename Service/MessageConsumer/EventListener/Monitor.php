@@ -3,11 +3,14 @@
 namespace Kaliop\QueueingBundle\Service\MessageConsumer\EventListener;
 
 use Kaliop\QueueingBundle\Event\MessageReceivedEvent;
+use Kaliop\QueueingBundle\Event\MessageConsumedEvent;
 
 /**
  * A braindead class which can be used to debug consumption of queue messages, by being registered as listener.
  *
  * @todo inject the Sf logger and use it for output instead of plain echo?
+ * @todo use more precise time logging, with fractional seconds
+ * @todo add a flag to tell this class to either dump the payloads or not
  */
 class Monitor
 {
@@ -19,6 +22,17 @@ class Monitor
             echo "Received a message at " . strftime('%Y/%m/%d - %H:%M:%S', time()) . ": " . \Doctrine\Common\Util\Debug::dump($event->getConsumer()->getCurrentMessage()) . "\n";
         } else {
             echo "Received a message at " . strftime('%Y/%m/%d - %H:%M:%S', time()) . ": " . var_export($event->getConsumer()->getCurrentMessage(), true) . "\n";
+        }
+    }
+
+    public function onMessageConsumed(MessageConsumedEvent $event)
+    {
+        /// @todo this might give php warnings
+        ///       We could also check if Symfony\Component\VarDumper is available and use it instead...
+        if (class_exists('Doctrine\Common\Util\Debug')) {
+            echo "Message finished consumption at " . strftime('%Y/%m/%d - %H:%M:%S', time()) . ": " . \Doctrine\Common\Util\Debug::dump($event->getConsumptionResult()) . "\n";
+        } else {
+            echo "Message finished consumption at " . strftime('%Y/%m/%d - %H:%M:%S', time()) . ": " . var_export($event->getConsumptionResult(), true) . "\n";
         }
     }
 }

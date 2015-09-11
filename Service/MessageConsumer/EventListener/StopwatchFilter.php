@@ -11,6 +11,7 @@ use Kaliop\QueueingBundle\Event\MessageReceivedEvent;
  * is running at its full capacity.
  *
  * @todo inject the Sf logger and use it for output instead of plain echo?
+ * @todo add a message-consumed method, so that timing can be more precise (measure at end of consumption on Nth message)
  */
 class StopwatchFilter
 {
@@ -28,7 +29,7 @@ class StopwatchFilter
 
     /**
      * NB: we measure the time consumed for processing of N messages upon receiving the Nth+1 message.
-     * This because we have only the before-execution event available.
+     * This because we only use the before-execution event.
      * @param MessageReceivedEvent $event
      */
     public function onMessageReceived(MessageReceivedEvent $event)
