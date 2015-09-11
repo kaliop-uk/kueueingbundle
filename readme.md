@@ -6,7 +6,7 @@ Main use cases:
 
 - make it easy to write message producers and consumers
 - shield the rest of the application from the messaging system in use
-- make it easy to introduce a queueing system in an existing application, allowing remote execution of existing console commands/services/etc
+- make it easy to introduce a queueing system in an existing application, allowing remote execution of existing console commands/services/etc...
 - help with the creation of job-processing message consumers which work as daemons, in php, overcoming the inherent
   stability problems.
 
@@ -46,14 +46,16 @@ Support for other messaging systems is available in separate bundles:
     This allows to filter received messages to introduce e.g. security, logging or other cross-cutting concerns.
     To 'swallow' a consumed message, your event listener should simply call stopPropagation() on the event 
 
+* An event: kaliop_queueing.message_consumed, which your services can listen to by usage of tag kaliop_queueing.event_listener
+
 * A console command used to consume messages, similar to the rabbitmq:consumer command but with more options, such as
   support for multiple driver and timeouts
 
 * A console command used to 'daemonize' (a.k.a. restart if not executing) multiple php processes which are 'workers'
     (a.k.a. message consumers)
 
-* A console command used to troubleshoot queues, by dumping their config and current message count as well as purging
-  and deleting them (exact capabilities depend on each driver)
+* A console command used to troubleshoot and manage queues, by dumping their config and current message count as well as
+  purging and deleting them (exact capabilities depend on each driver)
 
 * A console command used to troubleshoot drivers - at the moment it can simply list them 
 
@@ -62,7 +64,7 @@ Support for other messaging systems is available in separate bundles:
 * A MessageConsumer class from which message consumers can be derived
 
 
-## Getting started
+## Getting started tutorial
 
 ### Setup
 
@@ -84,7 +86,7 @@ For a start, the same Symfony installation will be used both as message producer
 
 5. Test first that a simple console command from this bundle can be executed locally 
 
-        php console kaliop_queueing:echoback "hello world" -f "testoututput.txt" 
+        php console kaliop_queueing:echoback "hello world" -f "testoutput.txt" 
 
 6. Check that the 'rabbitmq' driver for the bundle is registered:
 
@@ -109,8 +111,8 @@ For a start, the same Symfony installation will be used both as message producer
 
 10. Test what happens now: when you queue execution of echoback, the consumer should trigger it immediately
 
-        php console kaliop_queueing:queuecommand <queue> kaliop_queueing:echoback "hello world again" option.f.testoututput2.txt
-        cat testoututput2.txt
+        php console kaliop_queueing:queuecommand <queue> kaliop_queueing:echoback "hello world again" option.f.testoutput2.txt
+        cat testoutput2.txt
         tail logs/<env>.log
 
     Note that <queue> above is to be substituted with the name of a producer from step 8
@@ -202,7 +204,7 @@ For a start, the same Symfony installation will be used both as message producer
 
     To send to a queue a message in a pre-formatted payload
 
-* php console kaliop_queueing:consumer [-w] [-r=<routing key>] [-m=<messages-to-consume>] <consumer>
+* php console kaliop_queueing:consumer [-w] [-r=<routing key>] [-m=<messages-to-consume>] [-t=timeout] <consumer>
 
     To start a worker process which consumes messages from the specified queue.
 
@@ -210,9 +212,9 @@ For a start, the same Symfony installation will be used both as message producer
 
     To manage a given driver, or list installed drivers
     
-* php console kaliop_queueing:managequeue [-i=<driver>] list|purge|delete|info [<producer>]
+* php console kaliop_queueing:managequeue [-i=<driver>] list|purge|delete|info [<producer>] [--argument=<value>]*
 
-    To manage a given queue: get info about its state, or purge it from messages. Also to list all queues
+    To manage a given queue: get info about its state, delete it or purge it from messages. Also to list all queues
 
 * php console kaliop_queueing:watchdog start|stop|check
 
@@ -232,6 +234,14 @@ For a start, the same Symfony installation will be used both as message producer
 
 Note : these events are not dispatched by Symfony2's event dispatcher as such you cannot register listeners with the
 ``kernel.event_listener`` tag, or the ``@DI\Observe`` annotation. See the examples in services.yml on how to use them.
+
+## Cookbook
+
+### Error management
+
+### ACK/NACK, what the heck
+
+### Implementing a new driver
 
 
 ## More docs
