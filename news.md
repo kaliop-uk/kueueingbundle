@@ -16,6 +16,8 @@
 
 * NEW: added an interface for MessageProducer classes
 
+* NEW: the QueueManager classes (and console command) now take optional parameters for all actions
+
 * NEW: added a new service which can be used as MessageConsumed listener to help debugging: kaliop_queueing.message_consumer.filter.accumulator 
 
 * CHANGED: changed the MessageReceived event to simplify it a bit

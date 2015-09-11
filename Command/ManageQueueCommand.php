@@ -17,6 +17,7 @@ class ManageQueueCommand extends BaseCommand
             ->setDescription("Sends control commands to a queue to f.e. purge it or grab some stats")
             ->addArgument('action', InputArgument::REQUIRED, 'The action to execute. use "help" to see all available')
             ->addArgument('queue_name', InputArgument::OPTIONAL, 'The queue name (string)', '')
+            ->addOption('argument', 'a', InputOption::VALUE_IS_ARRAY, 'The arguments (varies on the action/driver combination)', array())
             ->addOption('driver', 'i', InputOption::VALUE_REQUIRED, 'The driver (string), if not default', null)
             ->addOption('debug', 'd', InputOption::VALUE_NONE, 'Enable Debugging');
     }
@@ -33,6 +34,7 @@ class ManageQueueCommand extends BaseCommand
 
         $driverName = $input->getOption('driver');
         $command = $input->getArgument('action');
+        $arguments = $input->getOption('argument');
         $queue = $input->getArgument('queue_name');
         $debug = $input->getOption('debug');
 
@@ -53,7 +55,7 @@ class ManageQueueCommand extends BaseCommand
         }
 
         $queueManager->setQueueName($queue);
-        $result = $queueManager->executeAction($command);
+        $result = $queueManager->executeAction($command, $arguments);
 
         $this->writeln("Sent '$command' to queue $queue");
 

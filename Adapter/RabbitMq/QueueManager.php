@@ -43,7 +43,7 @@ class QueueManager extends BaseMessageProducer implements ContainerAwareInterfac
         return $this;
     }
 
-    public function executeAction($action)
+    public function executeAction($action, array $arguments=array())
     {
         switch ($action) {
             case 'purge':

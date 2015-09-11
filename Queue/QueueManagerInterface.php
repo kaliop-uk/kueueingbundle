@@ -19,7 +19,8 @@ interface QueueManagerInterface
 
     /**
      * @param string $action
+     * @param array $arguments
      */
-    public function executeAction($action);
+    public function executeAction($action, array $arguments=array());
 
 }
