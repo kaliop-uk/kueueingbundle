@@ -35,6 +35,10 @@ install:
   - composer require --prefer-source --dev symfony/process:${SYMFONY_VERSION} symfony/framework-bundle:${SYMFONY_VERSION} symfony/finder:${SYMFONY_VERSION} symfony/monolog-bundle:${SYMFONY_VERSION}
 
 before_script:
+  # Disable xdebug for speed.
+  # NB: this should NOT be done for hhvm and php 7.0.
+  # Also we use the php 5.6 run to generate code coverage reports, and we need xdebug for that
+  - if [ "$TRAVIS_PHP_VERSION" != "hhvm" -a "$TRAVIS_PHP_VERSION" != "7.0" -a "$TRAVIS_PHP_VERSION" != "5.6" ]; then phpenv config-rm xdebug.ini; fi
   - cp phpunit.xml.dist phpunit.xml
 
 script:
