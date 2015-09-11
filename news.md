@@ -25,6 +25,8 @@
 
 * CHANGED: cli commands use '-i' to specify the driver to use instead of '-b'
 
+* CHANGED: cli command kaliop_queueing:managequeue uses '-o option=value' to specify options for the remote command
+
 * FIXED: RabbitMQ Consumers can not change the routing key associated with their queue. The bundle now throws an exception  
          if this is attempted
 

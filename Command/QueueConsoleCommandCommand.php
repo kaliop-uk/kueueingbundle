@@ -24,7 +24,8 @@ class QueueConsoleCommandCommand extends BaseCommand
             ->setDescription("Sends to a queue a message to execute a symfony console command")
             ->addArgument('queue_name', InputArgument::REQUIRED, 'The queue name (string)')
             ->addArgument('console_command', InputArgument::REQUIRED, 'The console command to execute (string)')
-            ->addArgument('argument/option', InputArgument::IS_ARRAY, 'Arguments and options for the executed command. Options use the syntax: option.<opt>.<val>')
+            ->addArgument('arguments', InputArgument::IS_ARRAY, 'Arguments for the executed command')
+            ->addOption('option', 'o', InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY, 'Options for the executed command; use the syntax: name=value', array())
             ->addOption('driver', 'i', InputOption::VALUE_OPTIONAL, 'The driver (string), if not default', null)
             ->addOption('routing-key', 'r', InputOption::VALUE_REQUIRED, 'The routing key, if needed (string)', null)
             ->addOption('ttl', 't', InputOption::VALUE_REQUIRED, 'Validity of message (in seconds)', null)
@@ -54,16 +55,14 @@ class QueueConsoleCommandCommand extends BaseCommand
         $key = $input->getOption('routing-key');
         $ttl = $ttl = $input->getOption('ttl');
         $debug = $input->getOption('debug');
-        $arguments = $input->getArgument('argument/option');
+        $arguments = $input->getArgument('arguments');
+        $cliOptions = $input->getOption('option');
 
         // parse arguments to tell options apart
         $options = array();
-        foreach ($arguments as $key => $arg) {
-            if (strpos($arg, 'option.') === 0) {
-                $arg = explode('.', $arg, 3);
-                $options[$arg[1]] = ((count($arg) == 3) ? $arg[2] : null);
-                unset($arguments[$key]);
-            }
+        foreach ($cliOptions as $key => $arg) {
+            $arg = explode('=', $arg, 2);
+            $options[$arg[0]] = ((count($arg) == 2) ? $arg[1] : null);
         }
 
         $driver = $this->getContainer()->get('kaliop_queueing.drivermanager')->getDriver($driverName);
