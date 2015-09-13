@@ -15,11 +15,14 @@
 
 * NEW: added an interface for MessageProducer classes
 
-* NEW: the QueueManager classes (and console command) now take optional parameters for all actions
+* NEW: the QueueManager classes (and console command) now take optional parameters for all actions.
+       The exact parameters depend on the driver+action combination 
 
 * NEW: added a new service which can be used as MessageConsumed listener to help testing: kaliop_queueing.message_consumer.filter.accumulator 
 
 * NEW: introduced protection against recursion for MessageConsumer::decodeAndConsume
+
+* CHANGED: the ConsumerInterface now sports a method setCallback() 
 
 * CHANGED: changed the MessageReceived event to simplify it a bit
 
