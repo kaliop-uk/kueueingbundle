@@ -174,7 +174,7 @@ For a start, the same Symfony installation will be used both as message producer
 
     And code:
 
-        $container->get('hello.world.producer')->publish($cmd, $args);
+        $container->get('hello.world.producer')->publish($args, $routingKey, ...);
 
 ### Receiving a message
 
