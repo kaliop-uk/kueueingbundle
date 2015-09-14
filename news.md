@@ -30,6 +30,9 @@
 
 * CHANGED: cli command kaliop_queueing:managequeue uses '-o option=value' to specify options for the remote command
 
+* CHANGED: cli command `kaliop_queueing:managequeue list` has been renamed `kaliop_queueing:managequeue list-configured`
+           to avoid confusion between configured bundle queues and queues/exchanges existing on the broker 
+
 * FIXED: RabbitMQ Consumers can not change the routing key associated with their queue. The bundle now throws an exception  
          if this is attempted
 
