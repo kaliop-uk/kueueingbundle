@@ -13,10 +13,10 @@ class RegisterOldSoundPass implements CompilerPassInterface
     protected $queueManagerService;
 
     public function __construct(
-        $driverService = 'kaliop_queueing.amqp.queue_manager'
+        $queueManagerService = 'kaliop_queueing.amqp.queue_manager'
     )
     {
-        $this->queueManagerService = $driverService;
+        $this->queueManagerService = $queueManagerService;
     }
 
     public function process(ContainerBuilder $container)

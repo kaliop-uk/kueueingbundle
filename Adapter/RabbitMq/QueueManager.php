@@ -195,11 +195,16 @@ class QueueManager extends BaseMessageProducer implements ContainerAwareInterfac
         }
     }
 
-
+    /**
+     * Used to keep track of the queues which are available (configured in the bundle)
+     */
     public function registerProducer($queueName) {
         $this->registeredProducers[] = $queueName;
     }
 
+    /**
+     * Used to keep track of the queues which are available (configured in the bundle)
+     */
     public function registerConsumer($queueName) {
         $this->registeredConsumers[] = $queueName;
     }
