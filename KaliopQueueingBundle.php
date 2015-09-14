@@ -5,6 +5,7 @@ namespace Kaliop\QueueingBundle;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Kaliop\QueueingBundle\DependencyInjection\Compiler\RegisterDriversPass;
 use Kaliop\QueueingBundle\DependencyInjection\Compiler\RegisterListenersPass;
+use Kaliop\QueueingBundle\DependencyInjection\Compiler\RegisterOldSoundPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class KaliopQueueingBundle extends Bundle
@@ -15,5 +16,6 @@ class KaliopQueueingBundle extends Bundle
 
         $container->addCompilerPass(new RegisterDriversPass());
         $container->addCompilerPass(new RegisterListenersPass());
+        $container->addCompilerPass(new RegisterOldSoundPass());
     }
 }

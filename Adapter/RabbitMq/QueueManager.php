@@ -20,6 +20,8 @@ class QueueManager extends BaseMessageProducer implements ContainerAwareInterfac
 {
 
     protected $container;
+    protected $registeredProducers = array();
+    protected $registeredConsumers = array();
 
     public function setContainer(ContainerInterface $container = null)
     {
@@ -124,33 +126,24 @@ class QueueManager extends BaseMessageProducer implements ContainerAwareInterfac
      *
      * @param int $type
      * @return string[] index is queue name, value is queue type
-     *
-     * @todo make it work in non-debug mode: f.e. since the services which get created are tagged, when sniff them out in a compiler pass...
      */
     public function listQueues($type = Queue::TYPE_ANY)
     {
         $out = array();
-        foreach ($this->findServiceIdsContaining('old_sound_rabbit_mq.') as $serviceName) {
-            switch ($type) {
-                case Queue::TYPE_CONSUMER:
-                    if (preg_match('/_consumer$/', $serviceName))
-                        $out[str_replace(array('old_sound_rabbit_mq.', '_consumer'), '', $serviceName)] = Queue::TYPE_CONSUMER;
-                    break;
-                case Queue::TYPE_PRODUCER:
-                    if (preg_match('/_producer$/', $serviceName))
-                        $out[str_replace(array('old_sound_rabbit_mq.', '_producer'), '', $serviceName)] = Queue::TYPE_PRODUCER;
-                    break;
-                case Queue::TYPE_ANY:
-                    if (preg_match('/_consumer$/', $serviceName))
-                        $out[str_replace(array('old_sound_rabbit_mq.', '_consumer'), '', $serviceName)] = Queue::TYPE_CONSUMER;
-                    if (preg_match('/_producer$/', $serviceName))
-                        $out[str_replace(array('old_sound_rabbit_mq.', '_producer'), '', $serviceName)] = Queue::TYPE_PRODUCER;
+        if ($type = Queue::TYPE_PRODUCER || $type = Queue::TYPE_ANY) {
+            foreach ($this->registeredProducers as $queueName) {
+                        $out[$queueName] = Queue::TYPE_PRODUCER;
+            }
+        }
+        if ($type = Queue::TYPE_CONSUMER || $type = Queue::TYPE_ANY) {
+            foreach ($this->registeredConsumers as $queueName) {
+                $out[$queueName] = Queue::TYPE_CONSUMER;
             }
         }
         return $out;
     }
 
-    protected function findServiceIdsContaining($name)
+    /*protected function findServiceIdsContaining($name)
     {
         $builder = $this->getContainerBuilder();
         $serviceIds = $builder->getServiceIds();
@@ -164,12 +157,12 @@ class QueueManager extends BaseMessageProducer implements ContainerAwareInterfac
         }
 
         return $foundServiceIds;
-    }
+    }*/
 
     /**
      * @return ContainerBuilder
      */
-    protected function getContainerBuilder()
+    /*protected function getContainerBuilder()
     {
         /// @todo reintroduce check
         //if (!$this->getApplication()->getKernel()->isDebug()) {
@@ -186,7 +179,7 @@ class QueueManager extends BaseMessageProducer implements ContainerAwareInterfac
         $loader->load($cachedFile);
 
         return $container;
-    }
+    }*/
 
     /**
      * Hack: generally queues are defined consumer-side, so we try that 1st and producer-side 2nd (but that only gives
@@ -200,5 +193,14 @@ class QueueManager extends BaseMessageProducer implements ContainerAwareInterfac
         } catch (ServiceNotFoundException $e) {
             return $this->container->get('old_sound_rabbit_mq.' . $this->getQueueName() . '_producer');
         }
+    }
+
+
+    public function registerProducer($queueName) {
+        $this->registeredProducers[] = $queueName;
+    }
+
+    public function registerConsumer($queueName) {
+        $this->registeredConsumers[] = $queueName;
     }
 }
