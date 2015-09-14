@@ -20,6 +20,12 @@ interface ConsumerInterface
     public function setRoutingKey($key);
 
     /**
+     * @param mixed $callback depending on the consumer, it might be a Callable, a MessageConsumerInterface or a
+     * @return $this
+     */
+    public function setCallback($callback);
+
+    /**
      * If $amount is null and $timeout is 0, loop forever
      *
      * @param int $amount maximum number of consumed messages after which to exit the loop

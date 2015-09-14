@@ -4,7 +4,7 @@ namespace Kaliop\QueueingBundle\Adapter\RabbitMq;
 
 use Kaliop\QueueingBundle\Queue\ConsumerInterface;
 use OldSound\RabbitMqBundle\RabbitMq\Consumer as BaseConsumer;
-use \PhpAmqpLib\Exception\AMQPTimeoutException;
+use PhpAmqpLib\Exception\AMQPTimeoutException;
 
 /**
  * Extends the parent class to allow users to get access to the queue and set a timeout to consume() calls
@@ -56,6 +56,21 @@ class Consumer extends BaseConsumer implements ConsumerInterface
 
             $this->queueDeclared = true;
         }
+    }
+
+    /**
+     * Overridden to make it fluent, plus accept an object as well
+     * @param callable|\OldSound\RabbitMqBundle\RabbitMq\ConsumerInterface $callback
+     * @return Consumer
+     */
+    public function setCallback($callback)
+    {
+        if ($callback instanceof \OldSound\RabbitMqBundle\RabbitMq\ConsumerInterface) {
+            $callback = array($callback, 'execute');
+        }
+        $this->callback = $callback;
+
+        return $this;
     }
 
     /**
