@@ -28,7 +28,7 @@ class QueueManager extends BaseMessageProducer implements ContainerAwareInterfac
 
     public function listActions()
     {
-        return array('list', 'info', 'purge', 'delete');
+        return array('list-configured', 'info', 'purge', 'delete');
     }
 
     /**
@@ -46,7 +46,7 @@ class QueueManager extends BaseMessageProducer implements ContainerAwareInterfac
     public function executeAction($action, array $arguments=array())
     {
         switch ($action) {
-            case 'list':
+            case 'list-configured':
                 return $this->listQueues();
 
             case 'info':
@@ -124,6 +124,8 @@ class QueueManager extends BaseMessageProducer implements ContainerAwareInterfac
      *
      * @param int $type
      * @return string[] index is queue name, value is queue type
+     *
+     * @todo make it work in non-debug mode: f.e. since the services which get created are tagged, when sniff them out in a compiler pass...
      */
     public function listQueues($type = Queue::TYPE_ANY)
     {
