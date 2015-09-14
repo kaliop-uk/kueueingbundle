@@ -7,7 +7,7 @@ class QueueManagementTests extends RabbitMQTest
     public function testListQueues()
     {
         $queueManager = $this->getDriver()->getQueueManager(null);
-        $this->assertArrayHasKey('travis_test', $queueManager->executeAction('list'));
+        $this->assertArrayHasKey('travis_test', $queueManager->executeAction('list-configured'));
     }
 
     public function testQueueInfo()
