@@ -13,6 +13,15 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class Driver extends ContainerAware implements DriverInterface
 {
+    /**
+     * @param string $queueName
+     * @return \Kaliop\QueueingBundle\Queue\ProducerInterface
+     */
+    public function getProducer($queueName)
+    {
+        return $this->container->get('old_sound_rabbit_mq.' . $queueName . '_producer');
+    }
+
     public function getConsumer($queueName)
     {
         return $this->container->get('old_sound_rabbit_mq.' . $queueName . '_consumer');
@@ -30,15 +39,6 @@ class Driver extends ContainerAware implements DriverInterface
     public function decodeMessage($message)
     {
         return new Message($message);
-    }
-
-    /**
-     * @param string $queueName
-     * @return \Kaliop\QueueingBundle\Queue\ProducerInterface
-     */
-    public function getProducer($queueName)
-    {
-        return $this->container->get('old_sound_rabbit_mq.' . $queueName . '_producer');
     }
 
     /**
