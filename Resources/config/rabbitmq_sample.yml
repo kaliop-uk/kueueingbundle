@@ -1,5 +1,5 @@
 
-# Example of configuration of the queue used to distribute execution of console commands to workers.
+# Example of configuration of 4 queues which showcase tha capabilities of this bundle.
 
 # NB: this file is NOT parsed, you will have to add a similar configuration to your bundle/application
 
@@ -17,13 +17,14 @@ old_sound_rabbit_mq:
             lazy:     false
 
     producers:
-        # Definition of a queue (producer) where commands to execute remotely are pushed to.
-        # The name of the producer is used with php console kaliop_queueing:queuecommand <name>
-        # Important: type = topic.
+        # Definition of a queue (producer) where to push messages to execute remotely console commands.
+        # The name of the producer is used with php console commands, e.g. kaliop_queueing:queuecommand <name>
         console_command:
             connection: default
             exchange_options:
+                # This is the name of the exchange used by RabbitMq
                 name: kaliop_queueing.console_command.exchange
+                # Important: type = topic.
                 type: topic
 
         symfony_service:
@@ -38,43 +39,47 @@ old_sound_rabbit_mq:
                 name: kaliop_queueing.xmlrpc_call.exchange
                 type: topic
 
+        http_request:
+            connection: default
+            exchange_options:
+                name: kaliop_queueing.http_request.exchange
+                type: topic
+
     consumers:
-        # This is the name used in the worker command-line: php console rabbitmq:consumer -w <name>
-        # You can create many similar registrations if you want to run different workers in parallel
+        # Definition of a queue (consumer) used to execute console commands as defined by the received messages.
+        # This is the name used in the worker command-line: php app/console kaliop_queueing:consumer -w <name>
+        # You can create many similar registrations if you want to run different workers in parallel (change the name but keep the same exchange:name and queue_options:name)
         console_command_executor:
             connection: default
             exchange_options:
                 name: kaliop_queueing.console_command.exchange
                 type: topic
             queue_options:
+                # This is the name of the queue used by RabbitMq
                 name: kaliop_queueing.console_command.default_queue
                 # Routing keys available on this queue are the command to be executed, with doublecolon replaced by dots
                 # A hash sign is a widlcard, while a star matches one word only
                 # Ex: kaliop.# matches all commands starting with 'kaliop:'
                 # NB take extra care about securing your environment when you allow execution of commands sent from remote hosts
                 routing_keys: [ '#' ]
-            # the name of the callback is fixed
+            # the callback decides how the received messages are handled
             callback: kaliop_queueing.message_consumer.console_command
 
-        # This is the name used in the worker command-line: php console rabbitmq:consumer -w <name>
-        # You can create many similar registrations if you want to run different workers in parallel
+        # Definition of a queue (consumer) used to execute methods of services as defined by the received messages.
         symfony_service_executor:
             connection: default
             exchange_options:
-                # queued scripts can not the same exchange as all other console commands, unless we separate them by routing keys...
-                # This should be changed at some point, as otherwise
+                # queued scripts can not use the same exchange as console commands, unless we separate them by routing keys...
                 name: kaliop_queueing.symfony_service.exchange
                 type: topic
             queue_options:
                 name: kaliop_queueing.symfony_service.default_queue
                 # Routing keys available on this queue are the command to be executed, with doublecolon replaced by dots
-                # A hash sign is a wildcard, while a star matches one word only
-                # Ex: kaliop.# matches all commands starting with 'kaliop:'
-                # NB take extra care about securing your environment when you allow execution of commands sent from remote hosts
+                # NB take extra care about securing your environment when you allow execution of services requested from remote hosts
                 routing_keys: [ '#' ]
-            # the name of the callback is fixed
             callback: kaliop_queueing.message_consumer.symfony_service
 
+        # Definition of a queue (consumer) used to send xmlrpc calls to remote servers as defined by the received messages.
         xmlrpc_call_executor:
             connection: default
             exchange_options:
@@ -83,9 +88,19 @@ old_sound_rabbit_mq:
             queue_options:
                 name: kaliop_queueing.xmlrpc_call.default_queue
                 # Routing keys available on this queue are the server name followed by method, with doublecolon replaced by dots
-                # A hash sign is a wildcard, while a star matches one word only
-                # Ex: kaliop.# matches all commands starting with 'kaliop:'
-                # NB take extra care about securing your environment when you allow execution of commands sent from remote hosts
+                # NB take extra care about securing your environment when you allow execution of calls requested from remote hosts
                 routing_keys: [ '#' ]
-            # the name of the callback is fixed
             callback: kaliop_queueing.message_consumer.xmlrpc_call
+
+        # Definition of a queue (consumer) used to send http requests to remote servers as defined by the received messages.
+        http_request:
+            connection: default
+            exchange_options:
+                name: kaliop_queueing.http_request.exchange
+                type: topic
+            queue_options:
+                name: kaliop_queueing.http_request.default_queue
+                # Routing keys available on this queue is the full url, with doublecolon and slashes replaced by dots
+                # NB take extra care about securing your environment when you allow execution of calls requested from remote hosts
+                routing_keys: [ '#' ]
+            callback: kaliop_queueing.message_consumer.http_request
