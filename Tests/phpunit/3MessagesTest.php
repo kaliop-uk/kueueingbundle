@@ -103,5 +103,6 @@ class MessagesTest extends RabbitMQTest
                 $this->contains('fre')
             )
         );
+        $this->assertEquals(4, $accumulator->countConsumptionResult());
     }
 }
