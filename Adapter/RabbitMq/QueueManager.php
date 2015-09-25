@@ -7,8 +7,6 @@ use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
-use Symfony\Component\Config\FileLocator;
 use InvalidArgumentException;
 use Kaliop\QueueingBundle\Queue\Queue;
 use Kaliop\QueueingBundle\Queue\QueueManagerInterface;
@@ -195,11 +193,16 @@ class QueueManager extends BaseMessageProducer implements ContainerAwareInterfac
         }
     }
 
-
+    /**
+     * Used to keep track of the queues which are available (configured in the bundle)
+     */
     public function registerProducer($queueName) {
         $this->registeredProducers[] = $queueName;
     }
 
+    /**
+     * Used to keep track of the queues which are available (configured in the bundle)
+     */
     public function registerConsumer($queueName) {
         $this->registeredConsumers[] = $queueName;
     }
