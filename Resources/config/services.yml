@@ -173,6 +173,7 @@ services:
         tags:
         #     - { name: kaliop_queueing.event_listener, event: kaliop_queueing.message_received }
         #     - { name: kaliop_queueing.event_listener, event: kaliop_queueing.message_consumed }
+        #     - { name: kaliop_queueing.event_listener, event: kaliop_queueing.message_consumption_failed }
 
     # A filter used to time message consumption. Enable it (uncomment the tag) for testing/development
     kaliop_queueing.message_consumer.filter.stopwatch:

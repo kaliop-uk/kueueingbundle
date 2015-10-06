@@ -1,3 +1,7 @@
+# Ver 0.3
+
+* NEW: introduced a new Event: MessageConsumptionFailed (triggered when message processing raises an Exception)
+
 
 # Ver 0.2
 

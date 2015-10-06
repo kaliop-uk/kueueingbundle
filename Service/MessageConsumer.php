@@ -2,6 +2,7 @@
 
 namespace Kaliop\QueueingBundle\Service;
 
+use Kaliop\QueueingBundle\Event\MessageConsumptionFailedEvent;
 use OldSound\RabbitMqBundle\RabbitMq\ConsumerInterface;
 use PhpAmqpLib\Message\AMQPMessage;
 use Psr\Log\LoggerInterface;
@@ -184,9 +185,15 @@ abstract class MessageConsumer implements ConsumerInterface, MessageConsumerInte
             }
 
         } catch (\Exception $e) {
-            // we keep on working, but log an error
+            // we keep on working, but log an error and emit a message
+
             if ($this->logger) {
                 $this->logger->error('Unexpected exception trying to decode and consume message: ' . $e->getMessage());
+            }
+
+            if ($this->dispatcher) {
+                $event = new MessageConsumptionFailedEvent($body, $e, $this);
+                $this->dispatcher->dispatch(EventsList::MESSAGE_CONSUMPTION_FAILED, $event);
             }
         }
 

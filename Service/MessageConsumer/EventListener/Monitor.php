@@ -2,6 +2,7 @@
 
 namespace Kaliop\QueueingBundle\Service\MessageConsumer\EventListener;
 
+use Kaliop\QueueingBundle\Event\MessageConsumptionFailedEvent;
 use Kaliop\QueueingBundle\Event\MessageReceivedEvent;
 use Kaliop\QueueingBundle\Event\MessageConsumedEvent;
 
@@ -33,6 +34,17 @@ class Monitor
             echo "Message finished consumption at " . strftime('%Y/%m/%d - %H:%M:%S', time()) . ": " . \Doctrine\Common\Util\Debug::dump($event->getConsumptionResult()) . "\n";
         } else {
             echo "Message finished consumption at " . strftime('%Y/%m/%d - %H:%M:%S', time()) . ": " . var_export($event->getConsumptionResult(), true) . "\n";
+        }
+    }
+
+    public function onMessageConsumptionFailed(MessageConsumptionFailedEvent $event)
+    {
+        /// @todo this might give php warnings
+        ///       We could also check if Symfony\Component\VarDumper is available and use it instead...
+        if (class_exists('Doctrine\Common\Util\Debug')) {
+            echo "Message failed consumption at " . strftime('%Y/%m/%d - %H:%M:%S', time()) . ": " . \Doctrine\Common\Util\Debug::dump($event->getException()) . "\n";
+        } else {
+            echo "Message failed consumption at " . strftime('%Y/%m/%d - %H:%M:%S', time()) . ": " . var_export($event->getException(), true) . "\n";
         }
     }
 }
