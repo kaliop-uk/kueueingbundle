@@ -28,7 +28,7 @@ class ConsoleCommand extends BaseMessageProducer
             $extras = array('expiration' => $ttl * 1000);
         }
         if ($routingKey === null) {
-            $routingKey = $this->getRoutingKey($command, $arguments = array(), $options);
+            $routingKey = $this->getRoutingKey($command, $arguments, $options);
         }
         $this->doPublish($msg, $routingKey, $extras);
     }

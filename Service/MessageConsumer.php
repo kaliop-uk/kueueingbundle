@@ -160,7 +160,7 @@ abstract class MessageConsumer implements ConsumerInterface, MessageConsumerInte
     protected function decodeAndConsume(MessageInterface $msg)
     {
         if ($this->currentMessage != null) {
-            throw new \Exception("Inception. In reality plane MessageConsumer is not allowed to consume multiple messages in parallel");
+            throw new \Exception("Inception. In this reality plane MessageConsumer is not allowed to consume multiple messages in parallel");
         }
 
         // save the message, in case child class needs it for whacky stuff

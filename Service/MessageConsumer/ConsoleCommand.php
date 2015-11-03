@@ -9,6 +9,8 @@ use Symfony\Component\Process\Process;
 
 /**
  * This service can be registered to consume "execute sf console command" messages
+ *
+ * @todo return a value object (with arrayAccess) instead of an array, so that event listener can easily tell it apart from other stuff
  */
 class ConsoleCommand extends MessageConsumer
 {
