@@ -138,15 +138,23 @@ abstract class MessageProducer implements MessageProducerInterface
         $producer->publish($this->encodeMessageBody($data), $routingKey, $extras);
     }
 
+    /**
+     * @param array $data
+     * @param string|array $routingKey if an array, it must have the same keys as $data
+     * @param array $extras
+     */
     protected function doBatchPublish(array $data, $routingKey = '', $extras = array())
     {
+        if (is_string($routingKey)) {
+            $routingKey = array_fill_keys(array_keys($data), $routingKey);
+        }
         $producer = $this->getProducerService();
         $producer->setContentType($this->getContentType());
         $messages = array();
-        foreach($data as $element) {
+        foreach($data as $key => $element) {
             $messages[] = array(
                 'msgBody' => $this->encodeMessageBody($element),
-                'routingKey' => $routingKey,
+                'routingKey' => $routingKey[$key],
                 'additionalProperties' => $extras
             );
         }
