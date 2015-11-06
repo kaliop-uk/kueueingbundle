@@ -166,6 +166,7 @@ abstract class MessageConsumer implements ConsumerInterface, MessageConsumerInte
         // save the message, in case child class needs it for whacky stuff
         $this->currentMessage = $msg;
 
+        $body = null;
         try {
             $body = $this->decodeMessageBody($msg);
 

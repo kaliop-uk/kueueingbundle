@@ -4,6 +4,7 @@ parameters:
     kaliop_queueing.worker_manager.class: Kaliop\QueueingBundle\Service\WorkerManager
     kaliop_queueing.watchdog.class: Kaliop\QueueingBundle\Helper\Watchdog
     kaliop_queueing.event_dispatcher.class: Symfony\Component\EventDispatcher\ContainerAwareEventDispatcher
+    kaliop_queueing.console_event_listener.class: Kaliop\QueueingBundle\Service\ConsoleEventListener
 
     kaliop_queueing.message_producer.class: Kaliop\QueueingBundle\Service\MessageProducer
     kaliop_queueing.message_consumer.class: Kaliop\QueueingBundle\Service\MessageConsumer
@@ -13,6 +14,8 @@ parameters:
     kaliop_queueing.message_producer.console_command.class: Kaliop\QueueingBundle\Service\MessageProducer\ConsoleCommand
     kaliop_queueing.message_consumer.console_command.class: Kaliop\QueueingBundle\Service\MessageConsumer\ConsoleCommand
     kaliop_queueing.message_consumer.console_command.filter.class: Kaliop\QueueingBundle\Service\MessageConsumer\EventListener\ConsoleCommandFilter
+
+    kaliop_queueing.message_consumer.inprocess_console_command.class: Kaliop\QueueingBundle\Service\MessageConsumer\InProcessConsoleCommand
 
     kaliop_queueing.message_producer.symfony_service.class: Kaliop\QueueingBundle\Service\MessageProducer\SymfonyService
     kaliop_queueing.message_consumer.symfony_service.class: Kaliop\QueueingBundle\Service\MessageConsumer\SymfonyService
@@ -65,6 +68,12 @@ services:
         class: %kaliop_queueing.amqp.queue_manager.class%
         calls:
             - [ setContainer, [ @service_container ] ]
+
+    # An event listener used to get a hook into the currently running Application
+    kaliop_queueing.console_event_listener:
+        class: %kaliop_queueing.console_event_listener.class%
+        tags:
+            - { name: kernel.event_listener, event: console.command, method: onConsoleCommand }
 
     ### Producers ###
 
@@ -119,6 +128,13 @@ services:
         class: %kaliop_queueing.message_consumer.console_command.class%
         arguments: [ @kaliop_queueing.worker_manager ]
         parent: kaliop_queueing.message_consumer
+
+    # Executes Sf console commands without spawning new processes
+    kaliop_queueing.message_consumer.inprocess_console_command:
+        class: %kaliop_queueing.message_consumer.inprocess_console_command.class%
+        calls:
+            - [ setEventListener, [ @kaliop_queueing.console_event_listener ] ]
+        parent: kaliop_queueing.message_consumer.console_command
 
     # Executes Sf services methods
     kaliop_queueing.message_consumer.symfony_service:

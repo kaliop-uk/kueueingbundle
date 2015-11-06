@@ -18,6 +18,19 @@ class MessageConsumptionFailedEvent extends Event
         $this->consumer = $consumer;
     }
 
+    /**
+     * The raw data received from the queueing driver
+     * @return \Kaliop\QueueingBundle\Queue\MessageInterface
+     */
+    public function getMessage()
+    {
+        return $this->consumer->getCurrentMessage();
+    }
+
+    /**
+     * The decoded data received from the queueing driver
+     * @return mixed
+     */
     public function getBody()
     {
         return $this->body;
