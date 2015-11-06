@@ -28,9 +28,30 @@ class ConsoleCommand extends BaseMessageProducer
             $extras = array('expiration' => $ttl * 1000);
         }
         if ($routingKey === null) {
-            $routingKey = $this->getRoutingKey($command, $arguments = array(), $options);
+            $routingKey = $this->getRoutingKey($command, $arguments, $options);
         }
         $this->doPublish($msg, $routingKey, $extras);
+    }
+
+    /**
+     * @param array $messages for each item: command, arguments, options
+     * @param null $routingKey
+     * @param null $ttl
+     */
+    public function batchPublish(array $messages, $routingKey = null, $ttl = null)
+    {
+        $extras = array();
+        if ($ttl) {
+            $extras = array('expiration' => $ttl * 1000);
+        }
+        if ($routingKey === null) {
+            $routingKey = array();
+            foreach($messages as $key => $message) {
+                $routingKey[$key] = $this->getRoutingKey($message['command'], @$message['arguments'], @$message['options']);
+            }
+        }
+        $this->doBatchPublish($messages, $routingKey, $extras);
+
     }
 
     protected function getRoutingKey($command, $arguments = array(), $options = array())

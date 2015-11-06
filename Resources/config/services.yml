@@ -166,13 +166,14 @@ services:
              - { name: kaliop_queueing.event_listener, event: kaliop_queueing.message_received }
 
     # You can enable this filter to get debug info of received messages - by uncommenting the 1st tag, as well as
-    # info on the results of message consumption, by uncommenting the 2nd tag
+    # info on the results of message consumption, by uncommenting the 2nd and 3rd tags
     # NB: this slows down considerably the message receiving, enable (tag it) only during development
     kaliop_queueing.message_consumer.filter.monitor:
         class: %kaliop_queueing.message_consumer.filter.monitor.class%
         tags:
         #     - { name: kaliop_queueing.event_listener, event: kaliop_queueing.message_received }
         #     - { name: kaliop_queueing.event_listener, event: kaliop_queueing.message_consumed }
+        #     - { name: kaliop_queueing.event_listener, event: kaliop_queueing.message_consumption_failed }
 
     # A filter used to time message consumption. Enable it (uncomment the tag) for testing/development
     kaliop_queueing.message_consumer.filter.stopwatch:
@@ -182,8 +183,8 @@ services:
         tags:
         #     - { name: kaliop_queueing.event_listener, event: kaliop_queueing.message_received }
 
-    # A filter used to debug the results of message
+    # A filter used to debug the results of message consumption. Enable it (uncomment the tag) for testing/development
     kaliop_queueing.message_consumer.filter.accumulator:
         class: %kaliop_queueing.message_consumer.filter.accumulator.class%
         tags:
-             - { name: kaliop_queueing.event_listener, event: kaliop_queueing.message_consumed }
+        #     - { name: kaliop_queueing.event_listener, event: kaliop_queueing.message_consumed }

@@ -5,16 +5,16 @@ namespace Kaliop\QueueingBundle\Event;
 use Symfony\Component\EventDispatcher\Event;
 use Kaliop\QueueingBundle\Queue\MessageConsumerInterface;
 
-class MessageConsumedEvent extends Event
+class MessageConsumptionFailedEvent extends Event
 {
     protected $body;
     protected $consumer;
-    protected $consumptionResult;
+    protected $exception;
 
-    public function __construct($body, $consumptionResult, MessageConsumerInterface $consumer)
+    public function __construct($body, \Exception $exception, MessageConsumerInterface $consumer)
     {
         $this->body = $body;
-        $this->consumptionResult = $consumptionResult;
+        $this->exception = $exception;
         $this->consumer = $consumer;
     }
 
@@ -23,9 +23,9 @@ class MessageConsumedEvent extends Event
         return $this->body;
     }
 
-    public function getConsumptionResult()
+    public function getException()
     {
-        return $this->consumptionResult;
+        return $this->exception;
     }
 
     public function getConsumer()
