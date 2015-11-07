@@ -227,12 +227,24 @@ For a start, the same Symfony installation will be used both as message producer
 
 * Kaliop\QueueingBundle\Event\EventsList::MESSAGE_RECEIVED emitted when a message is gotten from the queue, before it is consumed.
     It can be used to cancel the consuming.
+    It wil not be emitted if the message received from the queue can not be decoded according to its expected format (by
+    default json).
 
 * Kaliop\QueueingBundle\Event\EventsList::MESSAGE_CONSUMED emitted when a message from the queue has been consumed.
+
+* Kaliop\QueueingBundle\Event\EventsList::MESSAGE_CONSUMPTION_FAILED emitted when an exception is thrown by a message consumer
+    while trying to decode and consume a message.
+    This is generally emitted instead of the MESSAGE_CONSUMED event.
 
 * Kaliop\QueueingBundle\Event\EventsList::PROCESS_STARTED emitted when the watchdog starts a process
 
 * Kaliop\QueueingBundle\Event\EventsList::PROCESS_STOPPED emitted when the watchdog stops a process
+
+All of the filters tagged as 'kaliop_queueing.event_listener' can be set to run on all queues or just a single queue.
+In order to set up a filter on a single queue, use the following syntax:
+
+    Tags:
+        - { name: kaliop_queueing.event_listener, event: kaliop_queueing.message_received, queue: aQueueName }
 
 Note : these events are not dispatched by Symfony2's event dispatcher as such you cannot register listeners with the
 ``kernel.event_listener`` tag, or the ``@DI\Observe`` annotation. See the examples in services.yml on how to use them.
@@ -242,12 +254,23 @@ Note : these events are not dispatched by Symfony2's event dispatcher as such yo
 
 ### Error management
 
+(to be documented)
+
 ### ACK/NACK, what the heck
+
+(to be documented)
+
+### Re-queueing a message when an execute-console-command fails
+
+(to be documented. For the moment, look in services.yml for an example filter service definition which does that)
 
 ### Bundle Queues and Routing Keys - how do they map to Messaging Systems 
 
+(to be documented)
+
 ### Implementing a new driver
 
+(to be documented)
 
 ## More docs
 

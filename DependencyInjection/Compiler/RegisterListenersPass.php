@@ -46,6 +46,7 @@ class RegisterListenersPass implements CompilerPassInterface
             }
 
             foreach ($events as $event) {
+
                 $priority = isset($event['priority']) ? $event['priority'] : 0;
 
                 if (!isset($event['event'])) {
@@ -64,7 +65,10 @@ class RegisterListenersPass implements CompilerPassInterface
                         }, $method);
                     $event['method'] = preg_replace('/[^a-z0-9]/i', '', $method);
                 }
-                $definition->addMethodCall('addListenerService', array($event['event'], array($id, $event['method']), $priority));
+
+                $queue = isset($event['queue']) ? $event['queue'] : null;
+
+                $definition->addMethodCall('addListenerService', array($event['event'], array($id, $event['method']), $priority, $queue));
             }
         }
 

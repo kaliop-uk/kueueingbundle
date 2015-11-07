@@ -17,6 +17,9 @@
         "phpunit/phpunit": "~4.0",
         "codeclimate/php-test-reporter": "~0.2"
     },
+    "conflict": {
+        "kaliop/queueingbundle-sqs": "<=0.2"
+    },
     "suggest": {
         "phpxmlrpc/phpxmlrpc": "Used by the message consumer which executes xmlrpc calls. Ver 4.0 or later required"
     }

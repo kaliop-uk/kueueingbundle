@@ -26,6 +26,14 @@ interface ConsumerInterface
     public function setCallback($callback);
 
     /**
+     * This method will be called by the driver, using the 'logical' name of the queue (not the driver specific one).
+     * In turn, the consumer should inject the queueName into the Messages it builds
+     * @param string $queueName
+     * @return $this
+     */
+    public function setQueueName($queueName);
+
+    /**
      * If $amount is null and $timeout is 0, loop forever
      *
      * @param int $amount maximum number of consumed messages after which to exit the loop

@@ -33,7 +33,7 @@ class EchoBackCommand extends BaseCommand
             " and process with pid " . getmypid() . " on host " . gethostname() . " says: " .
             $input->getArgument('input') . "\n";
 
-        echo $msg;
+        $output->write($msg);
 
         $fileName = $input->getOption('file');
         if ($fileName != '') {

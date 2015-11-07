@@ -3,7 +3,6 @@
 namespace Kaliop\QueueingBundle\Adapter\RabbitMq;
 
 use Kaliop\QueueingBundle\Queue\MessageInterface;
-use PhpAmqpLib\Message\AMQPMessage;
 
 class Message implements MessageInterface
 {
@@ -24,6 +23,11 @@ class Message implements MessageInterface
     {
         //return $this->amqpMessage->content_encoding;
         return $this->amqpMessage->get('content_type');
+    }
+
+    public function getQueueName()
+    {
+        return $this->amqpMessage->getQueueName();
     }
 
     /**

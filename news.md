@@ -1,6 +1,34 @@
+# Ver 0.4
+
+* NEW: When tagging a service as Event Listener, it is possible to specify that it will only be triggered for a specific
+       queue
+
+* NEW: A new service is made available, commented out, in services.yml, which can be used to requeue console-command
+       messages when their execution fails. This can be use as a substitute for the NACK feature of some queueing systems,
+       which is not supported by the library
+
+* CHANGED: The interfaces ConsumerInterface and MessageInterface have acquired a new method each.
+           If you have implemented a driver you will need to adapt your code.
+
+
 # Ver 0.3
 
-* NEW: introduced a new Event: MessageConsumptionFailed (triggered when message processing raises an Exception)
+* FIXED: do not crash the consumer if the received message is invalid json (or other expected encoding)
+
+* NEW: introduced a new Event: `MessageConsumptionFailed` (triggered when message processing raises an Exception)
+
+* NEW: the ConsoleCommand producer gained a batchPublish() method
+
+* NEW: a new *EXPERIMENTAL* consumer is available for executing Console-Command messages. It is registered as service
+       `kaliop_queueing.message_consumer.inprocess_console_command`
+       The difference with the standard `kaliop_queueing.message_consumer.console_command` consumer is that this one does
+       not fork a new php process to execute the received commands.
+       This has the effect of making it:
+       - fast
+       - prone to memory leaks
+       - prone to resource leaks
+       - sensitive to problems with long-lived database connections
+       - prone to problems with fatal errors (unless you are on php 7 and you catch them all as exceptions)
 
 
 # Ver 0.2

@@ -16,6 +16,7 @@ class ConsoleCommand extends MessageConsumer
 {
     protected $consoleCommand;
     protected $application;
+    protected $eventListener;
     /// these will not be used for the executed commands, even if present in received message
     protected $filteredOptions = array(
         // default symfony console options which make no sense when commands are executed headless
@@ -33,10 +34,15 @@ class ConsoleCommand extends MessageConsumer
         $this->consoleCommand = $consoleManager->getConsoleCommand();
     }
 
-    public function setApplication(Application $application)
+    public function setEventListener($listener)
+    {
+        $this->eventListener = $listener;
+    }
+
+    /*public function setApplication(Application $application)
     {
         $this->application = $application;
-    }
+    }*/
 
     /**
      * @param array $body
@@ -55,6 +61,10 @@ class ConsoleCommand extends MessageConsumer
             throw new \UnexpectedValueException("Message format unsupported: missing 'command'. Received: " . json_encode($body));
         }
 
+        if ($this->eventListener) {
+            $this->application = $this->eventListener->getCurrentApplication();
+        }
+
         // for a speed/resource gain, we test: if command is not registered, do not try to run it
         $this->validateCommand($body['command'], @$body['arguments'], @$body['options']);
 
@@ -62,7 +72,7 @@ class ConsoleCommand extends MessageConsumer
     }
 
     /**
-     * Does some preliminary checks before attempting to run command. , throws if command is blatantly non-runnable.
+     * Does some preliminary checks before attempting to run command, throws if command is blatantly non-runnable.
      * (split as a separate method to better accommodate subclasses)
      *
      * @param string $consoleCommand
@@ -95,6 +105,35 @@ class ConsoleCommand extends MessageConsumer
     {
         $command = $this->consoleCommand;
 
+        $command .= $this->buildCommandString($consoleCommand, $arguments, $options);
+
+        $label = trim(ConsumerCommand::getLabel());
+        if ($label != '') {
+            $label = " '$label'";
+        }
+
+        if ($this->logger) {
+            $this->logger->debug("Console command will be executed from MessageConsumer{$label}: " . $command);
+        }
+
+        $process = new Process($command);
+        $retCode = $process->run();
+
+        $results = array($retCode, $process->getOutput(), $process->getErrorOutput());
+
+        if ($retCode != 0 && $this->logger) {
+            $this->logger->error(
+                "Console command executed from MessageConsumer{$label} failed. Retcode: $retCode, Error message: '" . trim($results[2]) . "'",
+                array());
+        }
+
+        return $results;
+    }
+
+    protected function buildCommandString($consoleCommand, $arguments = array(), $options = array())
+    {
+        $command = '';
+
         // forced options come before the command proper
         foreach ($this->getForcedOptions() as $opt => $value) {
             $command .= (strlen($opt) == 1 ? ' -' : ' --') . $opt;
@@ -108,6 +147,7 @@ class ConsoleCommand extends MessageConsumer
             $command .= ' ' . escapeshellarg($arg);
         }
 
+        /// @todo !important check if we can trim down this code by usage of \Symfony\Component\Console\Input\ArrayInput
         // options come after arguments to allow legacy scripts to be queued
         foreach ($options as $opt => $value) {
             // We allow callers to tell us how many dashes they want
@@ -137,27 +177,50 @@ class ConsoleCommand extends MessageConsumer
             }
         }
 
-        $label = trim(ConsumerCommand::getLabel());
-        if ($label != '') {
-            $label = " '$label'";
+        return $command;
+    }
+
+    protected function buildCommandArray($consoleCommand, $arguments = array(), $options = array())
+    {
+        $command = array();
+
+        // forced options come before the command proper
+        foreach ($this->getForcedOptions() as $opt => $value) {
+            $realOpt = (strlen($opt) == 1 ? '-' : '--') . $opt;
+            $command[$realOpt] = $value;
         }
 
-        if ($this->logger) {
-            $this->logger->debug("Console command will be executed from MessageConsumer{$label}: " . $command);
+        $command['command'] = $consoleCommand;
+
+        foreach ($arguments as $arg) {
+            $command[] = $arg;
         }
 
-        $process = new Process($command);
-        $retCode = $process->run();
+        /// @todo !important check if we can trim down this code by usage of \Symfony\Component\Console\Input\ArrayInput
+        // options come after arguments to allow legacy scripts to be queued
+        foreach ($options as $opt => $value) {
+            // We allow callers to tell us how many dashes they want
+            // If no dash is given, we use 1 for single letter options,
+            $optName = ltrim($opt, '-');
+            $dashes = strlen($opt) - strlen($optName);
+            if ($dashes == 0) {
+                $dashes = (strlen($optName) == 1) ? 1 : 2;
+            }
 
-        $results = array($retCode, $process->getOutput(), $process->getErrorOutput());
-
-        if ($retCode != 0 && $this->logger) {
-            $this->logger->error(
-                "Console command executed from MessageConsumer{$label} failed. Retcode: $retCode, Error message: '" . trim($results[2]) . "'",
-                array());
+            // silently drop undesirable options
+            if (preg_match($this->validOptionsRegexp, $optName) &&
+                !in_array($optName, $this->filteredOptions)
+            ) {
+                $opt = str_repeat('-', $dashes) . $optName;
+                $command[$opt] = $value;
+            } else {
+                if ($this->logger) {
+                    $this->logger->notice("Dropped option: '$opt'");
+                }
+            }
         }
 
-        return $results;
+        return $command;
     }
 
     protected function getForcedOptions()

@@ -5,6 +5,7 @@ namespace Kaliop\QueueingBundle\Adapter\RabbitMq;
 use Kaliop\QueueingBundle\Queue\ConsumerInterface;
 use OldSound\RabbitMqBundle\RabbitMq\Consumer as BaseConsumer;
 use PhpAmqpLib\Exception\AMQPTimeoutException;
+use PhpAmqpLib\Message\AMQPMessage as BaseAMQPMessage;
 
 /**
  * Extends the parent class to allow users to get access to the queue and set a timeout to consume() calls
@@ -13,6 +14,7 @@ class Consumer extends BaseConsumer implements ConsumerInterface
 {
     protected $queueStats = array();
     protected $loopBegin = null;
+    protected $queueName;
 
     public function getQueueOptions()
     {
@@ -27,6 +29,13 @@ class Consumer extends BaseConsumer implements ConsumerInterface
     public function getQueueStats()
     {
         return $this->queueStats;
+    }
+
+    public function setQueueName($queueName)
+    {
+        $this->queueName = $queueName;
+
+        return $this;
     }
 
     /**
@@ -103,6 +112,11 @@ class Consumer extends BaseConsumer implements ConsumerInterface
         return $this;
     }
 
+    /**
+     * Overridden to add support for timeout
+     * @param int $msgAmount
+     * @param int $timeout
+     */
     public function consume($msgAmount, $timeout=0)
     {
         if ($timeout > 0) {
@@ -132,4 +146,21 @@ class Consumer extends BaseConsumer implements ConsumerInterface
             parent::consume($msgAmount);
         }
     }
+
+    /**
+     * Overridden to inject the queue name into the AMQP message
+     * @param BaseAMQPMessage $msg
+     */
+    public function processMessage(BaseAMQPMessage $msg)
+    {
+        $newMsg = new AMQPMessage($msg->body, $msg->get_properties());
+        $newMsg->delivery_info = $msg->delivery_info;
+        $newMsg->body_size = $msg->body_size;
+        $newMsg->is_truncated = $msg->is_truncated;
+        $newMsg->setQueueName($this->queueName);
+
+        $processFlag = call_user_func($this->callback, $newMsg);
+        $this->handleProcessMessage($newMsg, $processFlag);
+    }
+
 }
