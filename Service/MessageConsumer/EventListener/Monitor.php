@@ -20,7 +20,7 @@ class Monitor
         /// @todo this might give php warnings
         ///       We could also check if Symfony\Component\VarDumper is available and use it instead...
         if (class_exists('Doctrine\Common\Util\Debug')) {
-            echo "Received a message at " . strftime('%Y/%m/%d - %H:%M:%S', time()) . ": " . \Doctrine\Common\Util\Debug::dump($event->getMessage()) . "\n";
+            echo "Received a message at " . strftime('%Y/%m/%d - %H:%M:%S', time()) . ": " . \Doctrine\Common\Util\Debug::dump($event->getMessage(), 2, false, false) . "\n";
         } else {
             echo "Received a message at " . strftime('%Y/%m/%d - %H:%M:%S', time()) . ": " . var_export($event->getMessage(), true) . "\n";
         }
@@ -31,7 +31,7 @@ class Monitor
         /// @todo this might give php warnings
         ///       We could also check if Symfony\Component\VarDumper is available and use it instead...
         if (class_exists('Doctrine\Common\Util\Debug')) {
-            echo "Message finished consumption at " . strftime('%Y/%m/%d - %H:%M:%S', time()) . ": " . \Doctrine\Common\Util\Debug::dump($event->getConsumptionResult()) . "\n";
+            echo "Message finished consumption at " . strftime('%Y/%m/%d - %H:%M:%S', time()) . ": " . \Doctrine\Common\Util\Debug::dump($event->getConsumptionResult(), 2, false, false) . "\n";
         } else {
             echo "Message finished consumption at " . strftime('%Y/%m/%d - %H:%M:%S', time()) . ": " . var_export($event->getConsumptionResult(), true) . "\n";
         }
@@ -42,7 +42,7 @@ class Monitor
         /// @todo this might give php warnings
         ///       We could also check if Symfony\Component\VarDumper is available and use it instead...
         if (class_exists('Doctrine\Common\Util\Debug')) {
-            echo "Message failed consumption at " . strftime('%Y/%m/%d - %H:%M:%S', time()) . ": " . \Doctrine\Common\Util\Debug::dump($event->getException()) . "\n";
+            echo "Message failed consumption at " . strftime('%Y/%m/%d - %H:%M:%S', time()) . ": " . \Doctrine\Common\Util\Debug::dump($event->getException(), 2, false, false) . "\n";
         } else {
             echo "Message failed consumption at " . strftime('%Y/%m/%d - %H:%M:%S', time()) . ": " . var_export($event->getException(), true) . "\n";
         }
