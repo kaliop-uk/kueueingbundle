@@ -254,12 +254,23 @@ Note : these events are not dispatched by Symfony2's event dispatcher as such yo
 
 ### Error management
 
+(to be documented)
+
 ### ACK/NACK, what the heck
+
+(to be documented)
+
+### Re-queueing a message when an execute-console-command fails
+
+(to be documented. For the moment, look in services.yml for an example filter service definition which does that)
 
 ### Bundle Queues and Routing Keys - how do they map to Messaging Systems 
 
+(to be documented)
+
 ### Implementing a new driver
 
+(to be documented)
 
 ## More docs
 

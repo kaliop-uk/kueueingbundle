@@ -3,6 +3,10 @@
 * NEW: When tagging a service as Event Listener, it is possible to specify that it will only be triggered for a specific
        queue
 
+* NEW: A new service is made available, commented out, in services.yml, which can be used to requeue console-command
+       messages when their execution fails. This can be use as a substitute for the NACK feature of some queueing systems,
+       which is not supported by the library
+
 * CHANGED: The interfaces ConsumerInterface and MessageInterface have acquired a new method each.
            If you have implemented a driver you will need to adapt your code.
 
