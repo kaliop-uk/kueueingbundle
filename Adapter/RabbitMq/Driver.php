@@ -24,7 +24,7 @@ class Driver extends ContainerAware implements DriverInterface
 
     public function getConsumer($queueName)
     {
-        return $this->container->get('old_sound_rabbit_mq.' . $queueName . '_consumer');
+        return $this->container->get('old_sound_rabbit_mq.' . $queueName . '_consumer')->setQueueName($queueName);
     }
 
     public function acceptMessage($message)

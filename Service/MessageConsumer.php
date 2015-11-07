@@ -143,6 +143,7 @@ abstract class MessageConsumer implements ConsumerInterface, MessageConsumerInte
     }
 
     /**
+     * @deprecated should be moved to protected access
      * @return MessageInterface
      */
     public function getCurrentMessage()
@@ -172,7 +173,7 @@ abstract class MessageConsumer implements ConsumerInterface, MessageConsumerInte
 
             // while at it, emit a message, and allow listeners to prevent further execution
             if ($this->dispatcher) {
-                $event = new MessageReceivedEvent($body, $this);
+                $event = new MessageReceivedEvent($msg, $body, $this);
                 if ($this->dispatcher->dispatch(EventsList::MESSAGE_RECEIVED, $event)->isPropagationStopped()) {
                     return;
                 }
@@ -180,8 +181,11 @@ abstract class MessageConsumer implements ConsumerInterface, MessageConsumerInte
 
             $result = $this->consume($body);
 
+            // q: should we one more try-catch block here, to prevent firing MESSAGE_CONSUMPTION_FAILED if in fact the
+            //    consumption went fine?
+
             if ($this->dispatcher) {
-                $event = new MessageConsumedEvent($body, $result, $this);
+                $event = new MessageConsumedEvent($msg, $body, $this, $result);
                 $this->dispatcher->dispatch(EventsList::MESSAGE_CONSUMED, $event);
             }
 
@@ -193,7 +197,7 @@ abstract class MessageConsumer implements ConsumerInterface, MessageConsumerInte
             }
 
             if ($this->dispatcher) {
-                $event = new MessageConsumptionFailedEvent($body, $e, $this);
+                $event = new MessageConsumptionFailedEvent($msg, $body, $this, $e);
                 $this->dispatcher->dispatch(EventsList::MESSAGE_CONSUMPTION_FAILED, $event);
             }
         }

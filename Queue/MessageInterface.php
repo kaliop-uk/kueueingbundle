@@ -26,6 +26,9 @@ interface MessageInterface
     /** @return string */
     public function getContentType();
 
+    /** @return string */
+    public function getQueueName();
+
     /** @return array */
     // not needed so far
     //public function getDeliveryInfo();

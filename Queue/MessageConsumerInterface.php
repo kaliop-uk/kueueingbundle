@@ -13,8 +13,8 @@ interface MessageConsumerInterface
     public function receive($msg);
 
     /**
-     * Might be useful to subclassses or event listeners
-     *
+     * @deprecated the current message is now made available directly in Events, and the current consumer message should
+     *             only be available to subclasses, not to the rest of the world...
      * @return \Kaliop\QueueingBundle\Queue\MessageInterface|null
      */
     public function getCurrentMessage();

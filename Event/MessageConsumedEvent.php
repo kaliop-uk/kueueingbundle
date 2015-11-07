@@ -2,34 +2,23 @@
 
 namespace Kaliop\QueueingBundle\Event;
 
-use Symfony\Component\EventDispatcher\Event;
 use Kaliop\QueueingBundle\Queue\MessageConsumerInterface;
+use Kaliop\QueueingBundle\Queue\MessageInterface;
 
-class MessageConsumedEvent extends Event
+class MessageConsumedEvent extends MessageEvent
 {
-    protected $body;
-    protected $consumer;
     protected $consumptionResult;
 
-    public function __construct($body, $consumptionResult, MessageConsumerInterface $consumer)
+    public function __construct(MessageInterface $message, $body, MessageConsumerInterface $consumer, $consumptionResult)
     {
+        $this->message = $message;
         $this->body = $body;
-        $this->consumptionResult = $consumptionResult;
         $this->consumer = $consumer;
-    }
-
-    public function getBody()
-    {
-        return $this->body;
+        $this->consumptionResult = $consumptionResult;
     }
 
     public function getConsumptionResult()
     {
         return $this->consumptionResult;
-    }
-
-    public function getConsumer()
-    {
-        return $this->consumer;
     }
 }

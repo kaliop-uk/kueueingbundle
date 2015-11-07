@@ -3,7 +3,7 @@ parameters:
     kaliop_queueing.driver.rabbitmq.class: Kaliop\QueueingBundle\Adapter\RabbitMq\Driver
     kaliop_queueing.worker_manager.class: Kaliop\QueueingBundle\Service\WorkerManager
     kaliop_queueing.watchdog.class: Kaliop\QueueingBundle\Helper\Watchdog
-    kaliop_queueing.event_dispatcher.class: Symfony\Component\EventDispatcher\ContainerAwareEventDispatcher
+    kaliop_queueing.event_dispatcher.class: Kaliop\QueueingBundle\Service\EventDispatcher
     kaliop_queueing.console_event_listener.class: Kaliop\QueueingBundle\Service\ConsoleEventListener
 
     kaliop_queueing.message_producer.class: Kaliop\QueueingBundle\Service\MessageProducer
@@ -159,6 +159,12 @@ services:
         parent: kaliop_queueing.message_consumer
 
     ### Filters ###
+
+    # NB: all of the filters tagged as 'kaliop_queueing.event_listener' can be set to run on all queues or just a single
+    # queue.
+    # In order to set up a filter on a single queue, use the following syntax:
+    # Tags:
+    #     - { name: kaliop_queueing.event_listener, event: kaliop_queueing.message_received, queue: aQueueName }
 
     # A filter used to limit which Sf console commands can be execute via queue messages
     kaliop_queueing.message_consumer.console_command.filter:
