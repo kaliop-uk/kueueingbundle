@@ -10,6 +10,8 @@
 * CHANGED: The interfaces ConsumerInterface and MessageInterface have acquired a new method each.
            If you have implemented a driver you will need to adapt your code.
 
+* FIXED: the `Monitor` event listener does not dump twice any more the received messages nor strip html tags
+
 
 # Ver 0.3
 
