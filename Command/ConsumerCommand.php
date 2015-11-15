@@ -100,7 +100,9 @@ class ConsumerCommand extends BaseCommand
     }
 
     /**
-     * Reimplemented to allow drivers to give us a Consumer
+     * Reimplemented to allow drivers to give us a Consumer.
+     * Also, only set the routing key to the consumer if it has been passed on the command line
+     *
      * @param $input
      */
     protected function initConsumer($input) {
@@ -109,6 +111,8 @@ class ConsumerCommand extends BaseCommand
         if (!is_null($input->getOption('memory-limit')) && ctype_digit((string) $input->getOption('memory-limit')) && $input->getOption('memory-limit') > 0) {
             $this->consumer->setMemoryLimit($input->getOption('memory-limit'));
         }
-        $this->consumer->setRoutingKey($input->getOption('route'));
+        if (($routingKey = $input->getOption('route')) !== '') {
+            $this->consumer->setRoutingKey($routingKey);
+        }
     }
 }
