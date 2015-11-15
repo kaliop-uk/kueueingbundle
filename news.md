@@ -1,7 +1,9 @@
-# Ver 0.4.1
+# Ver 0.4.2
 
 * FIXED: The routing key defined in consumer queues was not being applied when running the consumer command without a
          -r option
+
+* NEW: If the consumer in use supports it, pass down to it the 'label' option from the command line
 
 # Ver 0.4
 

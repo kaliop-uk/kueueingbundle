@@ -114,5 +114,8 @@ class ConsumerCommand extends BaseCommand
         if (($routingKey = $input->getOption('route')) !== '') {
             $this->consumer->setRoutingKey($routingKey);
         }
+        if (self::$label != '' && is_callable(array($this->consumer, 'setLabel'))) {
+            $this->consumer->setLabel(self::$label);
+        }
     }
 }
