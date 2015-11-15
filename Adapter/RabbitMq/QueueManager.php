@@ -135,7 +135,11 @@ class QueueManager extends BaseMessageProducer implements ContainerAwareInterfac
         }
         if ($type = Queue::TYPE_CONSUMER || $type = Queue::TYPE_ANY) {
             foreach ($this->registeredConsumers as $queueName) {
-                $out[$queueName] = Queue::TYPE_CONSUMER;
+                if (isset($out[$queueName])) {
+                    $out[$queueName] = Queue::TYPE_ANY;
+                } else {
+                    $out[$queueName] = Queue::TYPE_CONSUMER;
+                }
             }
         }
         return $out;
