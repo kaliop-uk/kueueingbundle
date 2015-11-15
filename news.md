@@ -1,4 +1,4 @@
-# Ver 0.4.2
+# Ver 0.4.1
 
 * FIXED: The routing key defined in consumer queues was not being applied when running the consumer command without a
          -r option
