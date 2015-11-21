@@ -3,9 +3,11 @@
 namespace Kaliop\QueueingBundle\Command;
 
 use OldSound\RabbitMqBundle\Command\ConsumerCommand as BaseCommand;
+use OldSound\RabbitMqBundle\RabbitMq\BaseConsumer as BaseConsumer;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Kaliop\QueueingBundle\Adapter\ForcedStopException;
 
 /**
  * Adds a few more options on top of the standard rabbitmq:consumer command,
@@ -53,21 +55,7 @@ class ConsumerCommand extends BaseCommand
             $this->driver->setDebug($debug);
         }
 
-        // reimplementation of parent::execute($input, $output); to add timeout
-
-        if (defined('AMQP_WITHOUT_SIGNALS') === false) {
-            define('AMQP_WITHOUT_SIGNALS', $input->getOption('without-signals'));
-        }
-
-        if (!AMQP_WITHOUT_SIGNALS && extension_loaded('pcntl')) {
-            if (!function_exists('pcntl_signal')) {
-                throw new \BadFunctionCallException("Function 'pcntl_signal' is referenced in the php.ini 'disable_functions' and can't be called.");
-            }
-
-            pcntl_signal(SIGTERM, array(&$this, 'stopConsumer'));
-            pcntl_signal(SIGINT, array(&$this, 'stopConsumer'));
-            pcntl_signal(SIGHUP, array(&$this, 'restartConsumer'));
-        }
+        // reimplementation of parent::execute($input, $output); to add timeout, let consumers handle signals better
 
         // this is now handled by the driver
         //if (defined('AMQP_DEBUG') === false) {
@@ -81,7 +69,12 @@ class ConsumerCommand extends BaseCommand
         }
         $this->initConsumer($input);
 
-        $this->consumer->consume($this->amount, $timeout);
+        try {
+            $this->consumer->consume($this->amount, $timeout);
+        } catch (ForcedStopException $e) {
+            // do nothing, exit
+            /// @todo shall we exit with a non 0 value here ? Maybe we could just let the exception bubble up...
+        }
 
         // end reimplementation
 
@@ -106,16 +99,63 @@ class ConsumerCommand extends BaseCommand
      * @param $input
      */
     protected function initConsumer($input) {
+
+        // set up signal handlers first, in case something goes on during consumer constructor
+
+        $handleSignals = extension_loaded('pcntl') && (!$input->getOption('without-signals'));
+        if ($handleSignals && !function_exists('pcntl_signal')) {
+            throw new \BadFunctionCallException("Function 'pcntl_signal' is referenced in the php.ini 'disable_functions' and can't be called.");
+        }
+        if ($handleSignals && !function_exists('pcntl_signal_dispatch')) {
+            throw new \BadFunctionCallException("Function 'pcntl_signal_dispatch' is referenced in the php.ini 'disable_functions' and can't be called.");
+        }
+        if ($handleSignals) {
+            pcntl_signal(SIGTERM, array($this, 'stopConsumer'));
+            pcntl_signal(SIGINT, array($this, 'stopConsumer'));
+            pcntl_signal(SIGHUP, array($this, 'restartConsumer'));
+        }
+
         $this->consumer = $this->driver->getConsumer($input->getArgument('name'));
 
         if (!is_null($input->getOption('memory-limit')) && ctype_digit((string) $input->getOption('memory-limit')) && $input->getOption('memory-limit') > 0) {
             $this->consumer->setMemoryLimit($input->getOption('memory-limit'));
         }
+
         if (($routingKey = $input->getOption('route')) !== '') {
             $this->consumer->setRoutingKey($routingKey);
         }
+
         if (self::$label != '' && is_callable(array($this->consumer, 'setLabel'))) {
             $this->consumer->setLabel(self::$label);
         }
+
+        if ($this->consumer instanceof \Kaliop\QueueingBundle\Queue\SignalHandlingConsumerInterface) {
+            $this->consumer->setHandleSignals($handleSignals);
+        }
     }
+
+    /**
+     * Reimplemented to allow non-amqp consumer to react gracefully to stop signals
+     */
+    public function stopConsumer()
+    {
+        if ($this->consumer instanceof BaseConsumer) {
+
+            // Process current message, then halt consumer
+            $this->consumer->forceStopConsumer();
+
+            // Halt consumer if waiting for a new message from the queue
+            try {
+                $this->consumer->stopConsuming();
+            } catch (AMQPTimeoutException $e) {}
+
+        } elseif ($this->consumer instanceof \Kaliop\QueueingBundle\Queue\SignalHandlingConsumerInterface) {
+
+            $this->consumer->forceStop();
+
+        } else {
+            exit();
+        }
+    }
+
 }
