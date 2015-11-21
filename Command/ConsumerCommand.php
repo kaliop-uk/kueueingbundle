@@ -4,6 +4,7 @@ namespace Kaliop\QueueingBundle\Command;
 
 use OldSound\RabbitMqBundle\Command\ConsumerCommand as BaseCommand;
 use OldSound\RabbitMqBundle\RabbitMq\BaseConsumer as BaseConsumer;
+use PhpAmqpLib\Exception\AMQPTimeoutException;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;

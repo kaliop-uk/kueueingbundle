@@ -183,7 +183,7 @@ class Consumer extends BaseConsumer implements ConsumerInterface, SignalHandling
 
     protected function maybeStopConsumer()
     {
-        if ($this->$this->dispatchSignals) {
+        if ($this->dispatchSignals) {
             pcntl_signal_dispatch();
         }
 
