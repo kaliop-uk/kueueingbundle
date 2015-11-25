@@ -58,7 +58,14 @@ class ConsoleCommand extends MessageConsumer
             (isset($body['arguments']) && !is_array($body['arguments'])) ||
             (isset($body['options']) && !is_array($body['options']))
         ) {
-            throw new \UnexpectedValueException("Message format unsupported: missing 'command'. Received: " . json_encode($body));
+            throw new \UnexpectedValueException("Message format unsupported: missing 'command' or bad 'arguments' or 'options'. Received: " . json_encode($body));
+        }
+
+        if (!isset($body['arguments'])) {
+            $body['arguments'] = array();
+        }
+        if (!isset($body['options'])) {
+            $body['options'] = array();
         }
 
         if ($this->eventListener) {
@@ -66,9 +73,9 @@ class ConsoleCommand extends MessageConsumer
         }
 
         // for a speed/resource gain, we test: if command is not registered, do not try to run it
-        $this->validateCommand($body['command'], @$body['arguments'], @$body['options']);
+        $this->validateCommand($body['command'], $body['arguments'], $body['options']);
 
-        return $this->runCommand($body['command'], @$body['arguments'], @$body['options']);
+        return $this->runCommand($body['command'], $body['arguments'], $body['options']);
     }
 
     /**

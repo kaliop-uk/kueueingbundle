@@ -2,6 +2,8 @@
 
 * IMPROVED: when the consumer stops because of a unix signal or too much memory used, print the reason
 
+* IMPROVED: make the consolecommand consumer accept messages without 'arguments' and 'options' members in the payload
+
 
 # Ver 0.5
 
