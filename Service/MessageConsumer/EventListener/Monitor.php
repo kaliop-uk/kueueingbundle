@@ -8,6 +8,7 @@ use Kaliop\QueueingBundle\Event\MessageConsumedEvent;
 
 /**
  * A braindead class which can be used to debug consumption of queue messages, by being registered as listener.
+ * It just echoes the messages to stdout.
  *
  * @todo inject the Sf logger and use it for output instead of plain echo?
  * @todo use more precise time logging, with fractional seconds

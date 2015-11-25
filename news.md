@@ -1,3 +1,8 @@
+# Ver 0.6
+
+* IMPROVED: when the consumer stops because of a unix signal or too much memory used, print the reason
+
+
 # Ver 0.5
 
 * NEW: If the consumer in use supports it, let it handle unix signals so that it can stop gracefully without loosing data

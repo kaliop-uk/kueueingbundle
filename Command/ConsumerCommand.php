@@ -73,8 +73,8 @@ class ConsumerCommand extends BaseCommand
         try {
             $this->consumer->consume($this->amount, $timeout);
         } catch (ForcedStopException $e) {
-            // do nothing, exit
-            /// @todo shall we exit with a non 0 value here ? Maybe we could just let the exception bubble up...
+            // exit gracefully with a message
+            $output->writeln("Stopped because: " . $e->getMessage());
         }
 
         // end reimplementation
@@ -111,8 +111,8 @@ class ConsumerCommand extends BaseCommand
             throw new \BadFunctionCallException("Function 'pcntl_signal_dispatch' is referenced in the php.ini 'disable_functions' and can't be called.");
         }
         if ($handleSignals) {
-            pcntl_signal(SIGTERM, array($this, 'stopConsumer'));
-            pcntl_signal(SIGINT, array($this, 'stopConsumer'));
+            pcntl_signal(SIGTERM, array($this, 'haltConsumer'));
+            pcntl_signal(SIGINT, array($this, 'haltConsumer'));
             pcntl_signal(SIGHUP, array($this, 'restartConsumer'));
         }
 
@@ -136,23 +136,26 @@ class ConsumerCommand extends BaseCommand
     }
 
     /**
-     * Reimplemented to allow non-amqp consumer to react gracefully to stop signals
+     * Reimplementation of stopConsumer to allow non-amqp consumer to react gracefully to stop signals
+     * @param int $sigNo
      */
-    public function stopConsumer()
+    public function haltConsumer($sigNo)
     {
         if ($this->consumer instanceof BaseConsumer) {
-
             // Process current message, then halt consumer
             $this->consumer->forceStopConsumer();
 
             // Halt consumer if waiting for a new message from the queue
             try {
                 $this->consumer->stopConsuming();
-            } catch (AMQPTimeoutException $e) {}
+            } catch (AMQPTimeoutException $e) {
+                // exit gracefully with a message
+                echo("Stopped because: Received stop signal $sigNo\n");
+            }
 
         } elseif ($this->consumer instanceof \Kaliop\QueueingBundle\Queue\SignalHandlingConsumerInterface) {
 
-            $this->consumer->forceStop();
+            $this->consumer->forceStop("Received stop signal $sigNo");
 
         } else {
             exit();

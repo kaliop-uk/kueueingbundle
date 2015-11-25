@@ -87,7 +87,7 @@ class Consumer extends BaseConsumer implements ConsumerInterface, SignalHandling
     /**
      * Set the memory limit - overridden to make it fluent
      *
-     * @param int $memoryLimit
+     * @param int $memoryLimit MB
      * @return Consumer
      */
     public function setMemoryLimit($memoryLimit)
@@ -176,7 +176,7 @@ class Consumer extends BaseConsumer implements ConsumerInterface, SignalHandling
         $this->dispatchSignals = $doHandle;
     }
 
-    public function forceStop()
+    public function forceStop($reason = '')
     {
         $this->forceStopConsumer();
     }

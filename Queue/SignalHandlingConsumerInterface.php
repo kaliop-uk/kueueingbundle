@@ -16,5 +16,8 @@ interface SignalHandlingConsumerInterface
      */
     public function setHandleSignals($doHandle);
 
-    public function forceStop();
+    /**
+     * @param string $reason
+     */
+    public function forceStop($reason = '');
 }
