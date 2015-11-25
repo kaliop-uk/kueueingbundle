@@ -3,6 +3,7 @@
 namespace Kaliop\QueueingBundle\Adapter\RabbitMq;
 
 use Kaliop\QueueingBundle\Queue\ConsumerInterface;
+use Kaliop\QueueingBundle\Queue\SignalHandlingConsumerInterface;
 use OldSound\RabbitMqBundle\RabbitMq\Consumer as BaseConsumer;
 use PhpAmqpLib\Exception\AMQPTimeoutException;
 use PhpAmqpLib\Message\AMQPMessage as BaseAMQPMessage;
@@ -10,11 +11,12 @@ use PhpAmqpLib\Message\AMQPMessage as BaseAMQPMessage;
 /**
  * Extends the parent class to allow users to get access to the queue and set a timeout to consume() calls
  */
-class Consumer extends BaseConsumer implements ConsumerInterface
+class Consumer extends BaseConsumer implements ConsumerInterface, SignalHandlingConsumerInterface
 {
     protected $queueStats = array();
     protected $loopBegin = null;
     protected $queueName;
+    protected $dispatchSignals = false;
 
     public function getQueueOptions()
     {
@@ -85,7 +87,7 @@ class Consumer extends BaseConsumer implements ConsumerInterface
     /**
      * Set the memory limit - overridden to make it fluent
      *
-     * @param int $memoryLimit
+     * @param int $memoryLimit MB
      * @return Consumer
      */
     public function setMemoryLimit($memoryLimit)
@@ -163,4 +165,32 @@ class Consumer extends BaseConsumer implements ConsumerInterface
         $this->handleProcessMessage($newMsg, $processFlag);
     }
 
+    public function setHandleSignals($doHandle)
+    {
+        if (defined('AMQP_WITHOUT_SIGNALS') === false) {
+            define('AMQP_WITHOUT_SIGNALS', !$doHandle);
+        } elseif (AMQP_WITHOUT_SIGNALS != (!$doHandle)) {
+            /// @todo throw an exception
+        }
+
+        $this->dispatchSignals = $doHandle;
+    }
+
+    public function forceStop($reason = '')
+    {
+        $this->forceStopConsumer();
+    }
+
+    protected function maybeStopConsumer()
+    {
+        if ($this->dispatchSignals) {
+            pcntl_signal_dispatch();
+        }
+
+        if ($this->forceStop || ($this->consumed == $this->target && $this->target > 0)) {
+            $this->stopConsuming();
+        } else {
+            return;
+        }
+    }
 }

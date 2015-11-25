@@ -1,3 +1,22 @@
+# Ver 0.6
+
+* IMPROVED: when the consumer stops because of a unix signal or too much memory used, print the reason
+
+
+# Ver 0.5
+
+* NEW: If the consumer in use supports it, let it handle unix signals so that it can stop gracefully without loosing data
+       (up to now only the rabbitmq consumer was able to do that)
+
+
+# Ver 0.4.1
+
+* FIXED: The routing key defined in consumer queues was not being applied when running the consumer command without a
+         -r option
+
+* NEW: If the consumer in use supports it, pass down to it the 'label' option from the command line
+
+
 # Ver 0.4
 
 * NEW: When tagging a service as Event Listener, it is possible to specify that it will only be triggered for a specific
@@ -41,22 +60,22 @@
 * NEW: the Publisher classes now implement a BatchPublish method for optimized sending of multiple messages
 
 * NEW: the Consume method of Consumer classes now accepts a $timeout optional parameter.
-       This is also true of the kaliop_queueing:consumer console command 
+       This is also true of the kaliop_queueing:consumer console command
 
 * NEW: introduced fluent interfaces for all setter methods
 
-* NEW: all MessageConsumer classes now return a value from their consume() method  
+* NEW: all MessageConsumer classes now return a value from their consume() method
 
 * NEW: added an interface for MessageProducer classes
 
 * NEW: the QueueManager classes (and console command) now take optional parameters for all actions.
-       The exact parameters depend on the driver+action combination 
+       The exact parameters depend on the driver+action combination
 
-* NEW: added a new service which can be used as MessageConsumed listener to help testing: kaliop_queueing.message_consumer.filter.accumulator 
+* NEW: added a new service which can be used as MessageConsumed listener to help testing: kaliop_queueing.message_consumer.filter.accumulator
 
 * NEW: introduced protection against recursion for MessageConsumer::decodeAndConsume
 
-* CHANGED: the ConsumerInterface now sports a method setCallback() 
+* CHANGED: the ConsumerInterface now sports a method setCallback()
 
 * CHANGED: changed the MessageReceived event to simplify it a bit
 
@@ -68,7 +87,7 @@
            to avoid confusion between configured bundle queues and queues/exchanges existing on the broker.
            It now works in prod environments and not only in dev
 
-* FIXED: RabbitMQ Consumers can not change the routing key associated with their queue. The bundle now throws an exception  
+* FIXED: RabbitMQ Consumers can not change the routing key associated with their queue. The bundle now throws an exception
          if this is attempted
 
 

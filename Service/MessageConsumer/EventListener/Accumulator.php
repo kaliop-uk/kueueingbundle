@@ -6,7 +6,12 @@ use Kaliop\QueueingBundle\Event\MessageConsumedEvent;
 
 /**
  * A braindead class which can be used to debug consumption of queue messages, by being registered as listener.
- * It just holds the results of the last execution of consume() by the MessageConsumer
+ * It just holds the results of the execution of consume() by the MessageConsumer.
+ *
+ * *** IMPORTANT *** this listener keeps *all* received messages in memory by default, without any built in safety
+ * measure to prevent crashing the php process by memory exhaustion.
+ *
+ * @todo add support for only keeping in memory N messages, or monitor total memory usage
  */
 class Accumulator
 {

@@ -8,7 +8,7 @@ namespace Kaliop\QueueingBundle\Queue;
 interface ConsumerInterface
 {
     /**
-     * @param int $limit
+     * @param int $limit MB
      * @return $this
      */
     public function setMemoryLimit($limit);
