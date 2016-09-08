@@ -406,3 +406,4 @@ developers of this library of where to turn to to get inspiration and borrow cod
 [![Total Downloads](https://poser.pugx.org/kaliop/queueingbundle/downloads)](https://packagist.org/packages/kaliop/queueingbundle)
 
 [![Build Status](https://travis-ci.org/kaliop-uk/kueueingbundle.svg?branch=master)](https://travis-ci.org/kaliop-uk/kueueingbundle)
+[![SensioLabsInsight](https://insight.sensiolabs.com/projects/7f83b578-75de-4f8f-ae67-404d2e55910c/mini.png)](https://insight.sensiolabs.com/projects/7f83b578-75de-4f8f-ae67-404d2e55910c)
