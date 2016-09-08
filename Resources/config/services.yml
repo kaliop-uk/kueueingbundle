@@ -41,38 +41,38 @@ services:
 
     kaliop_queueing.drivermanager:
         class: %kaliop_queueing.drivermanager.class%
-        arguments: [@service_container]
+        arguments: [ '@service_container' ]
         calls:
-            - [ setDefaultDriver, [ %kaliop_queueing.default.driver% ] ]
+            - [ setDefaultDriver, [ '%kaliop_queueing.default.driver%' ] ]
 
     kaliop_queueing.driver.rabbitmq:
-        class: %kaliop_queueing.driver.rabbitmq.class%
+        class: '%kaliop_queueing.driver.rabbitmq.class%'
         calls:
-            - [ setContainer, [ @service_container ] ]
+            - [ setContainer, [ '@service_container' ] ]
         tags:
             - { name: kaliop_queueing.driver, alias: rabbitmq }
 
     kaliop_queueing.event_dispatcher:
-        class: %kaliop_queueing.event_dispatcher.class%
-        arguments: [@service_container]
+        class: '%kaliop_queueing.event_dispatcher.class%'
+        arguments: [ '@service_container' ]
 
     kaliop_queueing.worker_manager:
-         class: %kaliop_queueing.worker_manager.class%
-         arguments: [ %kaliop_queueing.default.workers.list%, %kernel.root_dir% ]
+         class: '%kaliop_queueing.worker_manager.class%'
+         arguments: [ '%kaliop_queueing.default.workers.list%', '%kernel.root_dir%' ]
 
     kaliop_queueing.watchdog:
-        class: %kaliop_queueing.watchdog.class%
-        arguments: [ @kaliop_queueing.event_dispatcher ]
+        class: '%kaliop_queueing.watchdog.class%'
+        arguments: [ '@kaliop_queueing.event_dispatcher' ]
 
     # Produces messages used to manage the queues themselves.
     kaliop_queueing.amqp.queue_manager:
-        class: %kaliop_queueing.amqp.queue_manager.class%
+        class: '%kaliop_queueing.amqp.queue_manager.class%'
         calls:
-            - [ setContainer, [ @service_container ] ]
+            - [ setContainer, [ '@service_container' ] ]
 
     # An event listener used to get a hook into the currently running Application
     kaliop_queueing.console_event_listener:
-        class: %kaliop_queueing.console_event_listener.class%
+        class: '%kaliop_queueing.console_event_listener.class%'
         tags:
             - { name: kernel.event_listener, event: console.command, method: onConsoleCommand }
 
@@ -80,15 +80,15 @@ services:
 
     # The base service - mapped to an abstract class
     kaliop_queueing.message_producer:
-        class: %kaliop_queueing.message_producer.class%
+        class: '%kaliop_queueing.message_producer.class%'
         # nb: we assign by default no driver to the producer, otherwise it would look like the following:
-        #arguments: [ @kaliop_queueing.driver.rabbitmq ]
+        #arguments: [ '@kaliop_queueing.driver.rabbitmq' ]
         # nb: we assign by default no queue to this service, otherwise it would look like the following:
         #calls: [ setQueueName, [ queue_name ] ]
 
     # Produces 'generic' messages - message encoding is left to the application
     kaliop_queueing.message_producer.generic_message:
-        class: %kaliop_queueing.message_producer.generic_message.class%
+        class: '%kaliop_queueing.message_producer.generic_message.class%'
         parent: kaliop_queueing.message_producer
 
     # Produces messages used to distribute execution of Sf console commands
@@ -98,17 +98,17 @@ services:
 
     # Produces messages used to distribute execution of Sf services methods
     kaliop_queueing.message_producer.symfony_service:
-        class: %kaliop_queueing.message_producer.symfony_service.class%
+        class: '%kaliop_queueing.message_producer.symfony_service.class%'
         parent: kaliop_queueing.message_producer
 
     # Produces messages used to distribute execution of http requests
     kaliop_queueing.message_producer.http_request:
-        class: %kaliop_queueing.message_producer.http_request.class%
+        class: '%kaliop_queueing.message_producer.http_request.class%'
         parent: kaliop_queueing.message_producer
 
     # Produces messages used to distribute execution of xmlrpc calls
     kaliop_queueing.message_producer.xmlrpc_call:
-        class: %kaliop_queueing.message_producer.xmlrpc_call.class%
+        class: '%kaliop_queueing.message_producer.xmlrpc_call.class%'
         parent: kaliop_queueing.message_producer
 
     ### Consumers ###
@@ -118,45 +118,45 @@ services:
     kaliop_queueing.message_consumer:
         class: %kaliop_queueing.message_consumer.class%
         calls:
-            - [ setLogger, [ @?logger ] ]
-            - [ setDispatcher, [ @kaliop_queueing.event_dispatcher ] ]
-            - [ setDriverManager, [ @kaliop_queueing.drivermanager ] ]
+            - [ setLogger, [ '@?logger' ] ]
+            - [ setDispatcher, [ '@kaliop_queueing.event_dispatcher' ] ]
+            - [ setDriverManager, [ '@kaliop_queueing.drivermanager' ] ]
         tags:
             - { name: monolog.logger, channel: kaliop_queueing }
 
     # Executes Sf console commands
     kaliop_queueing.message_consumer.console_command:
-        class: %kaliop_queueing.message_consumer.console_command.class%
-        arguments: [ @kaliop_queueing.worker_manager ]
+        class: '%kaliop_queueing.message_consumer.console_command.class%'
+        arguments: [ '@kaliop_queueing.worker_manager' ]
         parent: kaliop_queueing.message_consumer
 
     # Executes Sf console commands without spawning new processes
     kaliop_queueing.message_consumer.inprocess_console_command:
-        class: %kaliop_queueing.message_consumer.inprocess_console_command.class%
+        class: '%kaliop_queueing.message_consumer.inprocess_console_command.class%'
         calls:
-            - [ setEventListener, [ @kaliop_queueing.console_event_listener ] ]
+            - [ setEventListener, [ '@kaliop_queueing.console_event_listener' ] ]
         parent: kaliop_queueing.message_consumer.console_command
 
     # Executes Sf services methods
     kaliop_queueing.message_consumer.symfony_service:
-        class: %kaliop_queueing.message_consumer.symfony_service.class%
-        arguments: [@service_container]
+        class: '%kaliop_queueing.message_consumer.symfony_service.class%'
+        arguments: [ '@service_container' ]
         parent: kaliop_queueing.message_consumer
 
     # Executes http requests
     kaliop_queueing.message_consumer.http_request:
-        class: %kaliop_queueing.message_consumer.http_request.class%
-        arguments: [@service_container]
+        class: '%kaliop_queueing.message_consumer.http_request.class%'
+        arguments: [ '@service_container' ]
         parent: kaliop_queueing.message_consumer
 
     # Executes xmlrpc calls
     kaliop_queueing.message_consumer.xmlrpc_call:
-        class: %kaliop_queueing.message_consumer.xmlrpc_call.class%
+        class: '%kaliop_queueing.message_consumer.xmlrpc_call.class%'
         parent: kaliop_queueing.message_consumer
 
     # A 'do nothing' consumer. Useful for testing/development
     kaliop_queueing.message_consumer.noop:
-        class: %kaliop_queueing.message_consumer.noop.class%
+        class: '%kaliop_queueing.message_consumer.noop.class%'
         parent: kaliop_queueing.message_consumer
 
     ### Filters ###
@@ -169,22 +169,22 @@ services:
 
     # A filter used to limit which Sf console commands can be execute via queue messages
     kaliop_queueing.message_consumer.console_command.filter:
-        class: %kaliop_queueing.message_consumer.console_command.filter.class%
-        arguments: [ %kaliop_queueing.default.allowed_commands% ]
+        class: '%kaliop_queueing.message_consumer.console_command.filter.class%'
+        arguments: [ '%kaliop_queueing.default.allowed_commands%' ]
         tags:
              - { name: kaliop_queueing.event_listener, event: kaliop_queueing.message_received }
 
     # A filter used to limit which Sf services methods can be execute via queue messages
     kaliop_queueing.message_consumer.symfony_service.filter:
-        class: %kaliop_queueing.message_consumer.symfony_service.filter.class%
-        arguments: [ %kaliop_queueing.default.allowed_services% ]
+        class: '%kaliop_queueing.message_consumer.symfony_service.filter.class%'
+        arguments: [ '%kaliop_queueing.default.allowed_services%' ]
         tags:
              - { name: kaliop_queueing.event_listener, event: kaliop_queueing.message_received }
 
     # A filter used to limit which remote servers can be contacted
     kaliop_queueing.message_consumer.http_request.filter:
-        class: %kaliop_queueing.message_consumer.http_request.filter.class%
-        arguments: [ %kaliop_queueing.default.allowed_services% ]
+        class: '%kaliop_queueing.message_consumer.http_request.filter.class%'
+        arguments: [ '%kaliop_queueing.default.allowed_services%' ]
         tags:
              - { name: kaliop_queueing.event_listener, event: kaliop_queueing.message_received }
 
@@ -193,7 +193,7 @@ services:
     # and can be limited to a single queue, specified in the tag
     #kaliop_queueing.message_consumer.filter.requeue_failed_consolecommands:
     #    class: %kaliop_queueing.message_consumer.filter.equeue_failed_consolecommands.class%
-    #    arguments: [ @kaliop_queueing.message_producer.console_command ]
+    #    arguments: [ '@kaliop_queueing.message_producer.console_command' ]
     #    tags:
     #        - { name: kaliop_queueing.event_listener, event: kaliop_queueing.message_consumption_failed, queue: aqueue }
 
@@ -201,7 +201,7 @@ services:
     # info on the results of message consumption, by uncommenting the 2nd and 3rd tags
     # NB: this slows down considerably the message receiving, enable (tag it) only during development
     kaliop_queueing.message_consumer.filter.monitor:
-        class: %kaliop_queueing.message_consumer.filter.monitor.class%
+        class: '%kaliop_queueing.message_consumer.filter.monitor.class%'
         tags:
         #     - { name: kaliop_queueing.event_listener, event: kaliop_queueing.message_received }
         #     - { name: kaliop_queueing.event_listener, event: kaliop_queueing.message_consumed }
@@ -209,7 +209,7 @@ services:
 
     # A filter used to time message consumption. Enable it (uncomment the tag) for testing/development
     kaliop_queueing.message_consumer.filter.stopwatch:
-        class: %kaliop_queueing.message_consumer.filter.stopwatch.class%
+        class: '%kaliop_queueing.message_consumer.filter.stopwatch.class%'
         # the stopwatch will measure the time taken to process this many messages
         arguments: [ 10 ]
         tags:
@@ -217,6 +217,6 @@ services:
 
     # A filter used to debug the results of message consumption. Enable it (uncomment the tag) for testing/development
     kaliop_queueing.message_consumer.filter.accumulator:
-        class: %kaliop_queueing.message_consumer.filter.accumulator.class%
+        class: '%kaliop_queueing.message_consumer.filter.accumulator.class%'
         tags:
         #     - { name: kaliop_queueing.event_listener, event: kaliop_queueing.message_consumed }
