@@ -63,7 +63,7 @@ class DriverManager
                 return $this->listDrivers();
 
             default:
-                throw new InvalidArgumentException("Action $action not supported");
+                throw new \InvalidArgumentException("Action $action not supported");
         }
     }
 
