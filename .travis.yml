@@ -43,7 +43,7 @@ install:
 
   - composer self-update
   # We might run composer install first, but then most of it would be undone anyway
-  - composer require --prefer-source --dev symfony/process:${SYMFONY_VERSION} symfony/framework-bundle:${SYMFONY_VERSION} symfony/finder:${SYMFONY_VERSION} symfony/monolog-bundle:${SYMFONY_VERSION}
+  - composer require --prefer-source --dev symfony/process:${SYMFONY_VERSION} symfony/framework-bundle:${SYMFONY_VERSION} symfony/finder:${SYMFONY_VERSION}
 
   # Re-enable xdebug for when we need to generate code coverage
   - if [ "$TRAVIS_PHP_VERSION" = "5.6" -a "$XDEBUG_INI" != "" ]; then mv "$XDEBUG_INI.bak" "$XDEBUG_INI"; fi

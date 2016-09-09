@@ -7,15 +7,15 @@
     },
     "require": {
         "ext-curl": "*",
-        "symfony/process": "~2.3",
-        "oldsound/rabbitmq-bundle": "~1.2"
+        "symfony/process": "^2.3",
+        "oldsound/rabbitmq-bundle": "^1.2"
     },
     "require-dev": {
-        "symfony/framework-bundle": "~2.3",
-        "symfony/finder": "~2.3",
-        "symfony/monolog-bundle": "~2.3",
-        "phpunit/phpunit": "~4.0",
-        "codeclimate/php-test-reporter": "~0.2"
+        "symfony/framework-bundle": "^2.3",
+        "symfony/finder": "^2.3",
+        "symfony/monolog-bundle": "^2.3",
+        "phpunit/phpunit": "^4.0",
+        "codeclimate/php-test-reporter": "^0.2"
     },
     "conflict": {
         "kaliop/queueingbundle-sqs": "<=0.2"
