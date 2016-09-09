@@ -1,3 +1,10 @@
+# Ver 0.7
+
+* NEW: made the package compatible with Symfony 3. As a side effect, we do not support Symfony 2.3 any more.
+
+* FIXED: an invalid exception was thrown in a rare corner case
+
+
 # Ver 0.6
 
 * IMPROVED: when the consumer stops because of a unix signal or too much memory used, print the reason
