@@ -10,19 +10,15 @@ matrix:
     #- php: 5.3
     #  env: SYMFONY_VERSION=2.3.*
     - php: 5.4
-      env: SYMFONY_VERSION=2.6.*
+      env: SYMFONY_VERSION=2.6.* CODE_COVERAGE=0
     - php: 5.5
-      env: SYMFONY_VERSION=2.7.*
+      env: SYMFONY_VERSION=2.7.* CODE_COVERAGE=0
     - php: 5.6
-      env: SYMFONY_VERSION=2.8.*
+      env: SYMFONY_VERSION=2.8.* CODE_COVERAGE=1
     - php: 7.0
-      env: SYMFONY_VERSION=3.0.*
+      env: SYMFONY_VERSION=3.0.* CODE_COVERAGE=0
     - php: hhvm
-      env: SYMFONY_VERSION=3.1.*
-
-  allow_failures:
-    # at the moment it gives a core dump because of generation of code coverage...
-    - php: 5.6
+      env: SYMFONY_VERSION=3.1.* CODE_COVERAGE=0
 
 services:
   - rabbitmq
@@ -46,14 +42,14 @@ install:
   - composer require --prefer-source --dev symfony/process:${SYMFONY_VERSION} symfony/framework-bundle:${SYMFONY_VERSION} symfony/finder:${SYMFONY_VERSION}
 
   # Re-enable xdebug for when we need to generate code coverage
-  - if [ "$TRAVIS_PHP_VERSION" = "5.6" -a "$XDEBUG_INI" != "" ]; then mv "$XDEBUG_INI.bak" "$XDEBUG_INI"; fi
+  - if [ "$CODE_COVERAGE" = "1" -a "$XDEBUG_INI" != "" ]; then mv "$XDEBUG_INI.bak" "$XDEBUG_INI"; fi
 
 before_script:
   - if [ "$TRAVIS_PHP_VERSION" = "5.6" ]; then phpenv config-add Tests/travis/zzz_php.ini; fi
   - cp phpunit.xml.dist phpunit.xml
 
 script:
-  - if [ "$TRAVIS_PHP_VERSION" = "5.6" ]; then phpunit --colors --coverage-clover=coverage.clover Tests/phpunit; else phpunit --colors Tests/phpunit; fi
+  - if [ "$CODE_COVERAGE" = "1" ]; then phpunit --colors --coverage-clover=coverage.clover Tests/phpunit; else phpunit --colors Tests/phpunit; fi
 
 after_failure:
   # Display as much info as we can to help developers
@@ -61,10 +57,10 @@ after_failure:
 
 after_script:
   # Upload code-coverage to Scrutinizer
-  - if [ "$TRAVIS_PHP_VERSION" = "5.6" -a -f coverage.clover ]; then wget https://scrutinizer-ci.com/ocular.phar; fi
-  - if [ "$TRAVIS_PHP_VERSION" = "5.6" -a -f coverage.clover ]; then php ocular.phar code-coverage:upload --format=php-clover coverage.clover; fi
+  - if [ "$CODE_COVERAGE" = "1" -a -f coverage.clover ]; then wget https://scrutinizer-ci.com/ocular.phar; fi
+  - if [ "$CODE_COVERAGE" = "1" -a -f coverage.clover ]; then php ocular.phar code-coverage:upload --format=php-clover coverage.clover; fi
   # Upload code-coverage to CodeClimate
-  - if [ "$TRAVIS_PHP_VERSION" = "5.6" -a -f coverage.clover ]; then CODECLIMATE_REPO_TOKEN=TOBEGOTTEN ./vendor/bin/test-reporter --coverage-report=coverage.clover; fi
+  - if [ "$CODE_COVERAGE" = "1" -a -f coverage.clover ]; then CODECLIMATE_REPO_TOKEN=TOBEGOTTEN ./vendor/bin/test-reporter --coverage-report=coverage.clover; fi
 
 cache:
   directories:
