@@ -91,7 +91,7 @@ class Watchdog
         } else {
             exec(
             // gotta love escaping single quotes in shell
-                "ps -eo pid,args | fgrep '" . str_replace("'", "'\''", $command) . "' | fgrep -v fgrep",
+                "ps -eo pid,args | fgrep '" . str_replace("'", "'\''", $command) . "' | grep -v grep",
                 $output,
                 $retCode);
 
