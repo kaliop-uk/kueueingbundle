@@ -42,7 +42,7 @@ before_script:
   - cp phpunit.xml.dist phpunit.xml
 
 script:
-  - if [ "$CODE_COVERAGE" = "1" ]; then ./vendor/phpunit/phpunit/phpunit --colors --coverage-clover=coverage.clover Tests/phpunit; else phpunit --colors Tests/phpunit; fi
+  - if [ "$CODE_COVERAGE" = "1" ]; then ./vendor/phpunit/phpunit/phpunit --colors --coverage-clover=coverage.clover Tests/phpunit; else ./vendor/phpunit/phpunit/phpunit --colors Tests/phpunit; fi
 
 after_failure:
   # Display as much info as we can to help developers
@@ -55,6 +55,7 @@ after_script:
   # Upload code-coverage to CodeClimate
   - if [ "$CODE_COVERAGE" = "1" -a -f coverage.clover ]; then CODECLIMATE_REPO_TOKEN=TOBEGOTTEN ./vendor/bin/test-reporter --coverage-report=coverage.clover; fi
 
-cache:
-  directories:
-    - $COMPOSER_CACHE_DIR
+# Try to avoid problems with shared composer caches...
+#cache:
+#  directories:
+#    - $COMPOSER_CACHE_DIR
