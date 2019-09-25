@@ -7,20 +7,20 @@
     },
     "require": {
         "ext-curl": "*",
-        "symfony/config": "^2.4 || ^3.0",
-        "symfony/console": "^2.4 || ^3.0",
-        "symfony/dependency-injection": "^2.4 || ^3.0",
-        "symfony/event-dispatcher": "^2.4 || ^3.0",
-        "symfony/http-kernel": "^2.4 || ^3.0",
-        "symfony/process": "^2.4 || ^3.0",
+        "symfony/config": "^2.4 || ^3.0 || ^4.0",
+        "symfony/console": "^2.4 || ^3.0 || ^4.0",
+        "symfony/dependency-injection": "^2.4 || ^3.0 || ^4.0",
+        "symfony/event-dispatcher": "^2.4 || ^3.0 || ^4.0",
+        "symfony/http-kernel": "^2.4 || ^3.0 || ^4.0",
+        "symfony/process": "^2.4 || ^3.0 || ^4.0",
         "php-amqplib/rabbitmq-bundle": "^1.2"
     },
     "require-dev": {
-        "symfony/framework-bundle": "^2.4 || ^3.0",
-        "symfony/finder": "^2.4 || ^3.0",
-        "symfony/monolog-bundle": "^2.4 || ^3.0",
-        "phpunit/phpunit": "^4.0",
-        "codeclimate/php-test-reporter": "^0.2"
+        "symfony/framework-bundle": "^2.4 || ^3.0 || ^4.0",
+        "symfony/finder": "^2.4 || ^3.0 || ^4.0",
+        "symfony/monolog-bundle": "^2.4 || ^3.0 || ^4.0",
+        "phpunit/phpunit": "^5.7 || ^7.5",
+        "codeclimate/php-test-reporter": "^0.4.4"
     },
     "conflict": {
         "kaliop/queueingbundle-sqs": "<=0.2"

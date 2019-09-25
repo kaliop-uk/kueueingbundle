@@ -6,19 +6,16 @@ sudo: true
 matrix:
   # Test only on versions of Sf that are still supported. See: http://symfony.com/doc/current/contributing/community/releases.html#version-history
   include:
-    # We are no more compatible with SF 2.3
-    #- php: 5.3
-    #  env: SYMFONY_VERSION=2.3.*
-    - php: 5.4
-      env: SYMFONY_VERSION=2.6.* CODE_COVERAGE=0
-    - php: 5.5
-      env: SYMFONY_VERSION=2.7.* CODE_COVERAGE=0
     - php: 5.6
-      env: SYMFONY_VERSION=2.8.* CODE_COVERAGE=1
+      env: SYMFONY_VERSION=2.7.* CODE_COVERAGE=0
     - php: 7.0
-      env: SYMFONY_VERSION=3.0.* CODE_COVERAGE=0
-    - php: hhvm
-      env: SYMFONY_VERSION=3.1.* CODE_COVERAGE=0
+      env: SYMFONY_VERSION=2.8.* CODE_COVERAGE=1
+    - php: 7.1
+      env: SYMFONY_VERSION=3.4.* CODE_COVERAGE=0
+    - php: 7.2
+      env: SYMFONY_VERSION=4.2.* CODE_COVERAGE=0
+    - php: 7.3
+      env: SYMFONY_VERSION=4.3.* CODE_COVERAGE=0
 
 services:
   - rabbitmq
