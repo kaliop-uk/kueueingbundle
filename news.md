@@ -1,10 +1,15 @@
-# Ver 0.7.1
+# Ver 0.7.2
 
 * FIXED: make yml config compatible with recent Symfony 3 versions
 
 * IMPROVED: declare compatibility with Symfony 4, even though we are known to fail with Sf >= 3.4
 
 * IMPROVED: update Travis tests to use more recent versions of PHP and Symfony and get back to partial green 
+
+
+# Ver 0.7.1
+
+* FIXED: fix watchdog helper getProcessPid not ignoring grep
 
 
 # Ver 0.7
