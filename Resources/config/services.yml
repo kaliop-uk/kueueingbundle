@@ -93,7 +93,7 @@ services:
 
     # Produces messages used to distribute execution of Sf console commands
     kaliop_queueing.message_producer.console_command:
-        class: %kaliop_queueing.message_producer.console_command.class%
+        class: '%kaliop_queueing.message_producer.console_command.class%'
         parent: kaliop_queueing.message_producer
 
     # Produces messages used to distribute execution of Sf services methods
@@ -116,7 +116,7 @@ services:
     # The base service - mapped to an abstract class
     # All the services which are tagged 'kaliop_queueing.driver' get registered automatically.
     kaliop_queueing.message_consumer:
-        class: %kaliop_queueing.message_consumer.class%
+        class: '%kaliop_queueing.message_consumer.class%'
         calls:
             - [ setLogger, [ '@?logger' ] ]
             - [ setDispatcher, [ '@kaliop_queueing.event_dispatcher' ] ]
@@ -192,7 +192,7 @@ services:
     # It has to be hooked up to a message producer service (see e.g. the ones defined above),
     # and can be limited to a single queue, specified in the tag
     #kaliop_queueing.message_consumer.filter.requeue_failed_consolecommands:
-    #    class: %kaliop_queueing.message_consumer.filter.equeue_failed_consolecommands.class%
+    #    class: '%kaliop_queueing.message_consumer.filter.equeue_failed_consolecommands.class%
     #    arguments: [ '@kaliop_queueing.message_producer.console_command' ]
     #    tags:
     #        - { name: kaliop_queueing.event_listener, event: kaliop_queueing.message_consumption_failed, queue: aqueue }
