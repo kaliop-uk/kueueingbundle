@@ -40,7 +40,7 @@ parameters:
 services:
 
     kaliop_queueing.drivermanager:
-        class: %kaliop_queueing.drivermanager.class%
+        class: '%kaliop_queueing.drivermanager.class%'
         arguments: [ '@service_container' ]
         calls:
             - [ setDefaultDriver, [ '%kaliop_queueing.default.driver%' ] ]
