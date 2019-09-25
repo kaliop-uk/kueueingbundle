@@ -14,12 +14,13 @@ matrix:
     - php: 7.3
       env: SYMFONY_VERSION=4.3.* CODE_COVERAGE=0
 
-services:
-  - rabbitmq
+#services:
+#  - rabbitmq
 
 before_install:
   # This is mandatory or 'apt-get install' calls following will fail
-  #- sudo apt-get update -qq
+  - sudo apt-get update -qq
+  - sudo apt-get install rabbitmq-server -y
   # Install a more recent Xdebug version, as the default one (2.2.7) crashes when generating code coverage
   #- if [ "$TRAVIS_PHP_VERSION" = "5.6" ]; then ./Tests/travis/setup_xdebug.sh; fi
 
