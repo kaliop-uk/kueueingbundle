@@ -49,7 +49,7 @@ class ConsumerCommand extends BaseCommand
 
         $driverName = $input->getOption('driver');
         $debug = $input->getOption('debug');
-        $timeout = $input->getOption('timeout');
+        $timeout = (int)$input->getOption('timeout');
 
         $this->driver = $this->getContainer()->get('kaliop_queueing.drivermanager')->getDriver($driverName);
         if ($debug !== null) {
