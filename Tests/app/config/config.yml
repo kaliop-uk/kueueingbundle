@@ -6,7 +6,7 @@ framework:
 services:
     # enable the accumulator listener
     kaliop_queueing.message_consumer.filter.accumulator:
-        class: %kaliop_queueing.message_consumer.filter.accumulator.class%
+        class: '%kaliop_queueing.message_consumer.filter.accumulator.class%'
         tags:
              - { name: kaliop_queueing.event_listener, event: kaliop_queueing.message_consumed }
 
