@@ -14,9 +14,6 @@ matrix:
     - php: 7.3
       env: SYMFONY_VERSION=4.3.* CODE_COVERAGE=0
 
-#services:
-#  - rabbitmq
-
 before_install:
   # This is mandatory or 'apt-get install' calls following will fail
   - sudo apt-get update -qq
@@ -46,7 +43,7 @@ script:
 
 after_failure:
   # Display as much info as we can to help developers
-  - then php -i
+  - php -i
 
 after_script:
   # Upload code-coverage to Scrutinizer
