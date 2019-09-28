@@ -3,8 +3,9 @@
 <phpunit bootstrap="./Tests/bootstrap.php">
 
     <php>
-        <!-- this env var is needed by Symfony -->
+        <!-- these env vars are needed by Symfony -->
         <server name="KERNEL_DIR" value="./Tests/app" />
+        <server name="KERNEL_CLASS" value="AppKernel" />
     </php>
 
     <!-- code coverage reporting -->
