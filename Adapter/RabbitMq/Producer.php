@@ -4,6 +4,7 @@ namespace Kaliop\QueueingBundle\Adapter\RabbitMq;
 
 use OldSound\RabbitMqBundle\RabbitMq\Producer as BaseProducer;
 use PhpAmqpLib\Message\AMQPMessage;
+use PhpAmqpLib\Wire\AMQPTable;
 use Kaliop\QueueingBundle\Queue\ProducerInterface;
 
 /**
@@ -13,7 +14,7 @@ class Producer extends BaseProducer implements ProducerInterface
 {
     protected $queueStats = array();
 
-    public function publish($msgBody, $routingKey = '', $params = array())
+    public function publish($msgBody, $routingKey = '', $params = array(), array $headers = null)
     {
         if ($this->autoSetupFabric) {
             $this->setupFabric();
@@ -23,6 +24,12 @@ class Producer extends BaseProducer implements ProducerInterface
             $msgBody,
             array_merge(array('content_type' => $this->contentType, 'delivery_mode' => $this->deliveryMode), $params)
         );
+
+        if (!empty($headers)) {
+            $headersTable = new AMQPTable($headers);
+            $msg->set('application_headers', $headersTable);
+        }
+
         $this->getChannel()->basic_publish($msg, $this->exchangeOptions['name'], $routingKey);
     }
 
