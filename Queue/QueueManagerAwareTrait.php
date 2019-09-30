@@ -12,7 +12,7 @@ trait QueueManagerAwareTrait
         $this->queueManager = $queueManager;
     }
 
-    protected function getQueueManager()
+    protected function getQueueManagerInternal()
     {
         return $this->queueManager;
     }

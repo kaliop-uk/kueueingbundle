@@ -47,7 +47,7 @@ class Driver implements DriverInterface, ContainerAwareInterface
      */
     public function getQueueManager($queueName)
     {
-        $mgr = $this->getQueueManager();
+        $mgr = $this->getQueueManagerInternal();
         $mgr->setQueueName($queueName);
         return $mgr;
     }
