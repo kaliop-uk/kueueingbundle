@@ -20,8 +20,8 @@ services:
     test_alias.kaliop_queueing.event_dispatcher:
         alias: 'kaliop_queueing.event_dispatcher'
         public: true
-    test_alias.kaliop_queueing.driver.worker_manager:
-        alias: 'kaliop_queueing.driver.worker_manager'
+    test_alias.kaliop_queueing.worker_manager:
+        alias: 'kaliop_queueing.worker_manager'
         public: true
     test_alias.kaliop_queueing.watchdog:
         alias: 'kaliop_queueing.watchdog'
