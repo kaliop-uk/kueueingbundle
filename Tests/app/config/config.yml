@@ -9,6 +9,7 @@ services:
         class: '%kaliop_queueing.message_consumer.filter.accumulator.class%'
         tags:
              - { name: kaliop_queueing.event_listener, event: kaliop_queueing.message_consumed }
+        public: true
 
     # make public (via aliases) all the services which are private in sf 3.4->4.0, for ease of testing
     test_alias.kaliop_queueing.event_dispatcher:
