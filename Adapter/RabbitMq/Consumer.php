@@ -119,7 +119,7 @@ class Consumer extends BaseConsumer implements ConsumerInterface, SignalHandling
      * @param int $msgAmount
      * @param int $timeout
      */
-    public function consume($msgAmount, $timeout=0)
+    public function consume($msgAmount, $timeout = 0)
     {
         if ($timeout > 0) {
             // save initial time

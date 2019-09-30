@@ -14,6 +14,8 @@ use Kaliop\QueueingBundle\Event\ProcessStoppedEvent;
  */
 class Watchdog
 {
+    /** @var EventDispatcherInterface $dispatcher */
+    protected $dispatcher;
 
     public function __construct(EventDispatcherInterface $dispatcher = null)
     {

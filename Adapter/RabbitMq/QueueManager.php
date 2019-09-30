@@ -128,12 +128,12 @@ class QueueManager extends BaseMessageProducer implements ContainerAwareInterfac
     public function listQueues($type = Queue::TYPE_ANY)
     {
         $out = array();
-        if ($type = Queue::TYPE_PRODUCER || $type = Queue::TYPE_ANY) {
+        if ($type == Queue::TYPE_PRODUCER || $type == Queue::TYPE_ANY) {
             foreach ($this->registeredProducers as $queueName) {
-                        $out[$queueName] = Queue::TYPE_PRODUCER;
+                $out[$queueName] = Queue::TYPE_PRODUCER;
             }
         }
-        if ($type = Queue::TYPE_CONSUMER || $type = Queue::TYPE_ANY) {
+        if ($type == Queue::TYPE_CONSUMER || $type == Queue::TYPE_ANY) {
             foreach ($this->registeredConsumers as $queueName) {
                 if (isset($out[$queueName])) {
                     $out[$queueName] = Queue::TYPE_ANY;
