@@ -12,70 +12,70 @@ services:
 
     # make public (via aliases) all the services which are private in sf 3.4->4.0, for ease of testing
     test_alias.kaliop_queueing.drivermanager:
-        alias: '@kaliop_queueing.drivermanager'
+        alias: 'kaliop_queueing.drivermanager'
         public: true
     test_alias.kaliop_queueing.driver.rabbitmq:
-        alias: '@kaliop_queueing.driver.rabbitmq'
+        alias: 'kaliop_queueing.driver.rabbitmq'
         public: true
     test_alias.kaliop_queueing.event_dispatcher:
-        alias: '@kaliop_queueing.event_dispatcher'
+        alias: 'kaliop_queueing.event_dispatcher'
         public: true
     test_alias.kaliop_queueing.driver.worker_manager:
-        alias: '@kaliop_queueing.driver.worker_manager'
+        alias: 'kaliop_queueing.driver.worker_manager'
         public: true
     test_alias.kaliop_queueing.watchdog:
-        alias: '@kaliop_queueing.watchdog'
+        alias: 'kaliop_queueing.watchdog'
         public: true
     test_alias.kaliop_queueing.amqp.queue_manager:
-        alias: '@kaliop_queueing.amqp.queue_manager'
+        alias: 'kaliop_queueing.amqp.queue_manager'
         public: true
     test_alias.kaliop_queueing.message_producer.console_command:
-        alias: '@kaliop_queueing.message_producer.console_command'
+        alias: 'kaliop_queueing.message_producer.console_command'
         public: true
     test_alias.kaliop_queueing.message_consumer.console_command:
-        alias: '@kaliop_queueing.message_consumer.console_command'
+        alias: 'kaliop_queueing.message_consumer.console_command'
         public: true
     test_alias.kaliop_queueing.message_producer.symfony_service:
-        alias: '@kaliop_queueing.message_producer.symfony_service'
+        alias: 'kaliop_queueing.message_producer.symfony_service'
         public: true
     test_alias.kaliop_queueing.message_consumer.symfony_service:
-        alias: '@kaliop_queueing.message_consumer.symfony_service'
+        alias: 'kaliop_queueing.message_consumer.symfony_service'
         public: true
     test_alias.kaliop_queueing.message_producer.http_request:
-        alias: '@kaliop_queueing.message_producer.http_request'
+        alias: 'kaliop_queueing.message_producer.http_request'
         public: true
     test_alias.kaliop_queueing.message_consumer.http_request:
-        alias: '@kaliop_queueing.message_consumer.http_request'
+        alias: 'kaliop_queueing.message_consumer.http_request'
         public: true
     test_alias.kaliop_queueing.message_producer.xmlrpc_call:
-        alias: '@kaliop_queueing.message_producer.xmlrpc_call'
+        alias: 'kaliop_queueing.message_producer.xmlrpc_call'
         public: true
     test_alias.kaliop_queueing.message_consumer.xmlrpc_call:
-        alias: '@kaliop_queueing.message_consumer.xmlrpc_call'
+        alias: 'kaliop_queueing.message_consumer.xmlrpc_call'
         public: true
     test_alias.kaliop_queueing.message_producer.generic_message:
-        alias: '@kaliop_queueing.message_producer.generic_message'
+        alias: 'kaliop_queueing.message_producer.generic_message'
         public: true
     test_alias.kaliop_queueing.message_consumer.noop:
-        alias: '@kaliop_queueing.message_consumer.noop'
+        alias: 'kaliop_queueing.message_consumer.noop'
         public: true
     test_alias.kaliop_queueing.message_consumer.console_command.filter:
-        alias: '@kaliop_queueing.message_consumer.console_command.filter'
+        alias: 'kaliop_queueing.message_consumer.console_command.filter'
         public: true
     test_alias.kaliop_queueing.message_consumer.symfony_service.filter:
-        alias: '@kaliop_queueing.message_consumer.symfony_service.filter'
+        alias: 'kaliop_queueing.message_consumer.symfony_service.filter'
         public: true
     test_alias.kaliop_queueing.message_consumer.http_request.filter:
-        alias: '@kaliop_queueing.message_consumer.http_request.filter'
+        alias: 'kaliop_queueing.message_consumer.http_request.filter'
         public: true
     test_alias.kaliop_queueing.message_consumer.filter.monitor:
-        alias: '@kaliop_queueing.message_consumer.filter.monitor'
+        alias: 'kaliop_queueing.message_consumer.filter.monitor'
         public: true
     test_alias.kaliop_queueing.message_consumer.filter.stopwatch:
-        alias: '@kaliop_queueing.message_consumer.filter.stopwatch'
+        alias: 'kaliop_queueing.message_consumer.filter.stopwatch'
         public: true
     test_alias.kaliop_queueing.message_consumer.filter.accumulator:
-        alias: '@kaliop_queueing.message_consumer.filter.accumulator'
+        alias: 'kaliop_queueing.message_consumer.filter.accumulator'
         public: true
 
 old_sound_rabbit_mq:
