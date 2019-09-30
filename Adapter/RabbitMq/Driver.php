@@ -2,19 +2,16 @@
 
 namespace Kaliop\QueueingBundle\Adapter\RabbitMq;
 
-use Kaliop\QueueingBundle\Queue\Queue;
 use PhpAmqpLib\Message\AMQPMessage;
 use Kaliop\QueueingBundle\Adapter\DriverInterface;
+use Kaliop\QueueingBundle\Queue\QueueManagerAwareTrait;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-
-use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
-use Symfony\Component\Config\FileLocator;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class Driver implements DriverInterface, ContainerAwareInterface
 {
     use ContainerAwareTrait;
+    use QueueManagerAwareTrait;
 
     /**
      * @param string $queueName
@@ -50,7 +47,7 @@ class Driver implements DriverInterface, ContainerAwareInterface
      */
     public function getQueueManager($queueName)
     {
-        $mgr = $this->container->get('kaliop_queueing.amqp.queue_manager');
+        $mgr = $this->getQueueManager();
         $mgr->setQueueName($queueName);
         return $mgr;
     }

@@ -20,6 +20,9 @@ services:
     test_alias.kaliop_queueing.message_consumer.console_command:
         alias: 'kaliop_queueing.message_consumer.console_command'
         public: true
+    test_alias.kaliop_queueing.message_producer.symfony_service:
+        alias: 'kaliop_queueing.message_producer.symfony_service'
+        public: true
     test_alias.kaliop_queueing.message_consumer.symfony_service:
         alias: 'kaliop_queueing.message_consumer.symfony_service'
         public: true

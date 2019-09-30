@@ -50,6 +50,7 @@ services:
         class: '%kaliop_queueing.driver.rabbitmq.class%'
         calls:
             - [ setContainer, [ '@service_container' ] ]
+            - [ setQueueManager, [ '@kaliop_queueing.amqp.queue_manager' ] ]
         tags:
             - { name: kaliop_queueing.driver, alias: rabbitmq }
         public: true
