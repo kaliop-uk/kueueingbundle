@@ -12,6 +12,7 @@ class DriverManager
 {
     protected $aliases = array();
     protected $defaultDriver;
+    protected $container;
 
     public function __construct(ContainerInterface $container)
     {

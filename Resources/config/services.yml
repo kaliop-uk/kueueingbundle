@@ -51,6 +51,7 @@ services:
             - [ setContainer, [ '@service_container' ] ]
         tags:
             - { name: kaliop_queueing.driver, alias: rabbitmq }
+        public: true
 
     kaliop_queueing.event_dispatcher:
         class: '%kaliop_queueing.event_dispatcher.class%'

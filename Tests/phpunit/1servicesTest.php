@@ -22,7 +22,7 @@ class sampleTest extends WebTestCase
     {
         $container = $this->getContainer();
         $service = $container->get('test_alias.kaliop_queueing.drivermanager');
-        $service = $container->get('test_alias.kaliop_queueing.driver.rabbitmq');
+        $service = $container->get('kaliop_queueing.driver.rabbitmq');
         $service = $container->get('test_alias.kaliop_queueing.event_dispatcher');
         $service = $container->get('test_alias.kaliop_queueing.worker_manager');
         $service = $container->get('test_alias.kaliop_queueing.watchdog');

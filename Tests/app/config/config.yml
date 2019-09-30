@@ -14,9 +14,6 @@ services:
     test_alias.kaliop_queueing.drivermanager:
         alias: 'kaliop_queueing.drivermanager'
         public: true
-    test_alias.kaliop_queueing.driver.rabbitmq:
-        alias: 'kaliop_queueing.driver.rabbitmq'
-        public: true
     test_alias.kaliop_queueing.event_dispatcher:
         alias: 'kaliop_queueing.event_dispatcher'
         public: true
