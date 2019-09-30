@@ -26,9 +26,9 @@ class MessagesTest extends RabbitMQTest
     {
         $this->purgeQueues('travis_test');
 
-        $msgProducer = $this->getMsgProducer('kaliop_queueing.message_producer.generic_message', 'travis_test');
+        $msgProducer = $this->getMsgProducer('test_alias.kaliop_queueing.message_producer.generic_message', 'travis_test');
         $msgProducer->publish('{"hello":"world"}');
-        $accumulator = $this->getContainer()->get('kaliop_queueing.message_consumer.filter.accumulator');
+        $accumulator = $this->getContainer()->get('test_alias.kaliop_queueing.message_consumer.filter.accumulator');
         $accumulator->reset();
         $this->getConsumer('travis_test')->consume(1, $this->timeout);
         $this->assertContains('world', $accumulator->getConsumptionResult());
@@ -38,11 +38,11 @@ class MessagesTest extends RabbitMQTest
     {
         $this->purgeQueues('travis_test_hellodotworld', 'travis_test_bonjourdotmonde');
 
-        $msgProducer = $this->getMsgProducer('kaliop_queueing.message_producer.generic_message', 'travis_test');
+        $msgProducer = $this->getMsgProducer('test_alias.kaliop_queueing.message_producer.generic_message', 'travis_test');
         $msgProducer->publish('{"hello":"eng"}', null, 'hello.world');
         $msgProducer->publish('{"hello":"fre"}', null, 'bonjour.monde');
 
-        $accumulator = $this->getContainer()->get('kaliop_queueing.message_consumer.filter.accumulator');
+        $accumulator = $this->getContainer()->get('test_alias.kaliop_queueing.message_consumer.filter.accumulator');
 
         $accumulator->reset();
         $this->getConsumer('travis_test_hellodotworld')->consume(1, $this->timeout);
@@ -57,12 +57,12 @@ class MessagesTest extends RabbitMQTest
     {
         $this->purgeQueues('travis_test_hellodotstar', 'travis_test_stardotworld');
 
-        $msgProducer = $this->getMsgProducer('kaliop_queueing.message_producer.generic_message', 'travis_test');
+        $msgProducer = $this->getMsgProducer('test_alias.kaliop_queueing.message_producer.generic_message', 'travis_test');
         $msgProducer->publish('{"hello":"fre"}', null, 'bonjour.monde');
         $msgProducer->publish('{"hello":"eng"}', null, 'hello.world');
         $msgProducer->publish('{"hello":"eng"}', null, 'hello.world');
 
-        $accumulator = $this->getContainer()->get('kaliop_queueing.message_consumer.filter.accumulator');
+        $accumulator = $this->getContainer()->get('test_alias.kaliop_queueing.message_consumer.filter.accumulator');
 
         $accumulator->reset();
         $this->getConsumer('travis_test_hellodotstar')->consume(2, $this->timeout);
@@ -77,13 +77,13 @@ class MessagesTest extends RabbitMQTest
     {
         $this->purgeQueues('travis_test_hellodothash', 'travis_test_hashdotworld', 'travis_test');
 
-        $msgProducer = $this->getMsgProducer('kaliop_queueing.message_producer.generic_message', 'travis_test');
+        $msgProducer = $this->getMsgProducer('test_alias.kaliop_queueing.message_producer.generic_message', 'travis_test');
         $msgProducer->publish('{"hello":"eng"}', null, 'hello.world');
         $msgProducer->publish('{"hello":"eng"}', null, 'hello.world');
         $msgProducer->publish('{"hello":"eng"}', null, 'hello.world');
         $msgProducer->publish('{"hello":"fre"}', null, 'bonjour.monde');
 
-        $accumulator = $this->getContainer()->get('kaliop_queueing.message_consumer.filter.accumulator');
+        $accumulator = $this->getContainer()->get('test_alias.kaliop_queueing.message_consumer.filter.accumulator');
 
         $accumulator->reset();
         $this->getConsumer('travis_test_hellodothash')->consume(3, $this->timeout);

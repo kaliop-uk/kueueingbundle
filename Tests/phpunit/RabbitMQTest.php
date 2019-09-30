@@ -21,7 +21,7 @@ abstract class RabbitMQTest extends WebTestCase
 
     protected function getDriver()
     {
-        return $this->getContainer()->get('kaliop_queueing.drivermanager')->getDriver('rabbitmq');
+        return $this->getContainer()->get('test_alias.kaliop_queueing.drivermanager')->getDriver('rabbitmq');
     }
 
     protected function getQueueManager($queueName= '')
