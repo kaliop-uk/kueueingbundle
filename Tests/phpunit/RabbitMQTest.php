@@ -49,6 +49,7 @@ abstract class RabbitMQTest extends WebTestCase
                 $this->getQueueManager($queueName)->executeAction('purge');
             } catch(PhpAmqpLib\Exception\AMQPProtocolChannelException $e) {
                 // it's ok if queues to be purged do not exist yet
+                echo "Error while purging queue '$queueName': " . $e->getMessage();
             }
         }
     }
