@@ -1,7 +1,7 @@
 # Configuration file used for running tests
 
 framework:
-    secret: "ThisIsNotSoSercretSoWeTestIt"
+    secret: "ThisIsNotSoSecretSoWeTestIt"
 
 services:
     # enable the accumulator listener
