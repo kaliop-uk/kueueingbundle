@@ -212,7 +212,7 @@ services:
     # NB: this slows down considerably the message receiving, enable (tag it) only during development
     kaliop_queueing.message_consumer.filter.monitor:
         class: '%kaliop_queueing.message_consumer.filter.monitor.class%'
-        tags:
+        #tags:
         #     - { name: kaliop_queueing.event_listener, event: kaliop_queueing.message_received }
         #     - { name: kaliop_queueing.event_listener, event: kaliop_queueing.message_consumed }
         #     - { name: kaliop_queueing.event_listener, event: kaliop_queueing.message_consumption_failed }
@@ -223,13 +223,13 @@ services:
         class: '%kaliop_queueing.message_consumer.filter.stopwatch.class%'
         # the stopwatch will measure the time taken to process this many messages
         arguments: [ 10 ]
-        tags:
+        #tags:
         #     - { name: kaliop_queueing.event_listener, event: kaliop_queueing.message_received }
         public: true
 
     # A filter used to debug the results of message consumption. Enable it (uncomment the tag) for testing/development
     kaliop_queueing.message_consumer.filter.accumulator:
         class: '%kaliop_queueing.message_consumer.filter.accumulator.class%'
-        tags:
+        #tags:
         #     - { name: kaliop_queueing.event_listener, event: kaliop_queueing.message_consumed }
         public: true
