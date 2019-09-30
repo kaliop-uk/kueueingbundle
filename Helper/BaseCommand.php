@@ -12,7 +12,7 @@ class BaseCommand extends ContainerAwareCommand
 {
     // used for logging to screen current date with uniform format
     /// @todo !important get it from configuration :-)
-    static $DATE_FORMAT = '%Y/%m/%d - %H:%M:%S';
+    protected static $DATE_FORMAT = '%Y/%m/%d - %H:%M:%S';
 
     /// @var \Symfony\Component\Console\Output\OutputInterface $output
     protected $output;
