@@ -21,15 +21,15 @@ class sampleTest extends WebTestCase
     public function testKnownServices()
     {
         $container = $this->getContainer();
-        $service = $container->get('test_alias.kaliop_queueing.drivermanager');
+        $service = $container->get('kaliop_queueing.drivermanager');
         $service = $container->get('kaliop_queueing.driver.rabbitmq');
         $service = $container->get('test_alias.kaliop_queueing.event_dispatcher');
-        $service = $container->get('test_alias.kaliop_queueing.worker_manager');
-        $service = $container->get('test_alias.kaliop_queueing.watchdog');
+        $service = $container->get('kaliop_queueing.worker_manager');
+        $service = $container->get('kaliop_queueing.watchdog');
         $service = $container->get('test_alias.kaliop_queueing.amqp.queue_manager');
-        $service = $container->get('test_alias.kaliop_queueing.message_producer.console_command');
+        $service = $container->get('kaliop_queueing.message_producer.console_command');
         $service = $container->get('test_alias.kaliop_queueing.message_consumer.console_command');
-        $service = $container->get('test_alias.kaliop_queueing.message_producer.symfony_service');
+        $service = $container->get('kaliop_queueing.message_producer.symfony_service');
         $service = $container->get('test_alias.kaliop_queueing.message_consumer.symfony_service');
         $service = $container->get('test_alias.kaliop_queueing.message_producer.http_request');
         $service = $container->get('test_alias.kaliop_queueing.message_consumer.http_request');

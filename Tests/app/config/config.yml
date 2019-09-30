@@ -11,29 +11,14 @@ services:
              - { name: kaliop_queueing.event_listener, event: kaliop_queueing.message_consumed }
 
     # make public (via aliases) all the services which are private in sf 3.4->4.0, for ease of testing
-    test_alias.kaliop_queueing.drivermanager:
-        alias: 'kaliop_queueing.drivermanager'
-        public: true
     test_alias.kaliop_queueing.event_dispatcher:
         alias: 'kaliop_queueing.event_dispatcher'
-        public: true
-    test_alias.kaliop_queueing.worker_manager:
-        alias: 'kaliop_queueing.worker_manager'
-        public: true
-    test_alias.kaliop_queueing.watchdog:
-        alias: 'kaliop_queueing.watchdog'
         public: true
     test_alias.kaliop_queueing.amqp.queue_manager:
         alias: 'kaliop_queueing.amqp.queue_manager'
         public: true
-    test_alias.kaliop_queueing.message_producer.console_command:
-        alias: 'kaliop_queueing.message_producer.console_command'
-        public: true
     test_alias.kaliop_queueing.message_consumer.console_command:
         alias: 'kaliop_queueing.message_consumer.console_command'
-        public: true
-    test_alias.kaliop_queueing.message_producer.symfony_service:
-        alias: 'kaliop_queueing.message_producer.symfony_service'
         public: true
     test_alias.kaliop_queueing.message_consumer.symfony_service:
         alias: 'kaliop_queueing.message_consumer.symfony_service'

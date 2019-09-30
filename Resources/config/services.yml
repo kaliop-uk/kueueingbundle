@@ -44,6 +44,7 @@ services:
         arguments: [ '@service_container' ]
         calls:
             - [ setDefaultDriver, [ '%kaliop_queueing.default.driver%' ] ]
+        public: true
 
     kaliop_queueing.driver.rabbitmq:
         class: '%kaliop_queueing.driver.rabbitmq.class%'
@@ -60,10 +61,12 @@ services:
     kaliop_queueing.worker_manager:
          class: '%kaliop_queueing.worker_manager.class%'
          arguments: [ '%kaliop_queueing.default.workers.list%', '%kernel.root_dir%' ]
+         public: true
 
     kaliop_queueing.watchdog:
         class: '%kaliop_queueing.watchdog.class%'
         arguments: [ '@kaliop_queueing.event_dispatcher' ]
+        public: true
 
     # Produces messages used to manage the queues themselves.
     kaliop_queueing.amqp.queue_manager:
