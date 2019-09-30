@@ -28,7 +28,7 @@ class MessagesTest extends RabbitMQTest
 
         $msgProducer = $this->getMsgProducer('test_alias.kaliop_queueing.message_producer.generic_message', 'travis_test');
         $msgProducer->publish('{"hello":"world"}');
-        $accumulator = $this->getContainer()->get('test_alias.kaliop_queueing.message_consumer.filter.accumulator');
+        $accumulator = $this->getContainer()->get('kaliop_queueing.message_consumer.filter.accumulator');
         $accumulator->reset();
         $this->getConsumer('travis_test')->consume(1, $this->timeout);
         $this->assertContains('world', $accumulator->getConsumptionResult());
@@ -42,7 +42,7 @@ class MessagesTest extends RabbitMQTest
         $msgProducer->publish('{"hello":"eng"}', null, 'hello.world');
         $msgProducer->publish('{"hello":"fre"}', null, 'bonjour.monde');
 
-        $accumulator = $this->getContainer()->get('test_alias.kaliop_queueing.message_consumer.filter.accumulator');
+        $accumulator = $this->getContainer()->get('kaliop_queueing.message_consumer.filter.accumulator');
 
         $accumulator->reset();
         $this->getConsumer('travis_test_hellodotworld')->consume(1, $this->timeout);
@@ -62,7 +62,7 @@ class MessagesTest extends RabbitMQTest
         $msgProducer->publish('{"hello":"eng"}', null, 'hello.world');
         $msgProducer->publish('{"hello":"eng"}', null, 'hello.world');
 
-        $accumulator = $this->getContainer()->get('test_alias.kaliop_queueing.message_consumer.filter.accumulator');
+        $accumulator = $this->getContainer()->get('kaliop_queueing.message_consumer.filter.accumulator');
 
         $accumulator->reset();
         $this->getConsumer('travis_test_hellodotstar')->consume(2, $this->timeout);
@@ -83,7 +83,7 @@ class MessagesTest extends RabbitMQTest
         $msgProducer->publish('{"hello":"eng"}', null, 'hello.world');
         $msgProducer->publish('{"hello":"fre"}', null, 'bonjour.monde');
 
-        $accumulator = $this->getContainer()->get('test_alias.kaliop_queueing.message_consumer.filter.accumulator');
+        $accumulator = $this->getContainer()->get('kaliop_queueing.message_consumer.filter.accumulator');
 
         $accumulator->reset();
         $this->getConsumer('travis_test_hellodothash')->consume(3, $this->timeout);
