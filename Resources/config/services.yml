@@ -99,6 +99,7 @@ services:
     kaliop_queueing.message_producer.console_command:
         class: '%kaliop_queueing.message_producer.console_command.class%'
         parent: kaliop_queueing.message_producer
+        public: true
 
     # Produces messages used to distribute execution of Sf services methods
     kaliop_queueing.message_producer.symfony_service:
