@@ -80,6 +80,7 @@ services:
         class: '%kaliop_queueing.console_event_listener.class%'
         tags:
             - { name: kernel.event_listener, event: console.command, method: onConsoleCommand }
+        public: true
 
     ### Producers ###
 
@@ -179,6 +180,7 @@ services:
         arguments: [ '%kaliop_queueing.default.allowed_commands%' ]
         tags:
              - { name: kaliop_queueing.event_listener, event: kaliop_queueing.message_received }
+        public: true
 
     # A filter used to limit which Sf services methods can be execute via queue messages
     kaliop_queueing.message_consumer.symfony_service.filter:
@@ -186,6 +188,7 @@ services:
         arguments: [ '%kaliop_queueing.default.allowed_services%' ]
         tags:
              - { name: kaliop_queueing.event_listener, event: kaliop_queueing.message_received }
+        public: true
 
     # A filter used to limit which remote servers can be contacted
     kaliop_queueing.message_consumer.http_request.filter:
@@ -193,6 +196,7 @@ services:
         arguments: [ '%kaliop_queueing.default.allowed_services%' ]
         tags:
              - { name: kaliop_queueing.event_listener, event: kaliop_queueing.message_received }
+        public: true
 
     # A filter used to re-queue the execution of console command when they fail.
     # It has to be hooked up to a message producer service (see e.g. the ones defined above),
@@ -212,6 +216,7 @@ services:
         #     - { name: kaliop_queueing.event_listener, event: kaliop_queueing.message_received }
         #     - { name: kaliop_queueing.event_listener, event: kaliop_queueing.message_consumed }
         #     - { name: kaliop_queueing.event_listener, event: kaliop_queueing.message_consumption_failed }
+        public: true
 
     # A filter used to time message consumption. Enable it (uncomment the tag) for testing/development
     kaliop_queueing.message_consumer.filter.stopwatch:
@@ -220,9 +225,11 @@ services:
         arguments: [ 10 ]
         tags:
         #     - { name: kaliop_queueing.event_listener, event: kaliop_queueing.message_received }
+        public: true
 
     # A filter used to debug the results of message consumption. Enable it (uncomment the tag) for testing/development
     kaliop_queueing.message_consumer.filter.accumulator:
         class: '%kaliop_queueing.message_consumer.filter.accumulator.class%'
         tags:
         #     - { name: kaliop_queueing.event_listener, event: kaliop_queueing.message_consumed }
+        public: true

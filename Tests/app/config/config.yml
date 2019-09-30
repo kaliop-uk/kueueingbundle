@@ -44,24 +44,6 @@ services:
     test_alias.kaliop_queueing.message_consumer.noop:
         alias: 'kaliop_queueing.message_consumer.noop'
         public: true
-    test_alias.kaliop_queueing.message_consumer.console_command.filter:
-        alias: 'kaliop_queueing.message_consumer.console_command.filter'
-        public: true
-    test_alias.kaliop_queueing.message_consumer.symfony_service.filter:
-        alias: 'kaliop_queueing.message_consumer.symfony_service.filter'
-        public: true
-    test_alias.kaliop_queueing.message_consumer.http_request.filter:
-        alias: 'kaliop_queueing.message_consumer.http_request.filter'
-        public: true
-    test_alias.kaliop_queueing.message_consumer.filter.monitor:
-        alias: 'kaliop_queueing.message_consumer.filter.monitor'
-        public: true
-    test_alias.kaliop_queueing.message_consumer.filter.stopwatch:
-        alias: 'kaliop_queueing.message_consumer.filter.stopwatch'
-        public: true
-    test_alias.kaliop_queueing.message_consumer.filter.accumulator:
-        alias: 'kaliop_queueing.message_consumer.filter.accumulator'
-        public: true
 
 old_sound_rabbit_mq:
     connections:

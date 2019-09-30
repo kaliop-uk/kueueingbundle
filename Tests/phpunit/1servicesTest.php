@@ -37,11 +37,11 @@ class sampleTest extends WebTestCase
         $service = $container->get('test_alias.kaliop_queueing.message_consumer.xmlrpc_call');
         $service = $container->get('test_alias.kaliop_queueing.message_producer.generic_message');
         $service = $container->get('test_alias.kaliop_queueing.message_consumer.noop');
-        $service = $container->get('test_alias.kaliop_queueing.message_consumer.console_command.filter');
-        $service = $container->get('test_alias.kaliop_queueing.message_consumer.symfony_service.filter');
-        $service = $container->get('test_alias.kaliop_queueing.message_consumer.http_request.filter');
-        $service = $container->get('test_alias.kaliop_queueing.message_consumer.filter.monitor');
-        $service = $container->get('test_alias.kaliop_queueing.message_consumer.filter.stopwatch');
-        $service = $container->get('test_alias.kaliop_queueing.message_consumer.filter.accumulator');
+        $service = $container->get('kaliop_queueing.message_consumer.console_command.filter');
+        $service = $container->get('kaliop_queueing.message_consumer.symfony_service.filter');
+        $service = $container->get('kaliop_queueing.message_consumer.http_request.filter');
+        $service = $container->get('kaliop_queueing.message_consumer.filter.monitor');
+        $service = $container->get('kaliop_queueing.message_consumer.filter.stopwatch');
+        $service = $container->get('kaliop_queueing.message_consumer.filter.accumulator');
     }
 }
