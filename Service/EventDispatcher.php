@@ -3,43 +3,21 @@
 namespace Kaliop\QueueingBundle\Service;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\EventDispatcher\EventDispatcher as BaseEventDispatcher;
+//use Symfony\Component\EventDispatcher\ContainerAwareEventDispatcher;
 use Symfony\Component\EventDispatcher\Event;
 
-/**
- * Reimplement for our needs Symfony\Component\EventDispatcher\ContainerAwareEventDispatcher - with some tweaks, as it
- * was deprecated then removed from SF
- */
-class EventDispatcher extends BaseEventDispatcher
+class EventDispatcher extends ContainerAwareEventDispatcher
 {
-    /**
-     * The container from where services are loaded.
-     *
-     * @var ContainerInterface
-     */
-    private $container;
-
-    /**
-     * The service IDs of the event listeners and subscribers.
-     *
-     * @var array
-     */
+    // parent member is private, so we set up a new copy for our own use
     private $listenerIds = array();
-
-    /**
-     * The services registered as listeners.
-     *
-     * @var array
-     */
+    // same...
+    private $container;
+    // same...
     private $listeners = array();
 
-    /**
-     * Constructor.
-     *
-     * @param ContainerInterface $container A ContainerInterface instance
-     */
     public function __construct(ContainerInterface $container)
     {
+        parent::__construct($container);
         $this->container = $container;
     }
 
@@ -57,136 +35,9 @@ class EventDispatcher extends BaseEventDispatcher
      */
     public function addListenerService($eventName, $callback, $priority = 0, $queueName = null)
     {
-        if (!is_array($callback) || 2 !== count($callback)) {
-            throw new \InvalidArgumentException('Expected an array("service", "method") argument');
-        }
+        parent::addListenerService($eventName, $callback, $priority);
 
         $this->listenerIds[$eventName][] = array($callback[0], $callback[1], $priority, $queueName);
-    }
-
-    public function removeListener($eventName, $listener)
-    {
-        $this->lazyLoad($eventName);
-
-        if (isset($this->listenerIds[$eventName])) {
-            foreach ($this->listenerIds[$eventName] as $i => $args) {
-                list($serviceId, $method, $priority) = $args;
-                $key = $serviceId.'.'.$method;
-                if (isset($this->listeners[$eventName][$key]) && $listener === array($this->listeners[$eventName][$key], $method)) {
-                    unset($this->listeners[$eventName][$key]);
-                    if (empty($this->listeners[$eventName])) {
-                        unset($this->listeners[$eventName]);
-                    }
-                    unset($this->listenerIds[$eventName][$i]);
-                    if (empty($this->listenerIds[$eventName])) {
-                        unset($this->listenerIds[$eventName]);
-                    }
-                }
-            }
-        }
-
-        parent::removeListener($eventName, $listener);
-    }
-
-    /**
-     * @see EventDispatcherInterface::hasListeners()
-     */
-    public function hasListeners($eventName = null)
-    {
-        if (null === $eventName) {
-            return (bool) count($this->listenerIds) || (bool) count($this->listeners);
-        }
-
-        if (isset($this->listenerIds[$eventName])) {
-            return true;
-        }
-
-        return parent::hasListeners($eventName);
-    }
-
-    /**
-     * @see EventDispatcherInterface::getListeners()
-     */
-    public function getListeners($eventName = null)
-    {
-        if (null === $eventName) {
-            foreach ($this->listenerIds as $serviceEventName => $args) {
-                $this->lazyLoad($serviceEventName);
-            }
-        } else {
-            $this->lazyLoad($eventName);
-        }
-
-        return parent::getListeners($eventName);
-    }
-
-    /**
-     * Adds a service as event subscriber.
-     *
-     * @param string $serviceId The service ID of the subscriber service
-     * @param string $class     The service's class name (which must implement EventSubscriberInterface)
-     */
-    public function addSubscriberService($serviceId, $class)
-    {
-        foreach ($class::getSubscribedEvents() as $eventName => $params) {
-            if (is_string($params)) {
-                $this->listenerIds[$eventName][] = array($serviceId, $params, 0);
-            } elseif (is_string($params[0])) {
-                $this->listenerIds[$eventName][] = array($serviceId, $params[0], isset($params[1]) ? $params[1] : 0);
-            } else {
-                foreach ($params as $listener) {
-                    $this->listenerIds[$eventName][] = array($serviceId, $listener[0], isset($listener[1]) ? $listener[1] : 0);
-                }
-            }
-        }
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * Lazily loads listeners for this event from the dependency injection
-     * container.
-     *
-     * @throws \InvalidArgumentException if the service is not defined
-     */
-    public function dispatch($eventName, Event $event = null)
-    {
-        $this->lazyLoad($eventName);
-
-        return parent::dispatch($eventName, $event);
-    }
-
-    public function getContainer()
-    {
-        return $this->container;
-    }
-
-    /**
-     * When loading listener services, store in a separate index the queue to which service is limited
-     * @param string $eventName The name of the event to dispatch. The name of
-     *                          the event is the name of the method that is
-     *                          invoked on listeners.
-     */
-    protected function lazyLoad($eventName)
-    {
-        if (isset($this->listenerIds[$eventName])) {
-            foreach ($this->listenerIds[$eventName] as $args) {
-                list($serviceId, $method, $priority, $queueName) = $args;
-               $listener = $this->container->get($serviceId);
-
-                $key = $serviceId.'.'.$method;
-                if (!isset($this->listeners[$eventName][$key])) {
-                    $this->addListener($eventName, array($listener, $method), $priority);
-                } elseif ($listener !== $this->listeners[$eventName][$key]) {
-                    parent::removeListener($eventName, array($this->listeners[$eventName][$key], $method));
-                    $this->addListener($eventName, array($listener, $method), $priority);
-                }
-
-                if ($queueName != null) {
-                    $this->listeners[$eventName][$key] = array($listener, $queueName);
-                }
-            }
-        }
     }
 
     /**
@@ -218,6 +69,26 @@ class EventDispatcher extends BaseEventDispatcher
             call_user_func($listener, $event, $eventName, $this);
             if ($event->isPropagationStopped()) {
                 break;
+            }
+        }
+    }
+
+    /**
+     * When loading listener services, store in a separate index the queue to which service is limited
+     * @param string $eventName
+     */
+    protected function lazyLoad($eventName)
+    {
+        parent::lazyLoad($eventName);
+
+        if (isset($this->listenerIds[$eventName])) {
+            foreach ($this->listenerIds[$eventName] as $args) {
+                list($serviceId, $method, $priority, $queueName) = $args;
+                if ($queueName != null) {
+                    $listener = $this->container->get($serviceId);
+                    $key = $serviceId.'.'.$method;
+                    $this->listeners[$eventName][$key] = array($listener, $queueName);
+                }
             }
         }
     }
