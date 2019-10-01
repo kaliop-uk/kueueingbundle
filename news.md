@@ -1,3 +1,10 @@
+# Ver 0.8
+
+* NEW: the bundle is now compatible with Symfony versions all the way up to 4.3 and recent versions of rabbitmq-bundle
+
+* FIXED: `QueueManager::listQueues($type)` would not honour the $type parameter 
+
+
 # Ver 0.7.2
 
 * FIXED: make yml config compatible with recent Symfony 3 versions
