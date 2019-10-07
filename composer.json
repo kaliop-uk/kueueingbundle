@@ -16,8 +16,8 @@
         "php-amqplib/rabbitmq-bundle": "^1.2"
     },
     "require-dev": {
-        "symfony/framework-bundle": "^2.4 || ^3.0 || ^4.0",
         "symfony/finder": "^2.4 || ^3.0 || ^4.0",
+        "symfony/framework-bundle": "^2.4 || ^3.0 || ^4.0",
         "symfony/monolog-bundle": "^2.4 || ^3.0 || ^4.0",
         "phpunit/phpunit": "^5.7 || ^7.5"
     },
