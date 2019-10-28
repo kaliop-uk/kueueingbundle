@@ -135,6 +135,8 @@ services:
     kaliop_queueing.message_consumer.console_command:
         class: '%kaliop_queueing.message_consumer.console_command.class%'
         arguments: [ '@kaliop_queueing.worker_manager' ]
+        calls:
+            - [ setForceSigChildEnabled, [ '%kaliop_queueing.default.console_commands.force_sigchild_enabled%' ] ]
         parent: kaliop_queueing.message_consumer
 
     # Executes Sf console commands without spawning new processes
