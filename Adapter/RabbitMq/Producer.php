@@ -14,6 +14,12 @@ class Producer extends BaseProducer implements ProducerInterface
 {
     protected $queueStats = array();
 
+    /**
+     * @param string $msgBody
+     * @param string $routingKey
+     * @param array $params see AMQPMessage::$propertyDefinitions
+     * @param array|null $headers
+     */
     public function publish($msgBody, $routingKey = '', $params = array(), array $headers = null)
     {
         if ($this->autoSetupFabric) {
@@ -22,7 +28,7 @@ class Producer extends BaseProducer implements ProducerInterface
 
         $msg = new AMQPMessage(
             $msgBody,
-            array_merge(array('content_type' => $this->contentType, 'delivery_mode' => $this->deliveryMode), $params)
+            array_merge($this->getBasicProperties(), $params)
         );
 
         if (!empty($headers)) {
