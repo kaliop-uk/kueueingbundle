@@ -27,7 +27,6 @@ install:
   - export XDEBUG_INI=${XDEBUG_INI/,/}
   - if [ "$XDEBUG_INI" != "" ]; then mv "$XDEBUG_INI" "$XDEBUG_INI.bak"; fi
 
-  - composer self-update
   # We might run composer install first, but then most of it would be undone anyway
   - composer require --prefer-source --dev symfony/process:${SYMFONY_VERSION} symfony/framework-bundle:${SYMFONY_VERSION} symfony/finder:${SYMFONY_VERSION}
 
@@ -50,7 +49,7 @@ after_script:
   - if [ "$CODE_COVERAGE" = "1" -a -f coverage.clover ]; then wget https://scrutinizer-ci.com/ocular.phar; fi
   - if [ "$CODE_COVERAGE" = "1" -a -f coverage.clover ]; then php ocular.phar code-coverage:upload --format=php-clover coverage.clover; fi
   # Upload code-coverage to CodeClimate
-  - if [ "$CODE_COVERAGE" = "1" -a -f coverage.clover ]; then CODECLIMATE_REPO_TOKEN=TOBEGOTTEN ./vendor/bin/test-reporter --coverage-report=coverage.clover; fi
+  #- if [ "$CODE_COVERAGE" = "1" -a -f coverage.clover ]; then CODECLIMATE_REPO_TOKEN=TOBEGOTTEN ./vendor/bin/test-reporter --coverage-report=coverage.clover; fi
 
 # Try to avoid problems with shared composer caches...
 #cache:
