@@ -1,3 +1,14 @@
+# Ver 0.9
+
+* NEW: allow forcing `enhanceSigchildCompatibility` to the Symfony Process component.
+   On OS such as Debian or Ubuntu, where the Symfony Process component does not detect SigchildCompatibility properly, 
+   this helps to retrieve the exit code of Symfony command-line scripts executed by queue consumers.
+   It also helps f.e. in making sure that Symfony command-line scripts executed by queue consumers can be properly
+   reaped on timeout expiration if using the `$timeout` argument in the Process constructor. 
+   In order to enable this, set to `true` the value of configuration parameter 
+   `kaliop_queueing.default.console_commands.force_sigchild_enabled`
+
+
 # Ver 0.8
 
 * NEW: the bundle is now compatible with Symfony versions all the way up to 4.3 and recent versions of rabbitmq-bundle

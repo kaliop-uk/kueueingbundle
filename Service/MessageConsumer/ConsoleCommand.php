@@ -2,10 +2,10 @@
 
 namespace Kaliop\QueueingBundle\Service\MessageConsumer;
 
-use Kaliop\QueueingBundle\Service\MessageConsumer;
+//use Symfony\Component\Console\Application;
 use Kaliop\QueueingBundle\Command\ConsumerCommand;
-use Symfony\Component\Console\Application;
-use Symfony\Component\Process\Process;
+use Kaliop\QueueingBundle\Helper\Process;
+use Kaliop\QueueingBundle\Service\MessageConsumer;
 
 /**
  * This service can be registered to consume "execute sf console command" messages
@@ -43,6 +43,15 @@ class ConsoleCommand extends MessageConsumer
     {
         $this->application = $application;
     }*/
+
+    /**
+     * @param null|bool $force
+     * @return null|bool
+     */
+    public function setForceSigChildEnabled($force)
+    {
+        return Process::forceSigchildEnabled($force);
+    }
 
     /**
      * @param array $body

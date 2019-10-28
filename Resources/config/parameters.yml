@@ -29,6 +29,9 @@ parameters:
         ###
         - regexp:/.*/
 
+    # Can be set to either 'true' or 'false' for forcing a value. 'null' means: let the Symfony Process Component decide
+    kaliop_queueing.default.console_commands.force_sigchild_enabled: null
+
     # To be configured in a bundle depending on this one (or in the application):
     # the Sf services which we allow to execute via queue messages. For each, the allowed php methods as an array
     # If you want to use a regexp, start it with regexp:
