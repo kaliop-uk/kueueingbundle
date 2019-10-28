@@ -8,7 +8,7 @@ namespace Kaliop\QueueingBundle\Queue;
 interface ProducerInterface
 {
     /**
-     * Publishes the message and does what he wants with the properties
+     * Publishes the message and does what he wants with the properties (driver dependent)
      *
      * @param string $msgBody
      * @param string $routingKey
@@ -21,7 +21,7 @@ interface ProducerInterface
      * Dumb drivers are expected to just loop over the array and execute a publish() call on each, while smart drivers
      * might have a dedicated routine.
      *
-     * @param array $messages Format of the array:
+     * @param array[] $messages Format of the array elements:
      *                        - 'msgBody' string, mandatory
      *                        - 'routingKey' string
      *                        - 'additionalProperties' array
