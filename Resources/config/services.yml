@@ -91,6 +91,8 @@ services:
         #arguments: [ '@kaliop_queueing.driver.rabbitmq' ]
         # nb: we assign by default no queue to this service, otherwise it would look like the following:
         #calls: [ setQueueName, [ queue_name ] ]
+        calls:
+            - [ setDispatcher, [ '@kaliop_queueing.event_dispatcher' ] ]
 
     # Produces 'generic' messages - message encoding is left to the application
     kaliop_queueing.message_producer.generic_message:

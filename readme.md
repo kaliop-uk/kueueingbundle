@@ -50,6 +50,8 @@ Support for other messaging systems is available in separate bundles:
 
 * An event: kaliop_queueing.message_consumption_failed, which your services can listen to by usage of tag kaliop_queueing.event_listener
 
+* An event: kaliop_queueing.message_sent, which your services can listen to by usage of tag kaliop_queueing.event_listener
+
 * A console command used to consume messages, similar to the rabbitmq:consumer command but with more options, such as
   support for multiple driver and timeouts
 

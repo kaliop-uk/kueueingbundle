@@ -8,6 +8,12 @@ final class EventsList
      * The MESSAGE_RECEIVED event is thrown each time a message is received, before it is processed
      * The event listener receives a MessageReceivedEvent instance.
      */
+    const MESSAGE_SENT = 'kaliop_queueing.message_sent';
+
+    /**
+     * The MESSAGE_RECEIVED event is thrown each time a message is received, before it is processed
+     * The event listener receives a MessageReceivedEvent instance.
+     */
     const MESSAGE_RECEIVED = 'kaliop_queueing.message_received';
 
     /**

@@ -3,7 +3,10 @@
 namespace Kaliop\QueueingBundle\Service;
 
 use Kaliop\QueueingBundle\Adapter\DriverInterface;
+use Kaliop\QueueingBundle\Event\MessageSentEvent;
+use Kaliop\QueueingBundle\Event\EventsList;
 use Kaliop\QueueingBundle\Queue\MessageProducerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * A helper class, exposed as service.
@@ -25,6 +28,7 @@ abstract class MessageProducer implements MessageProducerInterface
     );
     /** @var DriverInterface */
     protected $driver;
+    protected $dispatcher;
 
     /**
      * @param DriverInterface $driver
@@ -43,6 +47,11 @@ abstract class MessageProducer implements MessageProducerInterface
         $this->driver = $driver;
 
         return $this;
+    }
+
+    public function setDispatcher(EventDispatcherInterface $dispatcher = null)
+    {
+        $this->dispatcher = $dispatcher;
     }
 
     /**
@@ -135,7 +144,13 @@ abstract class MessageProducer implements MessageProducerInterface
     {
         $producer = $this->getProducerService();
         $producer->setContentType($this->getContentType());
-        $producer->publish($this->encodeMessageBody($data), $routingKey, $extras);
+        $body = $this->encodeMessageBody($data);
+        $producer->publish($body, $routingKey, $extras);
+
+        if ($this->dispatcher) {
+            $event = new MessageSentEvent($body, $routingKey, $extras);
+            $this->dispatcher->dispatch(EventsList::MESSAGE_SENT, $event);
+        }
     }
 
     /**
@@ -151,14 +166,23 @@ abstract class MessageProducer implements MessageProducerInterface
         $producer = $this->getProducerService();
         $producer->setContentType($this->getContentType());
         $messages = array();
+        $events = array();
         foreach($data as $key => $element) {
+            $body = $this->encodeMessageBody($element);
             $messages[] = array(
-                'msgBody' => $this->encodeMessageBody($element),
+                'msgBody' => $body,
                 'routingKey' => $routingKey[$key],
                 'additionalProperties' => $extras
             );
+            $events[] = new MessageSentEvent($body, $routingKey, $extras);
         }
 
         $producer->batchPublish($messages);
+
+        if ($this->dispatcher) {
+            foreach ($events as $event) {
+                $this->dispatcher->dispatch(EventsList::MESSAGE_RECEIVED, $event);
+            }
+        }
     }
 }

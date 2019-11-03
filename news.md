@@ -1,3 +1,8 @@
+# Ver 0.10
+
+* NEW: the MessageProducer now emits an event whenever a message is sent. Useful f.e. for logging / troubleshooting
+
+
 # Ver 0.9
 
 * NEW: allow forcing `enhanceSigchildCompatibility` to the Symfony Process component.
