@@ -1,3 +1,8 @@
+# Ver 0.10.1
+
+* FIXED: when using batch message publication, emit message sent event instead of message received 
+
+
 # Ver 0.10
 
 * NEW: the MessageProducer now emits an event whenever a message is sent. Useful f.e. for logging / troubleshooting

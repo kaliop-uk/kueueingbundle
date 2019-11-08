@@ -181,7 +181,7 @@ abstract class MessageProducer implements MessageProducerInterface
 
         if ($this->dispatcher) {
             foreach ($events as $event) {
-                $this->dispatcher->dispatch(EventsList::MESSAGE_RECEIVED, $event);
+                $this->dispatcher->dispatch(EventsList::MESSAGE_SENT, $event);
             }
         }
     }
