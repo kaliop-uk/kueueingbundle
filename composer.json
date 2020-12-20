@@ -27,5 +27,11 @@
     },
     "suggest": {
         "phpxmlrpc/phpxmlrpc": "Used by the message consumer which executes xmlrpc calls. Ver 4.0 or later required"
-    }
+    },
+    "funding": [
+        {
+            "type": "github",
+            "url": "https://github.com/sponsors/tanoconsulting"
+        }
+    ]
 }
